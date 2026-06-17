@@ -390,7 +390,18 @@ const Home = () => {
               <Button
                 onClick={() => navigate('/book-appointment')}
                 variant="primary"
-                className="w-full  md:w-auto px-18 py-10 text-2xl rounded-full font-bold shadow-xl text-center"
+                className="
+                  w-full md:w-auto
+                  px-10
+                  py-5
+                  text-xl
+                  rounded-full
+                  font-bold
+                  shadow-xl
+                  text-center
+                  hover:scale-105
+                  transition-transform
+                "
               >
                 Book Your Visit Now
               </Button>

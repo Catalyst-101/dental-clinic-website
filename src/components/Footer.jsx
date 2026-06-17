@@ -1,11 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { FaWhatsapp, FaInstagram, FaFacebook} from 'react-icons/fa';
 
 const Footer = () => {
   return (
     <footer className="bg-surface-container-lowest border-t border-outline-variant">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-xl px-margin-mobile md:px-margin-desktop py-xl max-w-7xl mx-auto">
-        
+
         {/* Brand Block */}
         <div className="space-y-md">
           <div className="text-headline-sm font-bold text-primary flex items-center gap-2">
@@ -17,16 +18,30 @@ const Footer = () => {
           <p className="text-body-md text-on-surface-variant leading-relaxed">
             Providing premium dental care with a focus on hospitality and clinical excellence since 1998.
           </p>
-          <div className="flex gap-sm">
-            <div className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary cursor-pointer hover:bg-primary hover:text-white transition-all">
-              <span className="material-symbols-outlined text-[20px]">public</span>
-            </div>
-            <div className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary cursor-pointer hover:bg-primary hover:text-white transition-all">
-              <span className="material-symbols-outlined text-[20px]">location_on</span>
-            </div>
-            <div className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary cursor-pointer hover:bg-primary hover:text-white transition-all">
-              <span className="material-symbols-outlined text-[20px]">alternate_email</span>
-            </div>
+          <div className="flex gap-sm justify-start">
+            <a
+              href="https://wa.me/919765432109"
+              target="_blank"
+              rel="noreferrer"
+              className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary cursor-pointer hover:bg-primary hover:text-white transition-all"
+            >
+              <FaWhatsapp className="text-[20px]" />
+            </a>
+
+            <a
+              href="#"
+              className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary cursor-pointer hover:bg-primary hover:text-white transition-all"
+            >
+              <FaInstagram className="text-[20px]" />
+            </a>
+
+            <a
+              href="#"
+              className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary cursor-pointer hover:bg-primary hover:text-white transition-all"
+            >
+              <FaFacebook className="text-[20px]" />
+            </a>
+
           </div>
         </div>
 
@@ -65,6 +80,12 @@ const Footer = () => {
             <li className="flex items-center gap-sm">
               <span className="material-symbols-outlined text-primary">call</span>
               <span className="text-on-surface-variant text-body-md font-bold">+1 (555) 000-1234</span>
+            </li>
+            <li className="flex items-center gap-sm">
+              <FaWhatsapp className="text-primary text-xl" />
+              <span className="text-on-surface-variant text-body-md font-bold">
+                +91 9765432109
+              </span>
             </li>
             <li className="flex items-center gap-sm">
               <span className="material-symbols-outlined text-primary">mail</span>

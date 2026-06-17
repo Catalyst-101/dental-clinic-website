@@ -59,9 +59,65 @@
   box-shadow: 0px 4px 20px rgba(22, 163, 74, 0.05);
 }
 
+@font-face {
+  font-family: "Material Symbols Outlined";
+  font-style: normal;
+  font-weight: 100;
+  font-display: swap;
+  src: url("./assets/symbols/material-symbols-outlined-latin-100-normal.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Material Symbols Outlined";
+  font-style: normal;
+  font-weight: 200;
+  font-display: swap;
+  src: url("./assets/symbols/material-symbols-outlined-latin-200-normal.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Material Symbols Outlined";
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("./assets/symbols/material-symbols-outlined-latin-300-normal.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Material Symbols Outlined";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./assets/symbols/material-symbols-outlined-latin-400-normal.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Material Symbols Outlined";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("./assets/symbols/material-symbols-outlined-latin-500-normal.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Material Symbols Outlined";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("./assets/symbols/material-symbols-outlined-latin-600-normal.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Material Symbols Outlined";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("./assets/symbols/material-symbols-outlined-latin-700-normal.woff") format("woff");
+}
+
 /* Material Symbols Adjustments */
 .material-symbols-outlined {
-  font-family: 'Material Symbols Outlined';
+  font-family: "Material Symbols Outlined";
   font-weight: normal;
   font-style: normal;
   font-size: 24px;
@@ -72,13 +128,8 @@
   white-space: nowrap;
   word-wrap: normal;
   direction: ltr;
-  -webkit-font-feature-settings: 'liga';
+  -webkit-font-feature-settings: "liga";
   -webkit-font-smoothing: antialiased;
-
-  font-variation-settings:
-    'wght' 400,
-    'GRAD' 0,
-    'opsz' 24;
 }
 
 /* Successful Booking Animations */

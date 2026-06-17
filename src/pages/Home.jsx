@@ -34,7 +34,12 @@ const Home = () => {
       <section className="relative hero-gradient overflow-hidden py-xl md:py-32">
         <div className="max-w-7xl mx-auto px-4 md:px-16 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
 
-          <div className="z-10">
+          <motion.div 
+            initial={{ opacity: 0, x: -40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }} 
+            className="z-10">
+
             <span className="inline-block bg-primary-fixed text-on-primary-fixed px-4 py-1 rounded-full text-label-sm font-label-sm mb-base uppercase tracking-wider">
               Premium Dental Experience
             </span>
@@ -66,44 +71,56 @@ const Home = () => {
                 Contact Us
               </Button>
             </div>
-          </div>
+          </motion.div>
 
           <motion.div
-            animate={{ y: [0, -15, 0] }}
+            initial={{ opacity: 0, x: +60 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
             transition={{
-              duration: 4,
-              repeat: Infinity,
-              ease: "easeInOut"
+              duration: 0.8,
+              ease: "easeOut"
             }}
-            className="relative group"
           >
-            <div className="absolute -inset-4 bg-primary/10 blur-3xl rounded-full opacity-50 group-hover:opacity-75 transition-opacity"></div>
 
-            <img
-              alt="Smiling Patient"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOvDU8SEGcwWn-yZQdn5kgz-TtL7SEYztCT4HCgPRIfJKoJmvfQUfuMlJH4BVYh8yOhonlDnvQuFUAEjsZRbgkOXyXCykVI6cvkkE0hxL41UOvMu9S-WoTvFehrqaPjxE3ilXGzokQ0UL1HxxrnkibbTo5mmonM60YHvvf2ut4FEkmGLVU8qDKY5A4ch1j04CXlgXw156PoK2qMQ05dcz7mDVjUfsXS0NUTepyauK2qUDpGqvUM-KG6gJipGUF3naK_hQnXvYeh45n"
-              className="relative rounded-[2rem] shadow-2xl z-10 w-full object-cover aspect-[4/3]"
-            />
+            <motion.div
+              animate={{ y: [0, -15, 0] }}
+              transition={{
+                duration: 4,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+              className="relative group"
+            >
+              <div className="absolute -inset-4 bg-primary/10 blur-3xl rounded-full opacity-50 group-hover:opacity-75 transition-opacity"></div>
 
-            {/* Floating Stat Card */}
-            <div className="absolute -bottom-6 -left-6 glass-morphism p-6 rounded-2xl shadow-xl z-20 hidden md:block">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-primary-container rounded-full flex items-center justify-center text-white">
-                  <span className="material-symbols-outlined">
-                    verified
-                  </span>
-                </div>
+              <img
+                alt="Smiling Patient"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOvDU8SEGcwWn-yZQdn5kgz-TtL7SEYztCT4HCgPRIfJKoJmvfQUfuMlJH4BVYh8yOhonlDnvQuFUAEjsZRbgkOXyXCykVI6cvkkE0hxL41UOvMu9S-WoTvFehrqaPjxE3ilXGzokQ0UL1HxxrnkibbTo5mmonM60YHvvf2ut4FEkmGLVU8qDKY5A4ch1j04CXlgXw156PoK2qMQ05dcz7mDVjUfsXS0NUTepyauK2qUDpGqvUM-KG6gJipGUF3naK_hQnXvYeh45n"
+                className="relative rounded-[2rem] shadow-2xl z-10 w-full object-cover aspect-[4/3]"
+              />
 
-                <div>
-                  <div className="text-headline-sm font-bold text-on-surface">
-                    99%
+              {/* Stat Card */}
+              <div className="absolute -bottom-6 -left-6 glass-morphism p-6 rounded-2xl shadow-xl z-20 hidden md:block">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-primary-container rounded-full flex items-center justify-center text-white">
+                    <span className="material-symbols-outlined">
+                      verified
+                    </span>
                   </div>
-                  <div className="text-label-sm text-on-surface-variant">
-                    Patient Satisfaction
+
+                  <div>
+                    <div className="text-headline-sm font-bold text-on-surface">
+                      99%
+                    </div>
+                    <div className="text-label-sm text-on-surface-variant">
+                      Patient Satisfaction
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+
+            </motion.div>
 
           </motion.div>
 
@@ -291,40 +308,131 @@ const Home = () => {
 
       {/* Testimonials */}
       <section className="py-xl bg-surface-container-highest/20 border-y border-outline-variant/10">
+
         <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop">
-          <div className="flex flex-col md:flex-row md:justify-between md:items-end mb-xl text-left">
+
+
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{
+              duration: 0.8,
+              ease: "easeOut"
+            }}
+            className="flex flex-col md:flex-row md:justify-between md:items-end mb-xl text-left"
+          >
+
             <div>
-              <h2 className="text-headline-md font-headline-md text-on-surface mb-sm">What Our Patients Say</h2>
-              <p className="text-body-md text-on-surface-variant">Real stories from people who found their perfect smile with us.</p>
+
+              <h2 className="text-headline-md font-headline-md text-on-surface mb-sm">
+                What Our Patients Say
+              </h2>
+
+              <p className="text-body-md text-on-surface-variant">
+                Real stories from people who found their perfect smile with us.
+              </p>
+
             </div>
-            <div className="hidden md:flex gap-sm mt-4 md:mt-0">
+
+
+
+            <motion.div
+              initial={{ opacity:0, x:40 }}
+              whileInView={{ opacity:1, x:0 }}
+              viewport={{ once:true }}
+              transition={{
+                duration:0.7
+              }}
+              className="hidden md:flex gap-sm mt-4 md:mt-0"
+            >
+
               <button className="w-12 h-12 rounded-full border border-primary text-primary flex items-center justify-center hover:bg-primary hover:text-white transition-all duration-300">
-                <span className="material-symbols-outlined">chevron_left</span>
+
+                <span className="material-symbols-outlined">
+                  chevron_left
+                </span>
+
               </button>
+
+
               <button className="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center hover:bg-primary-container transition-all duration-300">
-                <span className="material-symbols-outlined">chevron_right</span>
+
+                <span className="material-symbols-outlined">
+                  chevron_right
+                </span>
+
               </button>
-            </div>
-          </div>
+
+            </motion.div>
+
+
+          </motion.div>
+
+
+
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-md">
+
             {testimonials.map((t, idx) => (
-              <TestimonialCard key={idx} testimonial={t} />
+
+              <motion.div
+                key={idx}
+                initial={{
+                  opacity:0,
+                  y:40
+                }}
+                whileInView={{
+                  opacity:1,
+                  y:0
+                }}
+                viewport={{
+                  once:true
+                }}
+                transition={{
+                  duration:0.7,
+                  delay: idx * 0.15,
+                  ease:"easeOut"
+                }}
+              >
+
+                <TestimonialCard testimonial={t} />
+
+              </motion.div>
+
             ))}
+
           </div>
+
+
         </div>
+
       </section>
 
       {/* Inside Our Clinic (Gallery Teaser) */}
       <section className="py-xl px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto">
+
         <SectionTitle
           title="Inside Our Clinic"
           description="A clinical environment designed entirely for your comfort, sterility, and serenity."
         />
 
+
         <div className="grid grid-cols-1 md:grid-cols-12 gap-5 mt-10">
 
+
           {/* Large Featured Image */}
-          <div className="md:col-span-7 relative group overflow-hidden rounded-3xl">
+          <motion.div
+            initial={{ opacity: 0, x: -60 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{
+              duration: 0.8,
+              ease: "easeOut"
+            }}
+            className="md:col-span-7 relative group overflow-hidden rounded-3xl"
+          >
+
             <img
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEr4YK7fnQH3ANsEdFGI45FA3kOYs5QS5ykcYw7jH1gvFz5VrsQQwAJQL-OR7QDRrX2aX-AKNNLCSa0OS0Go0x0D2yEM__QrSr9O_Bm7pI9HnqBXTqBM17Qoj1_Wt5tROSkwZsvNMQF3hWPPQNyECeRAPG1ofxH8L4-fVLYH_-FM0W_WVJTwr3Y6D86cLbNQgEN-yXnnZg2P_jwXFOrS2mjQU8zLosrVnFwZahziGwXPUfzCIIDTMi3M233n97wwsVn1Z5M2aTdlLH"
               alt="Lobby Area"
@@ -332,13 +440,27 @@ const Home = () => {
             />
 
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition duration-500" />
-          </div>
+
+          </motion.div>
+
+
 
 
           {/* Right Side Images */}
           <div className="md:col-span-5 grid gap-5">
 
-            <div className="relative group overflow-hidden rounded-3xl">
+
+            <motion.div
+              initial={{ opacity: 0, x: 60 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{
+                duration: 0.8,
+                ease: "easeOut"
+              }}
+              className="relative group overflow-hidden rounded-3xl"
+            >
+
               <img
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8jOMVoVIgykP6d3AKhsrdnrOZqDa0AceqwoRO92Sgaads-OETKZer6gMCmqKSjTlEbQremFCeQJx4zeYC9XQKROJ9T8zJyPJ_4OATTh6TuowcCd1Q5rz3fofAc7Hx18jipfj_NyLWfLLms6-CjoxqgXsnOgkjdxVbqu79fSnOBGJd917nysxk6najqeSPfQgt0cbM1SCenWQtGgZ0Qxy5nATAJQ7cdMe6wlgZqRurGKHcOLPMz3EoR45-zHmKQ1bMea8MHFGVOCum"
                 alt="Operating Room"
@@ -346,10 +468,23 @@ const Home = () => {
               />
 
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition" />
-            </div>
+
+            </motion.div>
 
 
-            <div className="relative group overflow-hidden rounded-3xl">
+
+            <motion.div
+              initial={{ opacity: 0, x: 60 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{
+                duration: 0.8,
+                delay: 0.15,
+                ease: "easeOut"
+              }}
+              className="relative group overflow-hidden rounded-3xl"
+            >
+
               <img
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSo2rvH1iMKqIXt8r54vu3TyDMjPZwr4PJMkxTIzDo-CqRBsSHkUwf-psFIpwINaQGtYYKq6jELljCBx_DYoqpqYA9boPV72H08M6x_z6OBrG-dWw8idCc7RW_4DNj4TgDJt3AANDaYMIobmorWYYtIJHXB7Muxe5q3chywxacIaikhONkxRcIGd8xWFhU4oKXlX-dI1YU6pAe2sbWiM4_WQSQ0iwsazioC9UwXvfAT_MvISUAjr7NKk5_fnC0ll422rWHjpz-bJk_"
                 alt="Patient Lounge"
@@ -357,36 +492,98 @@ const Home = () => {
               />
 
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition" />
-            </div>
+
+            </motion.div>
+
 
           </div>
 
         </div>
 
 
-        <div className="flex justify-center mt-xl">
-          <Button onClick={() => navigate('/gallery')} variant="secondary" className="px-8 py-3 rounded-full font-bold"> Explore Full Gallery </Button>
-        </div>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="flex justify-center mt-xl"
+        >
+
+          <Button 
+            onClick={() => navigate('/gallery')} 
+            variant="secondary" 
+            className="px-8 py-3 rounded-full font-bold"
+          >
+            Explore Full Gallery
+          </Button>
+
+        </motion.div>
+
 
       </section>
 
       {/* Appointment CTA Banner */}
       <section className="py-xl px-margin-mobile md:px-margin-desktop">
-        <div className="max-w-7xl mx-auto glass-morphism p-xl rounded-[2.5rem] md:rounded-[3rem] relative overflow-hidden shadow-2xl text-center md:text-left border border-[#DCFCE7]">
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{
+            duration: 0.8,
+            ease: "easeOut"
+          }}
+          className="max-w-7xl mx-auto glass-morphism p-xl rounded-[2.5rem] md:rounded-[3rem] relative overflow-hidden shadow-2xl text-center md:text-left border border-[#DCFCE7]"
+        >
+
           {/* Background Decoration */}
           <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-96 h-96 bg-primary-fixed/20 blur-[100px] rounded-full pointer-events-none"></div>
+
           <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-64 h-64 bg-secondary-fixed/20 blur-[80px] rounded-full pointer-events-none"></div>
 
+
+
           <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-lg">
-            <div className="max-w-2xl text-left">
+
+
+            {/* Text */}
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{
+                duration: 0.8,
+                delay: 0.2
+              }}
+              className="max-w-2xl text-left"
+            >
+
               <h2 className="text-display-lg-mobile md:text-headline-md font-display-lg text-on-surface mb-sm">
                 Need Dental Care?
               </h2>
+
               <p className="text-body-lg text-on-surface-variant leading-relaxed">
                 Don't wait for a small problem to become a major procedure. Book your appointment today and join thousands of happy patients.
               </p>
-            </div>
-            <div className="flex-shrink-0 w-full md:w-auto">
+
+            </motion.div>
+
+
+
+
+            {/* Button */}
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{
+                duration: 0.8,
+                delay: 0.3
+              }}
+              className="flex-shrink-0 w-full md:w-auto"
+            >
+
               <Button
                 onClick={() => navigate('/book-appointment')}
                 variant="primary"
@@ -405,9 +602,14 @@ const Home = () => {
               >
                 Book Your Visit Now
               </Button>
-            </div>
+
+            </motion.div>
+
+
           </div>
-        </div>
+
+        </motion.div>
+
       </section>
 
     </div>

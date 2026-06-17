@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '../components/Button';
 import { SectionTitle } from '../components/SectionTitle';
+import Counter from '../components/Counter';
+import TimelineCard from '../components/TimelineCard';
 
 const About = () => {
   const navigate = useNavigate();
@@ -51,42 +53,79 @@ const About = () => {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            className="relative group w-full max-w-md lg:max-w-none justify-self-center mt-10 lg:mt-0"
+            initial={{ opacity: 0, x: +60 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{
+              duration: 0.8,
+              ease: "easeOut"
+            }}
           >
-            <div className="absolute -inset-4 bg-primary-container/10 rounded-[2rem] blur-2xl pointer-events-none"></div>
-            <img 
-              alt="Clinic Interior" 
-              className="relative rounded-[2rem] shadow-2xl w-full h-[450px] object-cover transition-transform duration-700 hover:scale-[1.02]" 
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxXhRmPwPxYWtomIn1zq-1W-2pjPE63DRztteTIu_tqUhNJwpdzOfJLzNA_eC1t32K_sEoS-_4n83RIbFQwrQENdn4x9baXH95kJHTIiMSiqFID9ZIFRCLpH8p6pPUC_ZsVbqJlV-iKHC03NOZ_kvrxmNra8q5rycc4En6VZA5rWrCeN0khaWBvNledlaf9N2vkyvaalAIWn3MNgg6F4XCyB4UZcTgpAwgaKGJNwp5Da9Uz2O5cQXjt3dbRQoQa9TF4cAuiCcy6m0n"
-            />
+            <motion.div
+              animate={{ y: [0, -15, 0] }}
+              transition={{
+                duration: 4,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+              className="relative group w-full max-w-md lg:max-w-none justify-self-center mt-10 lg:mt-0"
+            >
+
+              {/* Glow */}
+              <div className="
+                absolute 
+                -inset-4 
+                bg-primary-container/10 
+                blur-3xl 
+                rounded-full 
+                opacity-50 
+                group-hover:opacity-75 
+                transition-opacity
+              "></div>
+
+
+              {/* Image */}
+              <img
+                alt="Clinic Interior"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOvDU8SEGcwWn-yZQdn5kgz-TtL7SEYztCT4HCgPRIfJKoJmvfQUfuMlJH4BVYh8yOhonlDnvQuFUAEjsZRbgkOXyXCykVI6cvkkE0hxL41UOvMu9S-WoTvFehrqaPjxE3ilXGzokQ0UL1HxxrnkibbTo5mmonM60YHvvf2ut4FEkmGLVU8qDKY5A4ch1j04CXlgXw156PoK2qMQ05dcz7mDVjUfsXS0NUTepyauK2qUDpGqvUM-KG6gJipGUF3naK_hQnXvYeh45n"
+                className="
+                  relative
+                  rounded-[2rem]
+                  shadow-2xl
+                  z-10
+                  w-full
+                  h-[450px]
+                  object-cover
+                  transition-transform
+                  duration-700
+                  group-hover:scale-[1.02]
+                "
+              />
+
+            </motion.div>
           </motion.div>
 
         </div>
       </section>
 
-      {/* Achievement Counters */}
-      <section className="bg-surface-container-lowest py-lg border-y border-outline-variant/30">
-        <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-gutter text-center">
-            <div className="p-base">
-              <div className="text-display-lg font-display-lg text-primary mb-2">28+</div>
-              <div className="text-label-md font-label-md text-on-surface-variant uppercase tracking-widest">Years Experience</div>
-            </div>
-            <div className="p-base">
-              <div className="text-display-lg font-display-lg text-primary mb-2">15k+</div>
-              <div className="text-label-md font-label-md text-on-surface-variant uppercase tracking-widest">Happy Patients</div>
-            </div>
-            <div className="p-base">
-              <div className="text-display-lg font-display-lg text-primary mb-2">40+</div>
-              <div className="text-label-md font-label-md text-on-surface-variant uppercase tracking-widest">Medical Awards</div>
-            </div>
-            <div className="p-base">
-              <div className="text-display-lg font-display-lg text-primary mb-2">12+</div>
-              <div className="text-label-md font-label-md text-on-surface-variant uppercase tracking-widest">Specialists</div>
-            </div>
+      {/* Stats Section */}
+      <section className="py-lg bg-surface-container-lowest border-y border-outline-variant/10">
+        <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-2 md:grid-cols-4 gap-md">
+          <div className="text-center p-md">
+            <div className="text-display-lg-mobile md:text-display-lg font-bold text-primary mb-xs"><Counter end={15} suffix="k+" /></div>
+            <div className="text-label-md font-medium text-on-surface-variant">Patients Treated</div>
+          </div>
+          <div className="text-center p-md">
+            <div className="text-display-lg-mobile md:text-display-lg font-bold text-primary mb-xs"><Counter end={28} suffix="+" /></div>
+            <div className="text-label-md font-medium text-on-surface-variant">Years Experience</div>
+          </div>
+          <div className="text-center p-md">
+            <div className="text-display-lg-mobile md:text-display-lg font-bold text-primary mb-xs"><Counter end={45} suffix="+" /></div>
+            <div className="text-label-md font-medium text-on-surface-variant">Expert Dentists</div>
+          </div>
+          <div className="text-center p-md">
+            <div className="text-display-lg-mobile md:text-display-lg font-bold text-primary mb-xs"><Counter end={98} suffix="%" /></div>
+            <div className="text-label-md font-medium text-on-surface-variant">Successful Procedures</div>
           </div>
         </div>
       </section>
@@ -94,113 +133,195 @@ const About = () => {
       {/* Bento Story and Core Values */}
       <section className="py-xl bg-surface">
         <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop">
+
           <SectionTitle 
             title="The Foundation of Our Care" 
             description="Founded on the principles of integrity and innovation, DentaElite has evolved from a small private practice into a leading dental center."
           />
-          
+
           <div className="grid grid-cols-1 md:grid-cols-12 gap-gutter text-left">
+
+
             {/* Story Card */}
             <motion.div 
-              initial="hidden"
-              whileInView="visible"
+              initial={{ opacity: 0, x: -60 }}
+              whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              variants={revealAnim}
+              transition={{
+                duration: 0.8,
+                ease: "easeOut"
+              }}
               className="md:col-span-8 glass-card rounded-xl p-6 md:p-8 flex flex-col justify-between"
             >
+
               <div>
-                <h3 className="text-headline-sm font-headline-sm text-primary mb-4 font-bold">Our Story</h3>
+                <h3 className="text-headline-sm font-headline-sm text-primary mb-4 font-bold">
+                  Our Story
+                </h3>
+
                 <p className="text-body-md text-on-surface-variant mb-6 leading-relaxed">
                   Our journey began two decades ago with a simple vision: to make high-quality dentistry accessible without compromising on the patient experience. We recognized that dental visits are often met with anxiety, and we set out to change that narrative by creating an environment that feels more like a wellness retreat than a clinic.
                 </p>
+
                 <p className="text-body-md text-on-surface-variant mb-6 leading-relaxed">
                   Today, DentaElite stands at the forefront of digital dentistry, utilizing 3D scanning, laser treatments, and AI-driven diagnostics to provide unparalleled precision in every treatment plan.
                 </p>
               </div>
-              <div className="h-48 rounded-lg overflow-hidden mt-4">
+
+
+              <motion.div
+                animate={{
+                  scale: [1, 1.01, 1]
+                }}
+                transition={{
+                  duration: 5,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+                className="h-70 rounded-lg overflow-hidden mt-4"
+              >
+
                 <img 
                   alt="Medical Technology" 
                   className="w-full h-full object-cover" 
                   src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8q_ZzRmr-CEfOSKX0jXv5BCYs4PtvnGlUJHroHAkIDIQ7ys0U5lZO89F6oAr7sM8RTTYukEY89zbaO-ir4TVCSdU8wgre1FszO3NeLoUSxqVoU1ed2ykDeJ8yr-8xqkvakLA2BFGo0xhJJfXZ5136EbJNKHiSuSnlZP8ngZdPyG7wrFrEaHXd-xDmLlOIouZOSeM97piplRwFoMEVas10YehXhdjySccWv7aw7Wk6buMvARMQQeVPbL7zsXu2YfLJCsIs6Br6a94q" 
                 />
-              </div>
+
+              </motion.div>
+
+
             </motion.div>
+
+
 
             {/* Mission & Vision Column */}
             <div className="md:col-span-4 flex flex-col gap-gutter">
-              <motion.div 
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={revealAnim}
-                className="bg-primary-container rounded-xl p-6 md:p-8 text-on-primary-container flex-grow"
-              >
-                <span className="material-symbols-outlined text-[48px] mb-4">track_changes</span>
-                <h3 className="text-headline-sm font-headline-sm font-bold mb-2">Our Mission</h3>
-                <p className="text-label-md font-label-md opacity-90 leading-relaxed">
-                  To provide transformative dental care through the fusion of artistic precision and medical science.
-                </p>
-              </motion.div>
+
 
               <motion.div 
-                initial="hidden"
-                whileInView="visible"
+                initial={{ opacity: 0, x: 60 }}
+                whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                variants={revealAnim}
+                transition={{
+                  duration: 0.8,
+                  ease: "easeOut"
+                }}
+                className="bg-primary-container rounded-xl p-6 md:p-8 text-on-primary-container flex-grow"
+              >
+
+                <span className="material-symbols-outlined text-[56px] mb-4">
+                  track_changes
+                </span>
+
+                <h3 className="text-headline-md font-headline-sm font-bold mb-2">
+                  Our Mission
+                </h3>
+
+                <p className="text-body-lg font-label-md opacity-90 leading-relaxed">
+                  To provide transformative dental care through the fusion of artistic precision and medical science.
+                </p>
+
+              </motion.div>
+
+
+
+              <motion.div 
+                initial={{ opacity: 0, x: 60 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{
+                  duration: 0.8,
+                  ease: "easeOut",
+                  delay: 0.15
+                }}
                 className="bg-secondary-container rounded-xl p-6 md:p-8 text-on-secondary-container flex-grow"
               >
-                <span className="material-symbols-outlined text-[48px] mb-4">visibility</span>
-                <h3 className="text-headline-sm font-headline-sm font-bold mb-2">Our Vision</h3>
-                <p className="text-label-md font-label-md opacity-90 leading-relaxed">
+
+                <span className="material-symbols-outlined text-[56px] mb-4">
+                  visibility
+                </span>
+
+                <h3 className="text-headline-md font-headline-sm font-bold mb-2">
+                  Our Vision
+                </h3>
+
+                <p className="text-body-lg font-label-md opacity-90 leading-relaxed">
                   To become the global gold standard for premium patient-centered dental health and aesthetics.
                 </p>
+
               </motion.div>
+
+
             </div>
+
+
+
 
             {/* Core Values Rows */}
             <div className="md:col-span-12 grid grid-cols-1 sm:grid-cols-3 gap-gutter mt-4">
-              <motion.div 
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={revealAnim}
-                className="glass-card p-gutter rounded-xl text-center"
-              >
-                <div className="w-14 h-14 bg-surface-container-high rounded-full flex items-center justify-center mx-auto mb-4 text-primary">
-                  <span className="material-symbols-outlined">diversity_1</span>
-                </div>
-                <h4 className="text-headline-sm font-headline-sm mb-2 font-bold">Patient First</h4>
-                <p className="text-label-md font-label-md text-on-surface-variant">We tailor every treatment to the unique needs and comfort of our patients.</p>
-              </motion.div>
 
-              <motion.div 
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={revealAnim}
-                className="glass-card p-gutter rounded-xl text-center"
-              >
-                <div className="w-14 h-14 bg-surface-container-high rounded-full flex items-center justify-center mx-auto mb-4 text-primary">
-                  <span className="material-symbols-outlined">psychology</span>
-                </div>
-                <h4 className="text-headline-sm font-headline-sm mb-2 font-bold">Innovation</h4>
-                <p className="text-label-md font-label-md text-on-surface-variant">Constantly adopting the latest dental advancements and technologies.</p>
-              </motion.div>
 
-              <motion.div 
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={revealAnim}
-                className="glass-card p-gutter rounded-xl text-center"
-              >
-                <div className="w-14 h-14 bg-surface-container-high rounded-full flex items-center justify-center mx-auto mb-4 text-primary">
-                  <span className="material-symbols-outlined">verified_user</span>
-                </div>
-                <h4 className="text-headline-sm font-headline-sm mb-2 font-bold">Integrity</h4>
-                <p className="text-label-md font-label-md text-on-surface-variant">Maintaining transparent communication and the highest ethical standards.</p>
-              </motion.div>
+              {[
+
+                {
+                  icon:"diversity_1",
+                  title:"Patient First",
+                  text:"We tailor every treatment to the unique needs and comfort of our patients."
+                },
+
+                {
+                  icon:"psychology",
+                  title:"Innovation",
+                  text:"Constantly adopting the latest dental advancements and technologies."
+                },
+
+                {
+                  icon:"verified_user",
+                  title:"Integrity",
+                  text:"Maintaining transparent communication and the highest ethical standards."
+                }
+
+              ].map((item,index)=>(
+
+                <motion.div
+                  key={index}
+                  initial={{ opacity:0 }}
+                  whileInView={{ opacity:1 }}
+                  viewport={{ once:true }}
+                  transition={{
+                    duration:0.8,
+                    delay:index * 0.15
+                  }}
+                  className="glass-card p-gutter rounded-xl text-center"
+                >
+
+                  <div className="w-14 h-14 bg-surface-container-high rounded-full flex items-center justify-center mx-auto mb-4 text-primary">
+
+                    <span className="material-symbols-outlined">
+                      {item.icon}
+                    </span>
+
+                  </div>
+
+
+                  <h4 className="text-headline-sm font-headline-sm mb-2 font-bold">
+                    {item.title}
+                  </h4>
+
+
+                  <p className="text-label-md font-label-md text-on-surface-variant">
+                    {item.text}
+                  </p>
+
+
+                </motion.div>
+
+              ))}
+
+
             </div>
+
+
           </div>
 
         </div>
@@ -208,62 +329,73 @@ const About = () => {
 
       {/* Timeline Section */}
       <section className="py-xl bg-surface-container-lowest border-y border-outline-variant/10">
+
         <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop">
+
           <SectionTitle title="Milestones of Excellence" />
-          
+
+
           <div className="relative mt-12">
+
+
             {/* Vertical Line */}
-            <div className="absolute left-1/2 -translate-x-1/2 w-1 h-full timeline-gradient hidden md:block rounded-full"></div>
-            
+            <div 
+              className="
+                absolute
+                left-1/2
+                -translate-x-1/2
+                w-1
+                h-full
+                timeline-gradient
+                hidden
+                md:block
+                rounded-full
+              "
+            />
+
+
             <div className="space-y-xl relative">
-              
-              {/* 1998 */}
-              <div className="flex flex-col md:flex-row items-center justify-between w-full">
-                <div className="md:w-5/12 text-center md:text-right">
-                  <h4 className="text-headline-sm font-headline-sm text-primary mb-2 font-bold">1998</h4>
-                  <h5 className="text-label-md font-label-md font-bold text-on-surface mb-2">The Inception</h5>
-                  <p className="text-body-md text-on-surface-variant">Dr. Elizabeth Sterling opened the first DentaElite studio with two consultation rooms and a dream.</p>
-                </div>
-                <div className="w-8 h-8 rounded-full bg-primary border-4 border-surface-container-lowest z-10 my-4 md:my-0 shadow"></div>
-                <div className="md:w-5/12"></div>
-              </div>
 
-              {/* 2010 */}
-              <div className="flex flex-col md:flex-row-reverse items-center justify-between w-full">
-                <div className="md:w-5/12 text-center md:text-left">
-                  <h4 className="text-headline-sm font-headline-sm text-primary mb-2 font-bold">2010</h4>
-                  <h5 className="text-label-md font-label-md font-bold text-on-surface mb-2">Technological Expansion</h5>
-                  <p className="text-body-md text-on-surface-variant">Became the first clinic in the region to offer fully digital 3D panoramic imaging and laser surgery.</p>
-                </div>
-                <div className="w-8 h-8 rounded-full bg-primary border-4 border-surface-container-lowest z-10 my-4 md:my-0 shadow"></div>
-                <div className="md:w-5/12"></div>
-              </div>
 
-              {/* 2018 */}
-              <div className="flex flex-col md:flex-row items-center justify-between w-full">
-                <div className="md:w-5/12 text-center md:text-right">
-                  <h4 className="text-headline-sm font-headline-sm text-primary mb-2 font-bold">2018</h4>
-                  <h5 className="text-label-md font-label-md font-bold text-on-surface mb-2">Award Winning Care</h5>
-                  <p className="text-body-md text-on-surface-variant">Recognized as the 'Clinic of the Year' for outstanding patient experience and medical safety protocols.</p>
-                </div>
-                <div className="w-8 h-8 rounded-full bg-primary border-4 border-surface-container-lowest z-10 my-4 md:my-0 shadow"></div>
-                <div className="md:w-5/12"></div>
-              </div>
+              <TimelineCard
+                year="1998"
+                title="The Inception"
+                description="Dr. Elizabeth Sterling opened the first DentaElite studio with two consultation rooms and a dream."
+                side="left"
+              />
 
-              {/* 2026 */}
-              <div className="flex flex-col md:flex-row-reverse items-center justify-between w-full">
-                <div className="md:w-5/12 text-center md:text-left">
-                  <h4 className="text-headline-sm font-headline-sm text-primary mb-2 font-bold">2026</h4>
-                  <h5 className="text-label-md font-label-md font-bold text-on-surface mb-2">Future of Dentistry</h5>
-                  <p className="text-body-md text-on-surface-variant">Opening our new flagship facility featuring AI diagnostics and holistic dental wellness programs.</p>
-                </div>
-                <div className="w-8 h-8 rounded-full bg-primary border-4 border-surface-container-lowest z-10 my-4 md:my-0 shadow"></div>
-                <div className="md:w-5/12"></div>
-              </div>
+
+              <TimelineCard
+                year="2010"
+                title="Technological Expansion"
+                description="Became the first clinic in the region to offer fully digital 3D panoramic imaging and laser surgery."
+                side="right"
+              />
+
+
+              <TimelineCard
+                year="2018"
+                title="Award Winning Care"
+                description="Recognized as the Clinic of the Year for outstanding patient experience and medical safety protocols."
+                side="left"
+              />
+
+
+              <TimelineCard
+                year="2026"
+                title="Future of Dentistry"
+                description="Opening our new flagship facility featuring AI diagnostics and holistic dental wellness programs."
+                side="right"
+              />
+
 
             </div>
+
+
           </div>
+
         </div>
+
       </section>
 
       {/* Team Overview Section */}
@@ -276,10 +408,26 @@ const About = () => {
               viewport={{ once: true }}
               className="lg:w-1/2 w-full"
             >
-              <img 
-                alt="Our Medical Team" 
-                className="rounded-[2.5rem] shadow-xl w-full h-[500px] object-cover border border-outline-variant/20" 
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWx9ChKkKJh800iBd4atXda9vExcO92Ne6Yd7hST_quJAqJQUtBcnLLsxUWQvJGpEOjLW2RbQ0DSzNMDAEBcP9A92HF3sXITLYhRdLYAVsUB7jmTlSWpSshu4fnWabg7eZSkkLvrAcEtqHY-oXDgPCUzV12AI7V92pF4dJeeKIL7oRXmejCQnIckTqYHiS7gnUeFfEZX-xJX0LXGXWOjIZiOZhpL-yLSBMerXcJRoenOLfNdHU142DSU4ONPRBcFGmXg-NhwuRo_Nk" 
+              <motion.img
+                animate={{
+                  scale: [1, 1.01, 1]
+                }}
+                transition={{
+                  duration: 5,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+                alt="Our Medical Team"
+                className="
+                  rounded-[2.5rem]
+                  shadow-xl
+                  w-full
+                  h-[500px]
+                  object-cover
+                  border
+                  border-outline-variant/20
+                "
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWx9ChKkKJh800iBd4atXda9vExcO92Ne6Yd7hST_quJAqJQUtBcnLLsxUWQvJGpEOjLW2RbQ0DSzNMDAEBcP9A92HF3sXITLYhRdLYAVsUB7jmTlSWpSshu4fnWabg7eZSkkLvrAcEtqHY-oXDgPCUzV12AI7V92pF4dJeeKIL7oRXmejCQnIckTqYHiS7gnUeFfEZX-xJX0LXGXWOjIZiOZhpL-yLSBMerXcJRoenOLfNdHU142DSU4ONPRBcFGmXg-NhwuRo_Nk"
               />
             </motion.div>
             
@@ -325,24 +473,55 @@ const About = () => {
 
       {/* CTA Section */}
       <section className="py-xl px-margin-mobile md:px-margin-desktop">
-        <div className="max-w-5xl mx-auto bg-inverse-surface rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden text-center shadow-xl">
-          <div className="relative z-10 space-y-6">
-            <h2 className="text-display-lg-mobile md:text-display-lg font-display-lg text-white">
-              Ready for a <span className="text-primary-fixed font-bold">Premium Experience?</span>
-            </h2>
-            <p className="text-body-lg font-body-lg text-white/80 max-w-2xl mx-auto leading-relaxed">
-              Experience dental care that feels like luxury hospitality. Book your consultation today and discover the DentaElite difference.
-            </p>
-            <div className="flex flex-col sm:flex-row justify-center gap-4 pt-2">
-              <Button onClick={() => navigate('/book-appointment')} variant="primary" className="bg-primary-fixed text-on-primary-fixed px-8 py-4 font-bold rounded-full hover:bg-primary-fixed/90 shadow-md">
-                Book Your Visit
-              </Button>
-              <Button onClick={() => navigate('/services')} variant="secondary" className="border-white/30 text-white hover:bg-white/10 px-8 py-4 font-bold rounded-full">
-                View Our Services
-              </Button>
+
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{
+              duration: 0.8,
+              ease: "easeOut"
+            }}
+            className="max-w-5xl mx-auto bg-inverse-surface rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden text-center shadow-xl"
+          >
+
+            <div className="relative z-10 space-y-6">
+
+              <h2 className="text-display-lg-mobile md:text-display-lg font-display-lg text-white">
+                Ready for a <span className="text-primary-fixed font-bold">Premium Experience?</span>
+              </h2>
+
+              <p className="text-body-lg font-body-lg text-white/80 max-w-2xl mx-auto leading-relaxed">
+                Experience dental care that feels like luxury hospitality. Book your consultation today and discover the DentaElite difference.
+              </p>
+
+
+              <div className="flex flex-col sm:flex-row justify-center gap-4 pt-2">
+
+                <Button 
+                  onClick={() => navigate('/book-appointment')} 
+                  variant="primary" 
+                  className="bg-primary-fixed text-on-primary-fixed px-8 py-4 font-bold rounded-full hover:bg-primary-fixed/90 shadow-md"
+                >
+                  Book Your Visit
+                </Button>
+
+
+                <Button 
+                  onClick={() => navigate('/services')} 
+                  variant="secondary" 
+                  className="border-white/30 text-white hover:bg-white/10 px-8 py-4 font-bold rounded-full"
+                >
+                  View Our Services
+                </Button>
+
+              </div>
+
+
             </div>
-          </div>
-        </div>
+
+          </motion.div>
+
       </section>
 
     </div>

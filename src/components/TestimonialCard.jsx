@@ -21,10 +21,15 @@ const TestimonialCard = ({ testimonial }) => {
               key={i}
               className="material-symbols-outlined"
               style={{
-                fontVariationSettings: '"FILL" 1, "wght" 400, "GRAD" 0, "opsz" 24'
+                fontVariationSettings: `
+                  'FILL' ${i < rating ? 1 : 0},
+                  'wght' 700,
+                  'GRAD' 0,
+                  'opsz' 24
+                `
               }}
             >
-              {i < rating ? "star" : "star_border"}
+              star
             </span>
           ))}
         </div>

@@ -1,6 +1,26 @@
 @import "tailwindcss";
 @config "../tailwind.config.js";
 
+.max-w-xs {
+  max-width: 20rem !important;
+}
+
+.max-w-sm {
+  max-width: 24rem !important;
+}
+
+.max-w-md {
+  max-width: 28rem !important;
+}
+
+.max-w-lg {
+  max-width: 32rem !important;
+}
+
+.max-w-xl {
+  max-width: 36rem !important;
+}
+
 @layer base {
   body {
     @apply bg-background text-on-surface font-body-md antialiased;
@@ -8,7 +28,9 @@
 }
 
 /* Glassmorphism Styles */
-.glass-morphism, .glass-card, .glass-effect {
+.glass-morphism,
+.glass-card,
+.glass-effect {
   background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -39,10 +61,25 @@
 
 /* Material Symbols Adjustments */
 .material-symbols-outlined {
-  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-  display: inline-block;
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
   line-height: 1;
-  vertical-align: middle;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
 }
 
 /* Successful Booking Animations */
@@ -82,9 +119,12 @@
 }
 
 @keyframes scale {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: none;
   }
+
   50% {
     transform: scale3d(1.1, 1.1, 1);
   }

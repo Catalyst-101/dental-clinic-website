@@ -91,6 +91,13 @@ export default {
         "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
         "headline-sm": ["24px", { "lineHeight": "1.4", "fontWeight": "600" }],
         "display-lg-mobile": ["36px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "800" }]
+      },
+      maxWidth: {
+        "xs": "20rem",
+        "sm": "24rem",
+        "md": "28rem",
+        "lg": "32rem",
+        "xl": "36rem",
       }
     },
   },

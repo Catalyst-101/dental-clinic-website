@@ -31,67 +31,68 @@ const Home = () => {
     <div className="overflow-hidden bg-background">
       {/* Hero Section */}
       <section className="relative hero-gradient overflow-hidden py-xl md:py-32">
-        <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-1 md:grid-cols-2 gap-xl items-center">
-          
-          {/* Left Text Column */}
-          <motion.div 
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            className="z-10 text-left"
-          >
+        <div className="max-w-7xl mx-auto px-4 md:px-16 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+
+          <div className="z-10">
             <span className="inline-block bg-primary-fixed text-on-primary-fixed px-4 py-1 rounded-full text-label-sm font-label-sm mb-base uppercase tracking-wider">
               Premium Dental Experience
             </span>
+
             <h1 className="text-display-lg-mobile md:text-display-lg font-display-lg text-on-surface mb-md">
               Your Smile, <br />
               <span className="text-primary">Our Priority</span>
             </h1>
-            <p className="text-body-lg font-body-lg text-on-surface-variant mb-lg max-w-lg leading-relaxed">
-              Professional Dental Care for the Whole Family. Experience dental excellence with our state-of-the-art technology and compassionate care.
-            </p>
-            <div className="flex flex-wrap gap-md">
-              <Button onClick={() => navigate('/book-appointment')} variant="primary" className="px-8 py-4 text-body-md rounded-xl font-bold shadow-lg">
-                Book Appointment
-              </Button>
-              <Button onClick={() => navigate('/contact')} variant="secondary" className="px-8 py-4 text-body-md rounded-xl font-bold">
-                Contact Us
-              </Button>
-            </div>
-          </motion.div>
 
-          {/* Right Image Column */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8 }}
-            className="relative group justify-self-center w-full max-w-md md:max-w-none"
-          >
-            <div className="absolute -inset-4 bg-primary/10 blur-3xl rounded-full opacity-50 group-hover:opacity-75 transition-opacity duration-300"></div>
-            <img 
-              alt="Smiling Patient" 
-              className="relative rounded-[2rem] shadow-2xl z-10 w-full object-cover aspect-[4/3] border border-outline-variant/30" 
+            <p className="text-lg leading-7 text-gray-600 mb-6 max-w-lg">
+              Professional Dental Care for the Whole Family. Experience dental
+              excellence with our state-of-the-art technology and compassionate care.
+            </p>
+
+            <div className="flex flex-wrap gap-md">
+              <button
+                onClick={() => navigate("/book-appointment")}
+                className="bg-primary text-on-primary px-8 py-4 rounded-xl font-bold shadow-lg hover:bg-primary-container transition-all"
+              >
+                Book Appointment
+              </button>
+
+              <button
+                onClick={() => navigate("/contact")}
+                className="border-2 border-primary text-primary px-8 py-4 rounded-xl font-bold hover:bg-primary/5 transition-all"
+              >
+                Contact Us
+              </button>
+            </div>
+          </div>
+
+          <div className="relative group">
+            <div className="absolute -inset-4 bg-primary/10 blur-3xl rounded-full opacity-50 group-hover:opacity-75 transition-opacity"></div>
+
+            <img
+              alt="Smiling Patient"
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOvDU8SEGcwWn-yZQdn5kgz-TtL7SEYztCT4HCgPRIfJKoJmvfQUfuMlJH4BVYh8yOhonlDnvQuFUAEjsZRbgkOXyXCykVI6cvkkE0hxL41UOvMu9S-WoTvFehrqaPjxE3ilXGzokQ0UL1HxxrnkibbTo5mmonM60YHvvf2ut4FEkmGLVU8qDKY5A4ch1j04CXlgXw156PoK2qMQ05dcz7mDVjUfsXS0NUTepyauK2qUDpGqvUM-KG6gJipGUF3naK_hQnXvYeh45n"
+              className="relative rounded-[2rem] shadow-2xl z-10 w-full object-cover aspect-[4/3]"
             />
+
             {/* Floating Stat Card */}
-            <motion.div 
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.5, duration: 0.6 }}
-              className="absolute -bottom-6 -left-6 glass-morphism p-6 rounded-2xl shadow-xl z-20 hidden md:block border border-primary/20"
-            >
+            <div className="absolute -bottom-6 -left-6 glass-morphism p-6 rounded-2xl shadow-xl z-20 hidden md:block">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 bg-primary-container rounded-full flex items-center justify-center text-white">
-                  <span className="material-symbols-outlined text-[28px]">verified</span>
+                  <span className="material-symbols-outlined">verified</span>
                 </div>
-                <div className="text-left">
-                  <div className="text-headline-sm font-bold text-on-surface">99%</div>
-                  <div className="text-label-sm text-on-surface-variant">Patient Satisfaction</div>
+
+                <div>
+                  <div className="text-headline-sm font-bold text-on-surface">
+                    99%
+                  </div>
+                  <div className="text-label-sm text-on-surface-variant">
+                    Patient Satisfaction
+                  </div>
                 </div>
               </div>
-            </motion.div>
-          </motion.div>
-          
+            </div>
+          </div>
+
         </div>
       </section>
 
@@ -119,11 +120,11 @@ const Home = () => {
 
       {/* Featured Services */}
       <section className="py-xl px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto">
-        <SectionTitle 
-          title="Specialized Dental Services" 
+        <SectionTitle
+          title="Specialized Dental Services"
           description="Combining clinical excellence with high-end hospitality to provide a unique, comfortable, and effective dental experience."
         />
-        <motion.div 
+        <motion.div
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
@@ -146,25 +147,25 @@ const Home = () => {
       {/* Why Choose Us */}
       <section className="py-xl bg-surface-container-low border-y border-outline-variant/10">
         <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-1 md:grid-cols-2 gap-xl items-center">
-          
+
           {/* Left Column: Image */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
             className="order-2 md:order-1 relative"
           >
-            <img 
-              alt="Modern Equipment" 
-              className="rounded-[2rem] shadow-xl w-full h-[450px] object-cover" 
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOHAuYtEUWVB1ylQ4aX_IcBYH0L-R9w86H4_NBiYqwYFAUud8HTVDrZlPLnfbyPmxQrvCRmLYi5j8ls0blcUmNZ_BXIzvfiKh9Ob0sb0GJ3Mc6pMtpX4CD3mlBjGXacCrGOc5SB7wG4P8pztSNg_oYBNNXwq1GXWWvWzWyu5XEb84upYiFaRsFSYHsW71EG2kROtk-qbm8YyvdxrlFmUFEsxeQf3I9fKF0EdJHfjXBNpJciBDJGloUhZ1VP1f2rFRUxqIkWMkuUA22" 
+            <img
+              alt="Modern Equipment"
+              className="rounded-[2rem] shadow-xl w-full h-[450px] object-cover"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOHAuYtEUWVB1ylQ4aX_IcBYH0L-R9w86H4_NBiYqwYFAUud8HTVDrZlPLnfbyPmxQrvCRmLYi5j8ls0blcUmNZ_BXIzvfiKh9Ob0sb0GJ3Mc6pMtpX4CD3mlBjGXacCrGOc5SB7wG4P8pztSNg_oYBNNXwq1GXWWvWzWyu5XEb84upYiFaRsFSYHsW71EG2kROtk-qbm8YyvdxrlFmUFEsxeQf3I9fKF0EdJHfjXBNpJciBDJGloUhZ1VP1f2rFRUxqIkWMkuUA22"
             />
             <div className="absolute inset-0 bg-primary/10 rounded-[2rem] pointer-events-none"></div>
           </motion.div>
 
           {/* Right Column: Values */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
@@ -175,7 +176,7 @@ const Home = () => {
               Why Patients Trust DentaElite
             </h2>
             <div className="space-y-lg">
-              
+
               <div className="flex gap-md">
                 <div className="flex-shrink-0 w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white shadow-md">
                   <span className="material-symbols-outlined text-[24px]">precision_manufacturing</span>
@@ -220,11 +221,11 @@ const Home = () => {
 
       {/* Meet Our Doctors */}
       <section className="py-xl px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto">
-        <SectionTitle 
-          title="Our Expert Medical Team" 
+        <SectionTitle
+          title="Our Expert Medical Team"
           description="Dedicated professionals committed to your oral health and beautiful smile."
         />
-        <motion.div 
+        <motion.div
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
@@ -271,38 +272,38 @@ const Home = () => {
 
       {/* Inside Our Clinic (Gallery Teaser) */}
       <section className="py-xl px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto">
-        <SectionTitle 
-          title="Inside Our Clinic" 
+        <SectionTitle
+          title="Inside Our Clinic"
           description="A clinical environment designed entirely for your comfort, sterility, and serenity."
         />
         <div className="columns-1 md:columns-2 lg:columns-3 gap-md space-y-md">
-          
+
           <div className="relative group overflow-hidden rounded-2xl break-inside-avoid">
-            <img 
-              alt="Lobby Area" 
-              className="w-full object-cover rounded-2xl transition-transform duration-700 hover:scale-105" 
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEr4YK7fnQH3ANsEdFGI45FA3kOYs5QS5ykcYw7jH1gvFz5VrsQQwAJQL-OR7QDRrX2aX-AKNNLCSa0OS0Go0x0D2yEM__QrSr9O_Bm7pI9HnqBXTqBM17Qoj1_Wt5tROSkwZsvNMQF3hWPPQNyECeRAPG1ofxH8L4-fVLYH_-FM0W_WVJTwr3Y6D86cLbNQgEN-yXnnZg2P_jwXFOrS2mjQU8zLosrVnFwZahziGwXPUfzCIIDTMi3M233n97wwsVn1Z5M2aTdlLH" 
-            />
-          </div>
-          
-          <div className="relative group overflow-hidden rounded-2xl break-inside-avoid">
-            <img 
-              alt="Operating Room" 
-              className="w-full object-cover rounded-2xl transition-transform duration-700 hover:scale-105" 
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8jOMVoVIgykP6d3AKhsrdnrOZqDa0AceqwoRO92Sgaads-OETKZer6gMCmqKSjTlEbQremFCeQJx4zeYC9XQKROJ9T8zJyPJ_4OATTh6TuowcCd1Q5rz3fofAc7Hx18jipfj_NyLWfLLms6-CjoxqgXsnOgkjdxVbqu79fSnOBGJd917nysxk6najqeSPfQgt0cbM1SCenWQtGgZ0Qxy5nATAJQ7cdMe6wlgZqRurGKHcOLPMz3EoR45-zHmKQ1bMea8MHFGVOCum" 
+            <img
+              alt="Lobby Area"
+              className="w-full object-cover rounded-2xl transition-transform duration-700 hover:scale-105"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEr4YK7fnQH3ANsEdFGI45FA3kOYs5QS5ykcYw7jH1gvFz5VrsQQwAJQL-OR7QDRrX2aX-AKNNLCSa0OS0Go0x0D2yEM__QrSr9O_Bm7pI9HnqBXTqBM17Qoj1_Wt5tROSkwZsvNMQF3hWPPQNyECeRAPG1ofxH8L4-fVLYH_-FM0W_WVJTwr3Y6D86cLbNQgEN-yXnnZg2P_jwXFOrS2mjQU8zLosrVnFwZahziGwXPUfzCIIDTMi3M233n97wwsVn1Z5M2aTdlLH"
             />
           </div>
 
           <div className="relative group overflow-hidden rounded-2xl break-inside-avoid">
-            <img 
-              alt="Patient Lounge" 
-              className="w-full object-cover rounded-2xl transition-transform duration-700 hover:scale-105" 
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSo2rvH1iMKqIXt8r54vu3TyDMjPZwr4PJMkxTIzDo-CqRBsSHkUwf-psFIpwINaQGtYYKq6jELljCBx_DYoqpqYA9boPV72H08M6x_z6OBrG-dWw8idCc7RW_4DNj4TgDJt3AANDaYMIobmorWYYtIJHXB7Muxe5q3chywxacIaikhONkxRcIGd8xWFhU4oKXlX-dI1YU6pAe2sbWiM4_WQSQ0iwsazioC9UwXvfAT_MvISUAjr7NKk5_fnC0ll422rWHjpz-bJk_" 
+            <img
+              alt="Operating Room"
+              className="w-full object-cover rounded-2xl transition-transform duration-700 hover:scale-105"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8jOMVoVIgykP6d3AKhsrdnrOZqDa0AceqwoRO92Sgaads-OETKZer6gMCmqKSjTlEbQremFCeQJx4zeYC9XQKROJ9T8zJyPJ_4OATTh6TuowcCd1Q5rz3fofAc7Hx18jipfj_NyLWfLLms6-CjoxqgXsnOgkjdxVbqu79fSnOBGJd917nysxk6najqeSPfQgt0cbM1SCenWQtGgZ0Qxy5nATAJQ7cdMe6wlgZqRurGKHcOLPMz3EoR45-zHmKQ1bMea8MHFGVOCum"
+            />
+          </div>
+
+          <div className="relative group overflow-hidden rounded-2xl break-inside-avoid">
+            <img
+              alt="Patient Lounge"
+              className="w-full object-cover rounded-2xl transition-transform duration-700 hover:scale-105"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSo2rvH1iMKqIXt8r54vu3TyDMjPZwr4PJMkxTIzDo-CqRBsSHkUwf-psFIpwINaQGtYYKq6jELljCBx_DYoqpqYA9boPV72H08M6x_z6OBrG-dWw8idCc7RW_4DNj4TgDJt3AANDaYMIobmorWYYtIJHXB7Muxe5q3chywxacIaikhONkxRcIGd8xWFhU4oKXlX-dI1YU6pAe2sbWiM4_WQSQ0iwsazioC9UwXvfAT_MvISUAjr7NKk5_fnC0ll422rWHjpz-bJk_"
             />
           </div>
 
         </div>
-        
+
         <div className="text-center mt-xl">
           <Button onClick={() => navigate('/gallery')} variant="secondary" className="px-8 py-3 rounded-full font-bold">
             Explore Full Gallery
@@ -316,7 +317,7 @@ const Home = () => {
           {/* Background Decoration */}
           <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-96 h-96 bg-primary-fixed/20 blur-[100px] rounded-full pointer-events-none"></div>
           <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-64 h-64 bg-secondary-fixed/20 blur-[80px] rounded-full pointer-events-none"></div>
-          
+
           <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-lg">
             <div className="max-w-2xl text-left">
               <h2 className="text-display-lg-mobile md:text-headline-md font-display-lg text-on-surface mb-sm">
@@ -327,9 +328,9 @@ const Home = () => {
               </p>
             </div>
             <div className="flex-shrink-0 w-full md:w-auto">
-              <Button 
-                onClick={() => navigate('/book-appointment')} 
-                variant="primary" 
+              <Button
+                onClick={() => navigate('/book-appointment')}
+                variant="primary"
                 className="w-full md:w-auto px-8 py-4 text-headline-sm rounded-2xl font-bold shadow-xl text-center"
               >
                 Book Your Visit Now

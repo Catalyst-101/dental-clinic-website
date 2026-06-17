@@ -23,14 +23,12 @@ function App() {
     <div className="min-h-screen bg-background text-on-surface font-body-md flex flex-col">
       <ScrollToTop />
       
-      {/* Render standard Navbar only if not on booking wizard flow */}
       {!isBookingPage && <Navbar />}
       
       <main className="flex-grow">
         <AppRoutes />
       </main>
 
-      {/* Render standard Footer only if not on booking wizard flow */}
       {!isBookingPage && <Footer />}
     </div>
   );

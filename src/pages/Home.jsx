@@ -49,23 +49,33 @@ const Home = () => {
             </p>
 
             <div className="flex flex-wrap gap-md">
-              <button
+              <Button
                 onClick={() => navigate("/book-appointment")}
-                className="bg-primary text-on-primary px-8 py-4 rounded-xl font-bold shadow-lg hover:bg-primary-container transition-all"
+                variant="primary"
+                className="px-8 py-4 rounded-xl font-bold shadow-lg hover:bg-primary-container"
               >
                 Book Appointment
-              </button>
+              </Button>
 
-              <button
+              <Button
                 onClick={() => navigate("/contact")}
-                className="border-2 border-primary text-primary px-8 py-4 rounded-xl font-bold hover:bg-primary/5 transition-all"
+                variant="secondary"
+                className="px-8 py-4 rounded-xl font-bold"
               >
                 Contact Us
-              </button>
+              </Button>
             </div>
           </div>
 
-          <div className="relative group">
+          <motion.div
+            animate={{ y: [0, -15, 0] }}
+            transition={{
+              duration: 4,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            className="relative group"
+          >
             <div className="absolute -inset-4 bg-primary/10 blur-3xl rounded-full opacity-50 group-hover:opacity-75 transition-opacity"></div>
 
             <img
@@ -78,7 +88,9 @@ const Home = () => {
             <div className="absolute -bottom-6 -left-6 glass-morphism p-6 rounded-2xl shadow-xl z-20 hidden md:block">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 bg-primary-container rounded-full flex items-center justify-center text-white">
-                  <span className="material-symbols-outlined">verified</span>
+                  <span className="material-symbols-outlined">
+                    verified
+                  </span>
                 </div>
 
                 <div>
@@ -91,7 +103,8 @@ const Home = () => {
                 </div>
               </div>
             </div>
-          </div>
+
+          </motion.div>
 
         </div>
       </section>

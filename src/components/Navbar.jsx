@@ -35,12 +35,11 @@ const Navbar = () => {
   ];
 
   return (
-    <header 
-      className={`docked full-width top-0 sticky z-50 transition-all duration-300 ${
-        scrolled 
-          ? 'bg-surface/90 py-2 shadow-md backdrop-blur-xl border-b border-outline-variant/30' 
+    <header
+      className={`docked full-width top-0 sticky z-50 transition-all duration-300 ${scrolled
+          ? 'bg-surface/90 py-2 shadow-md backdrop-blur-xl border-b border-outline-variant/30'
           : 'bg-surface py-4 shadow-sm border-b border-outline-variant/10'
-      }`}
+        }`}
     >
       <nav className="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto h-16">
         {/* Brand Logo */}
@@ -58,10 +57,9 @@ const Navbar = () => {
               key={link.path}
               to={link.path}
               className={({ isActive }) =>
-                `text-label-md font-label-md transition-all duration-200 pb-1 ${
-                  isActive 
-                    ? 'text-primary font-bold border-b-2 border-primary' 
-                    : 'text-on-surface-variant hover:text-primary'
+                `text-label-md font-label-md transition-all duration-200 pb-1 ${isActive
+                  ? 'text-primary font-bold border-b-2 border-primary'
+                  : 'text-on-surface-variant hover:text-primary'
                 }`
               }
             >
@@ -72,17 +70,17 @@ const Navbar = () => {
 
         {/* Desktop CTA Button */}
         <div className="hidden md:block">
-          <Link 
-            to="/book-appointment" 
-            className="bg-primary text-on-primary px-6 py-2.5 rounded-full font-label-md text-label-md font-bold transition-all duration-150 hover:scale-105 active:scale-95 shadow-md flex items-center gap-2"
+          <Link
+            to="/book-appointment"
+            className="bg-primary text-on-primary px-6 py-2.5 rounded-lg font-label-md text-label-md font-bold transition-all duration-150 hover:scale-105 active:scale-95 shadow-md flex items-center gap-2"
           >
             Book Appointment
           </Link>
         </div>
 
         {/* Mobile Toggle Button */}
-        <button 
-          onClick={() => setIsOpen(!isOpen)} 
+        <button
+          onClick={() => setIsOpen(!isOpen)}
           className="md:hidden flex items-center text-on-surface hover:text-primary focus:outline-none"
         >
           <span className="material-symbols-outlined text-[32px]">
@@ -107,8 +105,7 @@ const Navbar = () => {
                   key={link.path}
                   to={link.path}
                   className={({ isActive }) =>
-                    `text-headline-sm font-semibold transition-all py-2 ${
-                      isActive ? 'text-primary' : 'text-on-surface-variant'
+                    `text-headline-sm font-semibold transition-all py-2 ${isActive ? 'text-primary' : 'text-on-surface-variant'
                     }`
                   }
                 >

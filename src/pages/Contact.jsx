@@ -43,7 +43,7 @@ const Contact = () => {
     <div className="overflow-hidden bg-background text-on-surface">
       
       {/* Hero Section */}
-      <header className="relative pt-xl pb-lg overflow-hidden hero-gradient">
+      <section className="relative pt-xl pb-lg overflow-hidden hero-gradient">
         <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop text-center relative z-10">
           <span className="inline-block px-4 py-1 rounded-full bg-secondary-container text-on-secondary-container text-label-sm font-label-sm mb-md uppercase tracking-wider">
             GET IN TOUCH
@@ -55,11 +55,8 @@ const Contact = () => {
             We're here to help you achieve your perfect smile. Reach out to our team for any inquiries or to visit our clinic.
           </p>
         </div>
-        
-        {/* Background Glows */}
-        <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
-        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-secondary/5 rounded-full blur-3xl pointer-events-none"></div>
-      </header>
+      
+      </section>
 
       {/* Main Content Layout */}
       <main className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-xl">

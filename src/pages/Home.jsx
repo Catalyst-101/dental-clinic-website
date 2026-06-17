@@ -7,6 +7,7 @@ import { ServiceCard } from '../components/ServiceCard';
 import { DoctorCard } from '../components/DoctorCard';
 import { TestimonialCard } from '../components/TestimonialCard';
 import { services, doctors, testimonials } from '../data/clinicData';
+import Counter from '../components/Counter';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -113,19 +114,19 @@ const Home = () => {
       <section className="py-lg bg-surface-container-lowest border-y border-outline-variant/10">
         <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-2 md:grid-cols-4 gap-md">
           <div className="text-center p-md">
-            <div className="text-display-lg-mobile md:text-display-lg font-bold text-primary mb-xs">15k+</div>
+            <div className="text-display-lg-mobile md:text-display-lg font-bold text-primary mb-xs"><Counter end={15} suffix="k+" /></div>
             <div className="text-label-md font-medium text-on-surface-variant">Patients Treated</div>
           </div>
           <div className="text-center p-md">
-            <div className="text-display-lg-mobile md:text-display-lg font-bold text-primary mb-xs">28+</div>
+            <div className="text-display-lg-mobile md:text-display-lg font-bold text-primary mb-xs"><Counter end={28} suffix="+" /></div>
             <div className="text-label-md font-medium text-on-surface-variant">Years Experience</div>
           </div>
           <div className="text-center p-md">
-            <div className="text-display-lg-mobile md:text-display-lg font-bold text-primary mb-xs">45+</div>
+            <div className="text-display-lg-mobile md:text-display-lg font-bold text-primary mb-xs"><Counter end={45} suffix="+" /></div>
             <div className="text-label-md font-medium text-on-surface-variant">Expert Dentists</div>
           </div>
           <div className="text-center p-md">
-            <div className="text-display-lg-mobile md:text-display-lg font-bold text-primary mb-xs">98%</div>
+            <div className="text-display-lg-mobile md:text-display-lg font-bold text-primary mb-xs"><Counter end={98} suffix="%" /></div>
             <div className="text-label-md font-medium text-on-surface-variant">Successful Procedures</div>
           </div>
         </div>
@@ -150,8 +151,12 @@ const Home = () => {
             </motion.div>
           ))}
         </motion.div>
-        <div className="text-center mt-xl">
-          <Button onClick={() => navigate('/services')} variant="secondary" className="px-8 py-3 rounded-full font-bold">
+        <div className="flex justify-center mt-xl">
+          <Button
+            onClick={() => navigate('/services')}
+            variant="secondary"
+            className="px-8 py-3 rounded-xl font-bold"
+          >
             View All Services
           </Button>
         </div>

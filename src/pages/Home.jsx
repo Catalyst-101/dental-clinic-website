@@ -171,7 +171,18 @@ const Home = () => {
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
+            animate={{
+              scale: [1, 1.03, 1],
+            }}
+            transition={{
+              opacity: { duration: 0.7 },
+              x: { duration: 0.7 },
+              scale: {
+                duration: 4,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }
+            }}
             className="order-2 md:order-1 relative"
           >
             <img

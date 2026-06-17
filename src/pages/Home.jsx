@@ -320,39 +320,54 @@ const Home = () => {
           title="Inside Our Clinic"
           description="A clinical environment designed entirely for your comfort, sterility, and serenity."
         />
-        <div className="columns-1 md:columns-2 lg:columns-3 gap-md space-y-md">
 
-          <div className="relative group overflow-hidden rounded-2xl break-inside-avoid">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-5 mt-10">
+
+          {/* Large Featured Image */}
+          <div className="md:col-span-7 relative group overflow-hidden rounded-3xl">
             <img
-              alt="Lobby Area"
-              className="w-full object-cover rounded-2xl transition-transform duration-700 hover:scale-105"
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEr4YK7fnQH3ANsEdFGI45FA3kOYs5QS5ykcYw7jH1gvFz5VrsQQwAJQL-OR7QDRrX2aX-AKNNLCSa0OS0Go0x0D2yEM__QrSr9O_Bm7pI9HnqBXTqBM17Qoj1_Wt5tROSkwZsvNMQF3hWPPQNyECeRAPG1ofxH8L4-fVLYH_-FM0W_WVJTwr3Y6D86cLbNQgEN-yXnnZg2P_jwXFOrS2mjQU8zLosrVnFwZahziGwXPUfzCIIDTMi3M233n97wwsVn1Z5M2aTdlLH"
+              alt="Lobby Area"
+              className="w-full h-[420px] object-cover transition duration-700 group-hover:scale-110"
             />
+
+            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition duration-500" />
           </div>
 
-          <div className="relative group overflow-hidden rounded-2xl break-inside-avoid">
-            <img
-              alt="Operating Room"
-              className="w-full object-cover rounded-2xl transition-transform duration-700 hover:scale-105"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8jOMVoVIgykP6d3AKhsrdnrOZqDa0AceqwoRO92Sgaads-OETKZer6gMCmqKSjTlEbQremFCeQJx4zeYC9XQKROJ9T8zJyPJ_4OATTh6TuowcCd1Q5rz3fofAc7Hx18jipfj_NyLWfLLms6-CjoxqgXsnOgkjdxVbqu79fSnOBGJd917nysxk6najqeSPfQgt0cbM1SCenWQtGgZ0Qxy5nATAJQ7cdMe6wlgZqRurGKHcOLPMz3EoR45-zHmKQ1bMea8MHFGVOCum"
-            />
-          </div>
 
-          <div className="relative group overflow-hidden rounded-2xl break-inside-avoid">
-            <img
-              alt="Patient Lounge"
-              className="w-full object-cover rounded-2xl transition-transform duration-700 hover:scale-105"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSo2rvH1iMKqIXt8r54vu3TyDMjPZwr4PJMkxTIzDo-CqRBsSHkUwf-psFIpwINaQGtYYKq6jELljCBx_DYoqpqYA9boPV72H08M6x_z6OBrG-dWw8idCc7RW_4DNj4TgDJt3AANDaYMIobmorWYYtIJHXB7Muxe5q3chywxacIaikhONkxRcIGd8xWFhU4oKXlX-dI1YU6pAe2sbWiM4_WQSQ0iwsazioC9UwXvfAT_MvISUAjr7NKk5_fnC0ll422rWHjpz-bJk_"
-            />
+          {/* Right Side Images */}
+          <div className="md:col-span-5 grid gap-5">
+
+            <div className="relative group overflow-hidden rounded-3xl">
+              <img
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8jOMVoVIgykP6d3AKhsrdnrOZqDa0AceqwoRO92Sgaads-OETKZer6gMCmqKSjTlEbQremFCeQJx4zeYC9XQKROJ9T8zJyPJ_4OATTh6TuowcCd1Q5rz3fofAc7Hx18jipfj_NyLWfLLms6-CjoxqgXsnOgkjdxVbqu79fSnOBGJd917nysxk6najqeSPfQgt0cbM1SCenWQtGgZ0Qxy5nATAJQ7cdMe6wlgZqRurGKHcOLPMz3EoR45-zHmKQ1bMea8MHFGVOCum"
+                alt="Operating Room"
+                className="w-full h-[200px] object-cover rounded-3xl transition duration-700 group-hover:scale-110"
+              />
+
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition" />
+            </div>
+
+
+            <div className="relative group overflow-hidden rounded-3xl">
+              <img
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSo2rvH1iMKqIXt8r54vu3TyDMjPZwr4PJMkxTIzDo-CqRBsSHkUwf-psFIpwINaQGtYYKq6jELljCBx_DYoqpqYA9boPV72H08M6x_z6OBrG-dWw8idCc7RW_4DNj4TgDJt3AANDaYMIobmorWYYtIJHXB7Muxe5q3chywxacIaikhONkxRcIGd8xWFhU4oKXlX-dI1YU6pAe2sbWiM4_WQSQ0iwsazioC9UwXvfAT_MvISUAjr7NKk5_fnC0ll422rWHjpz-bJk_"
+                alt="Patient Lounge"
+                className="w-full h-[200px] object-cover rounded-3xl transition duration-700 group-hover:scale-110"
+              />
+
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition" />
+            </div>
+
           </div>
 
         </div>
 
-        <div className="text-center mt-xl">
-          <Button onClick={() => navigate('/gallery')} variant="secondary" className="px-8 py-3 rounded-full font-bold">
-            Explore Full Gallery
-          </Button>
+
+        <div className="flex justify-center mt-xl">
+          <Button onClick={() => navigate('/gallery')} variant="secondary" className="px-8 py-3 rounded-full font-bold"> Explore Full Gallery </Button>
         </div>
+
       </section>
 
       {/* Appointment CTA Banner */}
@@ -375,7 +390,7 @@ const Home = () => {
               <Button
                 onClick={() => navigate('/book-appointment')}
                 variant="primary"
-                className="w-full md:w-auto px-8 py-4 text-headline-sm rounded-2xl font-bold shadow-xl text-center"
+                className="w-full  md:w-auto px-18 py-10 text-2xl rounded-full font-bold shadow-xl text-center"
               >
                 Book Your Visit Now
               </Button>

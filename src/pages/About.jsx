@@ -27,7 +27,7 @@ const About = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <span className="inline-block px-4 py-1.5 rounded-full bg-secondary-container text-on-secondary-container text-label-sm font-label-sm mb-6 uppercase tracking-wider">
+            <span className="inline-block px-4 py-1.5 rounded-full bg-[#DCFCE7] text-primary text-label-sm font-label-sm mb-6 uppercase tracking-wider">
               SINCE 1998
             </span>
             <h1 className="text-display-lg font-display-lg text-on-surface mb-6 leading-tight">

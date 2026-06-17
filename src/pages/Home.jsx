@@ -40,7 +40,7 @@ const Home = () => {
             transition={{ duration: 0.8 }} 
             className="z-10">
 
-            <span className="inline-block bg-primary-fixed text-on-primary-fixed px-4 py-1 rounded-full text-label-sm font-label-sm mb-base uppercase tracking-wider">
+            <span className="inline-block bg-[#DCFCE7] text-primary px-4 py-1.5 rounded-full text-label-sm font-label-sm mb-base uppercase tracking-wider">
               Premium Dental Experience
             </span>
 

@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Button } from '../components/Button';
 import { SectionTitle } from '../components/SectionTitle';
 import { ServiceCard } from '../components/ServiceCard';
-import { DoctorCard } from '../components/DoctorCard';
+import { DoctorCardSimple } from '../components/DoctorCardSimple';
 import { TestimonialCard } from '../components/TestimonialCard';
 import { services, doctors, testimonials } from '../data/clinicData';
 import Counter from '../components/Counter';
@@ -250,10 +250,13 @@ const Home = () => {
 
       {/* Meet Our Doctors */}
       <section className="py-xl px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto">
+
         <SectionTitle
           title="Our Expert Medical Team"
           description="Dedicated professionals committed to your oral health and beautiful smile."
         />
+
+
         <motion.div
           variants={staggerContainer}
           initial="hidden"
@@ -261,17 +264,29 @@ const Home = () => {
           viewport={{ once: true, margin: "-100px" }}
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-md"
         >
+
           {doctors.slice(0, 4).map((doctor) => (
-            <motion.div key={doctor.id} variants={fadeInUp}>
-              <DoctorCard doctor={doctor} />
+            <motion.div
+              key={doctor.id}
+              variants={fadeInUp}
+            >
+              <DoctorCardSimple doctor={doctor} />
             </motion.div>
           ))}
+
         </motion.div>
-        <div className="text-center mt-xl">
-          <Button onClick={() => navigate('/doctors')} variant="secondary" className="px-8 py-3 rounded-full font-bold">
+
+
+        <div className="flex justify-center mt-xl">
+          <Button
+            onClick={() => navigate('/doctors')}
+            variant="secondary"
+            className="px-8 py-3 rounded-full font-bold"
+          >
             Meet the Specialists
           </Button>
         </div>
+
       </section>
 
       {/* Testimonials */}

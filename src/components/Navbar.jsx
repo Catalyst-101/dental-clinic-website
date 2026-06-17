@@ -37,8 +37,8 @@ const Navbar = () => {
   return (
     <header
       className={`docked full-width top-0 sticky z-50 transition-all duration-300 ${scrolled
-          ? 'bg-surface/90 py-2 shadow-md backdrop-blur-xl border-b border-outline-variant/30'
-          : 'bg-surface py-4 shadow-sm border-b border-outline-variant/10'
+        ? 'bg-surface/90 py-2 shadow-md backdrop-blur-xl border-b border-outline-variant/30'
+        : 'bg-surface py-4 shadow-sm border-b border-outline-variant/10'
         }`}
     >
       <nav className="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto h-16">

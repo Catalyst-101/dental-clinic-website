@@ -390,7 +390,7 @@ const AppointmentForm = () => {
                   </div>
                   <div className="space-y-xs">
                     <label className="text-label-md font-label-md text-on-surface-variant px-1">Preferred Time</label>
-                    <div className="grid grid-cols-3 gap-2">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                       {['09:00 AM', '10:30 AM', '11:30 AM', '01:00 PM', '02:30 PM', '04:00 PM'].map((slot) => (
                         <button
                           key={slot}

@@ -5,7 +5,7 @@ import { FaWhatsapp, FaInstagram, FaFacebook} from 'react-icons/fa';
 const Footer = () => {
   return (
     <footer className="bg-surface-container-lowest border-t border-outline-variant">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-xl px-margin-mobile md:px-margin-desktop py-xl max-w-7xl mx-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-xl px-margin-mobile md:px-margin-desktop py-xl max-w-7xl mx-auto">
 
         {/* Brand Block */}
         <div className="space-y-md">

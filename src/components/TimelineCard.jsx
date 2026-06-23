@@ -1,20 +1,20 @@
 import { motion } from "framer-motion";
 
 const TimelineCard = ({ year, title, description, side }) => {
-
   const isLeft = side === "left";
 
   return (
-    <div className="flex items-center justify-between w-full">
+    <div className="flex flex-col md:flex-row items-center justify-between w-full gap-sm md:gap-0">
 
       {/* Left Card */}
       {isLeft ? (
         <motion.div
-          initial={{ opacity: 0, x: -60 }}
+          initial={{ opacity: 0, x: -40 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
           className="
+            w-full
             md:w-5/12
             glass-card
             rounded-2xl
@@ -36,17 +36,18 @@ const TimelineCard = ({ year, title, description, side }) => {
           </p>
         </motion.div>
       ) : (
-        <div className="md:w-5/12"></div>
+        <div className="hidden md:block md:w-5/12"></div>
       )}
 
-
-      {/* Dot */}
+      {/* Dot - Hidden on Mobile */}
       <motion.div
         initial={{ scale: 0 }}
         whileInView={{ scale: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
         className="
+          hidden
+          md:block
           w-8
           h-8
           rounded-full
@@ -59,15 +60,15 @@ const TimelineCard = ({ year, title, description, side }) => {
         "
       />
 
-
       {/* Right Card */}
       {!isLeft ? (
         <motion.div
-          initial={{ opacity: 0, x: 60 }}
+          initial={{ opacity: 0, x: 40 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
           className="
+            w-full
             md:w-5/12
             glass-card
             rounded-2xl
@@ -76,7 +77,6 @@ const TimelineCard = ({ year, title, description, side }) => {
             md:text-left
           "
         >
-
           <h4 className="text-headline-sm font-bold text-primary mb-2">
             {year}
           </h4>
@@ -88,10 +88,9 @@ const TimelineCard = ({ year, title, description, side }) => {
           <p className="text-body-md text-on-surface-variant leading-relaxed">
             {description}
           </p>
-
         </motion.div>
       ) : (
-        <div className="md:w-5/12"></div>
+        <div className="hidden md:block md:w-5/12"></div>
       )}
 
     </div>
@@ -99,3 +98,4 @@ const TimelineCard = ({ year, title, description, side }) => {
 };
 
 export default TimelineCard;
+export { TimelineCard };

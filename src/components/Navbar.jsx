@@ -47,7 +47,7 @@ const Navbar = () => {
           <span className="material-symbols-outlined text-[28px]" style={{ fontVariationSettings: "'FILL' 1" }}>
             dentistry
           </span>
-          DentaElite
+          SAMI DENTAL CLINIC
         </Link>
 
         {/* Desktop Menu */}

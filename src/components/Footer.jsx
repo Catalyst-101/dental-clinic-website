@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FaWhatsapp, FaInstagram, FaFacebook} from 'react-icons/fa';
+import { FaWhatsapp, FaInstagram, FaFacebook } from 'react-icons/fa';
 
 const Footer = () => {
   return (
@@ -13,14 +13,14 @@ const Footer = () => {
             <span className="material-symbols-outlined text-[28px]" style={{ fontVariationSettings: "'FILL' 1" }}>
               dentistry
             </span>
-            DentaElite
+            SAMI DENTAL CLINIC
           </div>
           <p className="text-body-md text-on-surface-variant leading-relaxed">
             Providing premium dental care with a focus on hospitality and clinical excellence since 1998.
           </p>
           <div className="flex gap-sm justify-start">
             <a
-              href="https://wa.me/919765432109"
+              href="https://wa.me/923375675083"
               target="_blank"
               rel="noreferrer"
               className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary cursor-pointer hover:bg-primary hover:text-white transition-all"
@@ -75,25 +75,29 @@ const Footer = () => {
           <ul className="space-y-sm">
             <li className="flex items-start gap-sm">
               <span className="material-symbols-outlined text-primary mt-1">location_on</span>
-              <span className="text-on-surface-variant text-body-md">123 Health Ave, Medical District, NY 10012</span>
+              <span className="text-on-surface-variant text-body-md">New Diljanplaza Section D 2nd Floor Office D7 Ring Road Achini, chowk, Achini Payan, Peshawar, 25000, Pakistan</span>
             </li>
             <li className="flex items-center gap-sm">
               <span className="material-symbols-outlined text-primary">call</span>
-              <span className="text-on-surface-variant text-body-md font-bold">+1 (555) 000-1234</span>
+              <span className="text-on-surface-variant text-body-md font-bold">+92 337 5675083</span>
             </li>
             <li className="flex items-center gap-sm">
               <FaWhatsapp className="text-primary text-xl" />
               <span className="text-on-surface-variant text-body-md font-bold">
-                +91 9765432109
+                +92 337 5675083
               </span>
             </li>
             <li className="flex items-center gap-sm">
               <span className="material-symbols-outlined text-primary">mail</span>
               <span className="text-on-surface-variant text-body-md">hello@dentaelite.com</span>
             </li>
-            <li className="flex items-center gap-sm">
-              <span className="material-symbols-outlined text-primary">schedule</span>
-              <span className="text-on-surface-variant text-body-md">Mon - Sat: 8:00 AM - 7:00 PM</span>
+            <li className="flex gap-sm">
+              <span className="material-symbols-outlined text-primary mt-1">schedule</span>
+              <div className="flex flex-col justify-center items-center gap-4">
+                <span className="text-on-surface-variant text-body-md">Mon - Sat: 9:00 AM - 10:00 PM</span>
+                <span className="text-on-surface-variant text-body-md">Friday: 8:00 AM - 12:00 PM & 3:30 PM - 11:00 PM</span>
+                <span className="text-on-surface-variant text-body-md">Sunday: 11:00 AM - 6:00 PM</span>
+              </div>
             </li>
           </ul>
         </div>

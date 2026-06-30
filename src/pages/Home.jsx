@@ -34,10 +34,10 @@ const Home = () => {
       <section className="relative hero-gradient overflow-hidden py-xl md:py-32">
         <div className="max-w-7xl mx-auto px-4 md:px-16 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
 
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: -40 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }} 
+            transition={{ duration: 0.8 }}
             className="z-10">
 
             <span className="inline-block bg-[#DCFCE7] text-primary px-4 py-1.5 rounded-full text-label-sm font-label-sm mb-base uppercase tracking-wider">
@@ -96,7 +96,7 @@ const Home = () => {
 
               <img
                 alt="Smiling Patient"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOvDU8SEGcwWn-yZQdn5kgz-TtL7SEYztCT4HCgPRIfJKoJmvfQUfuMlJH4BVYh8yOhonlDnvQuFUAEjsZRbgkOXyXCykVI6cvkkE0hxL41UOvMu9S-WoTvFehrqaPjxE3ilXGzokQ0UL1HxxrnkibbTo5mmonM60YHvvf2ut4FEkmGLVU8qDKY5A4ch1j04CXlgXw156PoK2qMQ05dcz7mDVjUfsXS0NUTepyauK2qUDpGqvUM-KG6gJipGUF3naK_hQnXvYeh45n"
+                src="src/assets/images/home_hero.jpg"
                 className="relative rounded-[2rem] shadow-2xl z-10 w-full object-cover aspect-[4/3]"
               />
 
@@ -338,11 +338,11 @@ const Home = () => {
 
 
             <motion.div
-              initial={{ opacity:0, x:40 }}
-              whileInView={{ opacity:1, x:0 }}
-              viewport={{ once:true }}
+              initial={{ opacity: 0, x: 40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
               transition={{
-                duration:0.7
+                duration: 0.7
               }}
               className="hidden md:flex gap-sm mt-4 md:mt-0"
             >
@@ -379,20 +379,20 @@ const Home = () => {
               <motion.div
                 key={idx}
                 initial={{
-                  opacity:0,
-                  y:40
+                  opacity: 0,
+                  y: 40
                 }}
                 whileInView={{
-                  opacity:1,
-                  y:0
+                  opacity: 1,
+                  y: 0
                 }}
                 viewport={{
-                  once:true
+                  once: true
                 }}
                 transition={{
-                  duration:0.7,
+                  duration: 0.7,
                   delay: idx * 0.15,
-                  ease:"easeOut"
+                  ease: "easeOut"
                 }}
               >
 
@@ -510,9 +510,9 @@ const Home = () => {
           className="flex justify-center mt-xl"
         >
 
-          <Button 
-            onClick={() => navigate('/gallery')} 
-            variant="secondary" 
+          <Button
+            onClick={() => navigate('/gallery')}
+            variant="secondary"
             className="px-8 py-3 rounded-full font-bold"
           >
             Explore Full Gallery

@@ -96,7 +96,7 @@ const Home = () => {
 
               <img
                 alt="Smiling Patient"
-                src="src/assets/images/home_hero.jpg"
+                src="./src/assets/images/home_hero.jpg"
                 className="relative rounded-[2rem] shadow-2xl z-10 w-full object-cover aspect-[4/3]"
               />
 

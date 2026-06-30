@@ -8,6 +8,7 @@ import { DoctorCardSimple } from '../components/DoctorCardSimple';
 import { TestimonialCard } from '../components/TestimonialCard';
 import { services, doctors, testimonials } from '../data/clinicData';
 import Counter from '../components/Counter';
+import heroImage from "../assets/images/home_hero.jpg";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -96,7 +97,7 @@ const Home = () => {
 
               <img
                 alt="Smiling Patient"
-                src="./src/assets/images/home_hero.jpg"
+                src={heroImage}
                 className="relative rounded-[2rem] shadow-2xl z-10 w-full object-cover aspect-[4/3]"
               />
 

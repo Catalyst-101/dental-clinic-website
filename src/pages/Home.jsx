@@ -170,22 +170,35 @@ const Home = () => {
       {/* Stats Section */}
       <section className="py-lg bg-surface-container-lowest border-y border-outline-variant/10">
         <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-2 md:grid-cols-4 gap-md">
-          <div className="text-center p-md">
-            <div className="text-display-lg-mobile md:text-display-lg font-bold text-primary mb-xs"><Counter end={15} suffix="k+" /></div>
-            <div className="text-label-md font-medium text-on-surface-variant">Patients Treated</div>
-          </div>
-          <div className="text-center p-md">
-            <div className="text-display-lg-mobile md:text-display-lg font-bold text-primary mb-xs"><Counter end={28} suffix="+" /></div>
-            <div className="text-label-md font-medium text-on-surface-variant">Years Experience</div>
-          </div>
-          <div className="text-center p-md">
-            <div className="text-display-lg-mobile md:text-display-lg font-bold text-primary mb-xs"><Counter end={45} suffix="+" /></div>
-            <div className="text-label-md font-medium text-on-surface-variant">Expert Dentists</div>
-          </div>
-          <div className="text-center p-md">
-            <div className="text-display-lg-mobile md:text-display-lg font-bold text-primary mb-xs"><Counter end={98} suffix="%" /></div>
-            <div className="text-label-md font-medium text-on-surface-variant">Successful Procedures</div>
-          </div>
+          {(settingsData?.stats && settingsData.stats.length > 0 ? settingsData.stats : [
+            { label: 'Patients Treated', value: '15,000+' },
+            { label: 'Years Experience', value: '28+' },
+            { label: 'Expert Dentists', value: '45+' },
+            { label: 'Successful Procedures', value: '98%' }
+          ]).map((stat, idx) => {
+            const valStr = String(stat.value || '').trim();
+            const numMatch = valStr.match(/\d+[\d,]*/);
+            let endVal = 0;
+            let prefixStr = '';
+            let suffixStr = valStr;
+
+            if (numMatch) {
+              const numStr = numMatch[0];
+              const numIndex = valStr.indexOf(numStr);
+              prefixStr = valStr.substring(0, numIndex);
+              suffixStr = valStr.substring(numIndex + numStr.length);
+              endVal = parseInt(numStr.replace(/,/g, ''), 10);
+            }
+
+            return (
+              <div key={idx} className="text-center p-md">
+                <div className="text-display-lg-mobile md:text-display-lg font-bold text-primary mb-xs">
+                  {prefixStr}<Counter end={endVal} suffix={suffixStr} />
+                </div>
+                <div className="text-label-md font-medium text-on-surface-variant">{stat.label}</div>
+              </div>
+            );
+          })}
         </div>
       </section>
 

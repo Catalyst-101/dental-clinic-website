@@ -31,6 +31,7 @@ const Footer = () => {
   const contact = settings?.contact || {};
   const social = settings?.social || {};
   const businessHours = settings?.businessHours || [];
+  const whatsAppVal = contact.whatsApp || social.whatsApp || "+92 337 5675083";
 
   return (
     <footer className="bg-surface-container-lowest border-t border-outline-variant">
@@ -48,16 +49,14 @@ const Footer = () => {
             Providing premium dental care with a focus on hospitality and clinical excellence.
           </p>
           <div className="flex gap-sm justify-start">
-            {social.whatsApp && (
-              <a
-                href={social.whatsApp.startsWith('http') ? social.whatsApp : `https://wa.me/${social.whatsApp.replace(/[^0-9]/g, '')}`}
-                target="_blank"
-                rel="noreferrer"
-                className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary cursor-pointer hover:bg-primary hover:text-white transition-all"
-              >
-                <FaWhatsapp className="text-[20px]" />
-              </a>
-            )}
+            <a
+              href={whatsAppVal.startsWith('http') ? whatsAppVal : `https://wa.me/${whatsAppVal.replace(/[^0-9]/g, '')}`}
+              target="_blank"
+              rel="noreferrer"
+              className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary cursor-pointer hover:bg-primary hover:text-white transition-all"
+            >
+              <FaWhatsapp className="text-[20px]" />
+            </a>
 
             {social.instagram && (
               <a
@@ -127,7 +126,7 @@ const Footer = () => {
             <li className="flex items-start gap-sm">
               <span className="material-symbols-outlined text-primary mt-1">location_on</span>
               <span className="text-on-surface-variant text-body-md">
-                {contact.address || "New Diljanplaza Section D 2nd Floor Office D7 Ring Road Achini, chowk, Achini Payan, Peshawar, 25000, Pakistan"}
+                {contact.address || "New Diljanplaza Section D 2nd Floor Office D7 Ring Road Achini Chowk, Achini Payan, Peshawar"}
               </span>
             </li>
             <li className="flex items-center gap-sm">
@@ -136,14 +135,17 @@ const Footer = () => {
                 {contact.phone || "+92 337 5675083"}
               </span>
             </li>
-            {contact.whatsApp && (
-              <li className="flex items-center gap-sm">
-                <FaWhatsapp className="text-primary text-xl" />
-                <span className="text-on-surface-variant text-body-md font-bold">
-                  {contact.whatsApp}
-                </span>
-              </li>
-            )}
+            <li className="flex items-center gap-sm">
+              <FaWhatsapp className="text-primary text-xl" />
+              <a
+                href={whatsAppVal.startsWith('http') ? whatsAppVal : `https://wa.me/${whatsAppVal.replace(/[^0-9]/g, '')}`}
+                target="_blank"
+                rel="noreferrer"
+                className="text-on-surface-variant hover:text-primary transition-colors text-body-md font-bold"
+              >
+                {whatsAppVal}
+              </a>
+            </li>
             <li className="flex items-center gap-sm">
               <span className="material-symbols-outlined text-primary">mail</span>
               <span className="text-on-surface-variant text-body-md">

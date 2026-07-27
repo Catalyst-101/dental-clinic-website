@@ -83,30 +83,124 @@ const AppointmentForm = () => {
     }));
   };
 
-  const handlePdfUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    if (!file.name.toLowerCase().endsWith('.pdf') && file.type !== 'application/pdf') {
-      showToast('Please select a valid PDF document.', 'warning');
+  const handleDownloadConfirmation = () => {
+    const selectedServiceObj = servicesList.find(s => (s.id === formData.serviceId || s._id === formData.serviceId || s.slug === formData.serviceId));
+    const selectedDoctorObj = doctorsList.find(d => (d.id === formData.doctorId || d._id === formData.doctorId || d.slug === formData.doctorId));
+    
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) {
+      showToast('Pop-up window was blocked by your browser. Please allow pop-ups to view/print PDF confirmation.', 'warning');
       return;
     }
-    try {
-      setUploadingPdf(true);
-      const data = new FormData();
-      data.append('file', file);
-      const res = await api.post('/upload/pdf', data, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
-      if (res.data && res.data.url) {
-        setDocumentUrl(res.data.url);
-        setPdfFileName(file.name);
-        showToast('Medical record PDF attached successfully!', 'success');
-      }
-    } catch (err) {
-      showToast(parseErrorMessage(err, 'Failed to upload PDF document.'), 'error');
-    } finally {
-      setUploadingPdf(false);
-    }
+
+    const refNo = appointmentId || ('DE-' + Math.floor(100000 + Math.random() * 900000));
+    const patientName = formData.fullName || 'Valued Patient';
+    const doctorName = selectedDoctorObj ? selectedDoctorObj.name : (formData.doctorId || 'Assigned Specialist');
+    const serviceName = selectedServiceObj ? selectedServiceObj.title : (formData.serviceId || 'Dental Consultation');
+
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Appointment Confirmation PDF - ${refNo}</title>
+        <style>
+          @page { size: A4; margin: 20mm; }
+          body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #0f172a; margin: 0; padding: 24px; background: #fff; }
+          .receipt-box { border: 2px solid #059669; border-radius: 16px; padding: 32px; max-w: 700px; margin: 0 auto; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+          .header { text-align: center; border-bottom: 2px dashed #cbd5e1; padding-bottom: 20px; margin-bottom: 24px; }
+          .clinic-title { font-size: 26px; font-weight: 800; color: #047857; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
+          .subtitle { font-size: 13px; color: #64748b; margin-top: 4px; font-weight: 500; }
+          .status-badge { display: inline-block; margin-top: 12px; background: #d1fae5; color: #047857; font-size: 11px; font-weight: 800; padding: 6px 16px; rounded: 9999px; border-radius: 20px; letter-spacing: 0.5px; }
+          .section-heading { font-size: 12px; font-weight: 800; color: #059669; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; border-bottom: 1px solid #f1f5f9; padding-bottom: 4px; }
+          .info-grid { display: grid; grid-template-cols: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+          .info-item { background: #f8fafc; padding: 12px 16px; border-radius: 8px; border: 1px solid #e2e8f0; }
+          .info-label { font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; }
+          .info-val { font-size: 14px; font-weight: 700; color: #0f172a; margin-top: 2px; }
+          .footer-note { text-align: center; margin-top: 32px; border-top: 1px solid #e2e8f0; padding-top: 16px; font-size: 11px; color: #64748b; }
+          @media print {
+            body { padding: 0; }
+            .receipt-box { border: none; padding: 0; box-shadow: none; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="receipt-box">
+          <div class="header">
+            <h1 class="clinic-title">SAMI DENTAL CLINIC</h1>
+            <div class="subtitle">Official Appointment Confirmation Receipt</div>
+            <div class="status-badge">APPOINTMENT CONFIRMED</div>
+          </div>
+
+          <div class="section-heading">Patient Details</div>
+          <div class="info-grid">
+            <div class="info-item">
+              <div class="info-label">Reference ID</div>
+              <div class="info-val">${refNo}</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Patient Name</div>
+              <div class="info-val">${patientName}</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Phone Number</div>
+              <div class="info-val">${formData.phone || 'N/A'}</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Email Address</div>
+              <div class="info-val">${formData.email || 'N/A'}</div>
+            </div>
+          </div>
+
+          <div class="section-heading">Reservation Details</div>
+          <div class="info-grid">
+            <div class="info-item">
+              <div class="info-label">Assigned Specialist</div>
+              <div class="info-val">${doctorName}</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Service</div>
+              <div class="info-val">${serviceName}</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Date</div>
+              <div class="info-val">${formData.date}</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Time Slot</div>
+              <div class="info-val">${formData.time}</div>
+            </div>
+          </div>
+
+          <div class="section-heading">Clinic Address & Contact</div>
+          <div class="info-item" style="margin-bottom: 12px;">
+            <div class="info-label">Address</div>
+            <div class="info-val">New Diljanplaza Section D 2nd Floor Office D7, Ring Road Achini Chowk, Achini Payan, Peshawar</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Contact Phone & WhatsApp</div>
+            <div class="info-val">+92 337 5675083 | hello@dentaelite.care</div>
+          </div>
+
+          <div class="footer-note">
+            Please bring a copy of this PDF confirmation receipt when visiting SAMI Dental Clinic.<br/>
+            Thank you for choosing our specialized dental services!
+          </div>
+        </div>
+
+        <script>
+          window.onload = function() {
+            setTimeout(function() {
+              window.print();
+            }, 300);
+          };
+        </script>
+      </body>
+      </html>
+    `;
+
+    printWindow.document.write(htmlContent);
+    printWindow.document.close();
+    showToast('PDF confirmation receipt generated! Save or print as PDF.', 'success');
   };
 
   const handleStep1Submit = (e) => {
@@ -349,31 +443,6 @@ const AppointmentForm = () => {
                     value={formData.notes}
                     onChange={handleInputChange}
                   ></textarea>
-                </div>
-
-                <div className="space-y-xs">
-                  <label className="text-label-md font-label-md text-on-surface-variant px-1" htmlFor="medicalPdf">
-                    Attach Medical Records (PDF format)
-                  </label>
-                  <div className="flex items-center gap-3 bg-surface-container-lowest border border-outline-variant rounded-lg p-2.5">
-                    <input
-                      type="file"
-                      id="medicalPdf"
-                      accept="application/pdf,.pdf"
-                      onChange={handlePdfUpload}
-                      className="hidden"
-                    />
-                    <label
-                      htmlFor="medicalPdf"
-                      className="px-4 py-2 bg-primary/10 text-primary font-bold rounded-lg hover:bg-primary/20 transition-colors cursor-pointer text-sm flex items-center gap-2"
-                    >
-                      <span className="material-symbols-outlined text-[18px]">upload_file</span>
-                      {uploadingPdf ? "Uploading..." : "Attach PDF Document"}
-                    </label>
-                    <span className="text-body-sm text-on-surface-variant truncate font-medium">
-                      {pdfFileName ? pdfFileName : documentUrl ? "PDF Attached" : "Optional PDF report"}
-                    </span>
-                  </div>
                 </div>
 
                 <div className="pt-2">
@@ -731,7 +800,7 @@ const AppointmentForm = () => {
                 {/* Action Buttons */}
                 <div className="flex flex-col sm:flex-row gap-md justify-center">
                   <button 
-                    onClick={() => alert('Downloading confirmation PDF...')}
+                    onClick={handleDownloadConfirmation}
                     className="bg-primary hover:bg-primary-container text-on-primary px-8 py-4 rounded-full font-label-md text-label-md flex items-center justify-center gap-2 transition-all active:scale-95 shadow-md"
                   >
                     <span className="material-symbols-outlined text-[20px]">download</span>

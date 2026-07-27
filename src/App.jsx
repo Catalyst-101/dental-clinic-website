@@ -1,11 +1,10 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { FaWhatsapp } from "react-icons/fa";
-
 import AppRoutes from "./routes/AppRoutes";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-
+import { fetchSettings } from "./api/settingsApi";
 
 // Scroll restoration component to reset scroll height on route changes
 function ScrollToTop() {
@@ -18,10 +17,31 @@ function ScrollToTop() {
   return null;
 }
 
-
 function App() {
   const location = useLocation();
   const isBookingPage = location.pathname === "/book-appointment";
+  const [whatsAppNum, setWhatsAppNum] = useState("+92 337 5675083");
+
+  useEffect(() => {
+    let isMounted = true;
+    const loadSettings = async () => {
+      try {
+        const data = await fetchSettings();
+        if (isMounted && data) {
+          const num = data.contact?.whatsApp || data.social?.whatsApp || "+92 337 5675083";
+          setWhatsAppNum(num);
+        }
+      } catch (err) {
+        console.error("Failed to load settings in App.jsx:", err);
+      }
+    };
+    loadSettings();
+    return () => { isMounted = false; };
+  }, []);
+
+  const whatsAppUrl = whatsAppNum.startsWith("http")
+    ? whatsAppNum
+    : `https://wa.me/${whatsAppNum.replace(/[^0-9]/g, "")}`;
 
   return (
     <div className="min-h-screen bg-background text-on-surface font-body-md flex flex-col">
@@ -36,11 +56,10 @@ function App() {
 
       {!isBookingPage && <Footer />}
 
-
       {/* Floating WhatsApp Button */}
       {!isBookingPage && (
         <a
-          href="https://wa.me/919765432109"
+          href={whatsAppUrl}
           target="_blank"
           rel="noreferrer"
           className="

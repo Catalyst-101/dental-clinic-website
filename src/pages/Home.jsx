@@ -8,7 +8,9 @@ import { DoctorCardSimple } from '../components/DoctorCardSimple';
 import { TestimonialCard } from '../components/TestimonialCard';
 import { fetchServices } from '../api/servicesApi';
 import { fetchDoctors } from '../api/doctorsApi';
-import { fetchTestimonials, fetchSettings } from '../api/settingsApi';
+import { fetchTestimonials, fetchSettings, fetchGallery } from '../api/settingsApi';
+import { getFullImageUrl } from '../api/axios';
+import { SkeletonCard, Skeleton } from '../components/Skeleton';
 import Counter from '../components/Counter';
 import heroImage from "../assets/images/home_hero.jpg";
 
@@ -17,6 +19,7 @@ const Home = () => {
   const [servicesList, setServicesList] = useState([]);
   const [doctorsList, setDoctorsList] = useState([]);
   const [testimonialsList, setTestimonialsList] = useState([]);
+  const [galleryList, setGalleryList] = useState([]);
   const [settingsData, setSettingsData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -25,17 +28,19 @@ const Home = () => {
     const loadHomeData = async () => {
       try {
         setLoading(true);
-        const [servicesData, doctorsData, testimonialsData, settingsRes] = await Promise.all([
-          fetchServices(),
-          fetchDoctors(),
+        const [servicesData, doctorsData, testimonialsData, settingsRes, galleryRes] = await Promise.all([
+          fetchServices({ all: "true" }),
+          fetchDoctors({ all: "true" }),
           fetchTestimonials(),
-          fetchSettings()
+          fetchSettings(),
+          fetchGallery()
         ]);
         if (isMounted) {
           setServicesList(servicesData || []);
           setDoctorsList(doctorsData || []);
           setTestimonialsList(testimonialsData || []);
           setSettingsData(settingsRes || null);
+          setGalleryList(galleryRes || []);
         }
       } catch (err) {
         console.error("Failed to load home data from backend:", err);
@@ -469,8 +474,8 @@ const Home = () => {
           >
 
             <img
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEr4YK7fnQH3ANsEdFGI45FA3kOYs5QS5ykcYw7jH1gvFz5VrsQQwAJQL-OR7QDRrX2aX-AKNNLCSa0OS0Go0x0D2yEM__QrSr9O_Bm7pI9HnqBXTqBM17Qoj1_Wt5tROSkwZsvNMQF3hWPPQNyECeRAPG1ofxH8L4-fVLYH_-FM0W_WVJTwr3Y6D86cLbNQgEN-yXnnZg2P_jwXFOrS2mjQU8zLosrVnFwZahziGwXPUfzCIIDTMi3M233n97wwsVn1Z5M2aTdlLH"
-              alt="Lobby Area"
+              src={galleryList[0] ? getFullImageUrl(galleryList[0].image || galleryList[0].url) : "https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=800&q=80"}
+              alt={galleryList[0]?.title || "Clinical Facility"}
               className="w-full h-[420px] object-cover transition duration-700 group-hover:scale-110"
             />
 
@@ -497,8 +502,8 @@ const Home = () => {
             >
 
               <img
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8jOMVoVIgykP6d3AKhsrdnrOZqDa0AceqwoRO92Sgaads-OETKZer6gMCmqKSjTlEbQremFCeQJx4zeYC9XQKROJ9T8zJyPJ_4OATTh6TuowcCd1Q5rz3fofAc7Hx18jipfj_NyLWfLLms6-CjoxqgXsnOgkjdxVbqu79fSnOBGJd917nysxk6najqeSPfQgt0cbM1SCenWQtGgZ0Qxy5nATAJQ7cdMe6wlgZqRurGKHcOLPMz3EoR45-zHmKQ1bMea8MHFGVOCum"
-                alt="Operating Room"
+                src={galleryList[1] ? getFullImageUrl(galleryList[1].image || galleryList[1].url) : "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&w=800&q=80"}
+                alt={galleryList[1]?.title || "Operating Facility"}
                 className="w-full h-[200px] object-cover rounded-3xl transition duration-700 group-hover:scale-110"
               />
 
@@ -521,8 +526,8 @@ const Home = () => {
             >
 
               <img
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSo2rvH1iMKqIXt8r54vu3TyDMjPZwr4PJMkxTIzDo-CqRBsSHkUwf-psFIpwINaQGtYYKq6jELljCBx_DYoqpqYA9boPV72H08M6x_z6OBrG-dWw8idCc7RW_4DNj4TgDJt3AANDaYMIobmorWYYtIJHXB7Muxe5q3chywxacIaikhONkxRcIGd8xWFhU4oKXlX-dI1YU6pAe2sbWiM4_WQSQ0iwsazioC9UwXvfAT_MvISUAjr7NKk5_fnC0ll422rWHjpz-bJk_"
-                alt="Patient Lounge"
+                src={galleryList[2] ? getFullImageUrl(galleryList[2].image || galleryList[2].url) : "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&q=80"}
+                alt={galleryList[2]?.title || "Patient Lounge"}
                 className="w-full h-[200px] object-cover rounded-3xl transition duration-700 group-hover:scale-110"
               />
 

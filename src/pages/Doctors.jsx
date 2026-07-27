@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { fetchDoctors } from '../api/doctorsApi';
 import { DoctorCard } from '../components/DoctorCard';
 import { Button } from '../components/Button';
+import { SkeletonProfile } from '../components/Skeleton';
 
 
 const Doctors = () => {
@@ -409,7 +410,13 @@ const Doctors = () => {
 
 
         {
-        filteredDoctors.length > 0 ?
+        loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+            {[...Array(6)].map((_, i) => (
+              <SkeletonProfile key={i} />
+            ))}
+          </div>
+        ) : filteredDoctors.length > 0 ?
 
         (
 

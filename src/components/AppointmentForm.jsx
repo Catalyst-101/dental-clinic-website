@@ -4,15 +4,20 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { fetchServices } from '../api/servicesApi';
 import { fetchDoctors } from '../api/doctorsApi';
 import { createAppointment } from '../api/appointmentsApi';
-import { getFullImageUrl } from '../api/axios';
+import api, { getFullImageUrl, parseErrorMessage } from '../api/axios';
+import { useToast } from '../context/ToastContext';
 
 const AppointmentForm = () => {
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [appointmentId, setAppointmentId] = useState('');
   const [servicesList, setServicesList] = useState([]);
   const [doctorsList, setDoctorsList] = useState([]);
+  const [documentUrl, setDocumentUrl] = useState('');
+  const [uploadingPdf, setUploadingPdf] = useState(false);
+  const [pdfFileName, setPdfFileName] = useState('');
 
   useEffect(() => {
     let isMounted = true;
@@ -78,10 +83,36 @@ const AppointmentForm = () => {
     }));
   };
 
+  const handlePdfUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (!file.name.toLowerCase().endsWith('.pdf') && file.type !== 'application/pdf') {
+      showToast('Please select a valid PDF document.', 'warning');
+      return;
+    }
+    try {
+      setUploadingPdf(true);
+      const data = new FormData();
+      data.append('file', file);
+      const res = await api.post('/upload/pdf', data, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      if (res.data && res.data.url) {
+        setDocumentUrl(res.data.url);
+        setPdfFileName(file.name);
+        showToast('Medical record PDF attached successfully!', 'success');
+      }
+    } catch (err) {
+      showToast(parseErrorMessage(err, 'Failed to upload PDF document.'), 'error');
+    } finally {
+      setUploadingPdf(false);
+    }
+  };
+
   const handleStep1Submit = (e) => {
     e.preventDefault();
     if (!formData.fullName || !formData.phone || !formData.email || !formData.gender || !formData.dob || !formData.address) {
-      alert('Please fill in all required patient details.');
+      showToast('Please fill in all required patient details.', 'warning');
       return;
     }
     setStep(2);
@@ -90,7 +121,7 @@ const AppointmentForm = () => {
   const handleStep2Submit = (e) => {
     e.preventDefault();
     if (!formData.serviceId || !formData.doctorId || !formData.date || !formData.time) {
-      alert('Please complete all appointment details.');
+      showToast('Please complete all appointment details.', 'warning');
       return;
     }
     setStep(3);
@@ -110,7 +141,8 @@ const AppointmentForm = () => {
         serviceName: selectedServiceObj ? selectedServiceObj.title : formData.serviceId,
         date: formData.date,
         time: formData.time,
-        notes: formData.notes
+        notes: formData.notes,
+        documentUrl: documentUrl
       };
 
       const response = await createAppointment(payload);
@@ -119,7 +151,7 @@ const AppointmentForm = () => {
       setStep(4);
       triggerConfetti();
     } catch (err) {
-      alert(err.message || "Failed to submit appointment. Please try again.");
+      showToast(err.message || "Failed to submit appointment. Please try again.", "error");
     } finally {
       setLoading(false);
     }
@@ -317,6 +349,31 @@ const AppointmentForm = () => {
                     value={formData.notes}
                     onChange={handleInputChange}
                   ></textarea>
+                </div>
+
+                <div className="space-y-xs">
+                  <label className="text-label-md font-label-md text-on-surface-variant px-1" htmlFor="medicalPdf">
+                    Attach Medical Records (PDF format)
+                  </label>
+                  <div className="flex items-center gap-3 bg-surface-container-lowest border border-outline-variant rounded-lg p-2.5">
+                    <input
+                      type="file"
+                      id="medicalPdf"
+                      accept="application/pdf,.pdf"
+                      onChange={handlePdfUpload}
+                      className="hidden"
+                    />
+                    <label
+                      htmlFor="medicalPdf"
+                      className="px-4 py-2 bg-primary/10 text-primary font-bold rounded-lg hover:bg-primary/20 transition-colors cursor-pointer text-sm flex items-center gap-2"
+                    >
+                      <span className="material-symbols-outlined text-[18px]">upload_file</span>
+                      {uploadingPdf ? "Uploading..." : "Attach PDF Document"}
+                    </label>
+                    <span className="text-body-sm text-on-surface-variant truncate font-medium">
+                      {pdfFileName ? pdfFileName : documentUrl ? "PDF Attached" : "Optional PDF report"}
+                    </span>
+                  </div>
                 </div>
 
                 <div className="pt-2">

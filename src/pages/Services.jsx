@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { ServiceCard } from '../components/ServiceCard';
 import { Button } from '../components/Button';
 import { fetchServices } from '../api/servicesApi';
+import { SkeletonCard } from '../components/Skeleton';
 
 const Services = () => {
   const navigate = useNavigate();
@@ -103,8 +104,10 @@ const Services = () => {
       {/* Services Grid Section */}
       <section className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-xl">
         {loading ? (
-          <div className="flex justify-center py-16">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
+            {[...Array(4)].map((_, i) => (
+              <SkeletonCard key={i} />
+            ))}
           </div>
         ) : (
           <motion.div 

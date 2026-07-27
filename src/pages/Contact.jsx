@@ -4,9 +4,11 @@ import { motion } from 'framer-motion';
 import { Button } from '../components/Button';
 import { sendContactMessage } from '../api/contactApi';
 import { fetchSettings } from '../api/settingsApi';
+import { useToast } from '../context/ToastContext';
 
 const Contact = () => {
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [settings, setSettings] = useState(null);
   const [formData, setFormData] = useState({
@@ -43,7 +45,7 @@ const Contact = () => {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.message) {
-      alert("Please fill in all required fields.");
+      showToast("Please fill in all required fields.", "warning");
       return;
     }
     try {
@@ -62,9 +64,9 @@ const Contact = () => {
         subject: 'General Inquiry',
         message: ''
       });
-      alert('Message sent successfully! Our clinical staff will reach out to you shortly.');
+      showToast('Message sent successfully! Our clinical staff will reach out to you shortly.', 'success');
     } catch (err) {
-      alert(err.message || 'Failed to send message. Please try again.');
+      showToast(err.message || 'Failed to send message. Please try again.', 'error');
     } finally {
       setFormSubmitted(false);
     }

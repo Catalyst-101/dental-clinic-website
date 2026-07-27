@@ -1,14 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { services, doctors } from '../data/clinicData';
+import { fetchServices } from '../api/servicesApi';
+import { fetchDoctors } from '../api/doctorsApi';
+import { createAppointment } from '../api/appointmentsApi';
+import { getFullImageUrl } from '../api/axios';
 
 const AppointmentForm = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [appointmentId, setAppointmentId] = useState('');
-  
+  const [servicesList, setServicesList] = useState([]);
+  const [doctorsList, setDoctorsList] = useState([]);
+
+  useEffect(() => {
+    let isMounted = true;
+    const loadFormData = async () => {
+      try {
+        const [servRes, docRes] = await Promise.all([
+          fetchServices(),
+          fetchDoctors({ all: "true" })
+        ]);
+        if (isMounted) {
+          setServicesList(servRes || []);
+          setDoctorsList(docRes || []);
+        }
+      } catch (err) {
+        console.error("Failed to load options for appointment form:", err);
+      }
+    };
+    loadFormData();
+    return () => { isMounted = false; };
+  }, []);
+
   // Form state
   const [formData, setFormData] = useState({
     fullName: '',
@@ -23,11 +48,6 @@ const AppointmentForm = () => {
     date: '',
     time: ''
   });
-
-  // Generate random Appointment ID on confirm
-  const generateAppointmentId = () => {
-    return `DE-${Math.floor(10000 + Math.random() * 90000)}`;
-  };
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -64,11 +84,7 @@ const AppointmentForm = () => {
       alert('Please fill in all required patient details.');
       return;
     }
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      setStep(2);
-    }, 1000);
+    setStep(2);
   };
 
   const handleStep2Submit = (e) => {
@@ -80,14 +96,33 @@ const AppointmentForm = () => {
     setStep(3);
   };
 
-  const handleConfirm = () => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      setAppointmentId(generateAppointmentId());
+  const handleConfirm = async () => {
+    try {
+      setLoading(true);
+      const selectedServiceObj = servicesList.find(s => (s.id === formData.serviceId || s._id === formData.serviceId || s.slug === formData.serviceId));
+      const selectedDoctorObj = doctorsList.find(d => (d.id === formData.doctorId || d._id === formData.doctorId || d.slug === formData.doctorId));
+
+      const payload = {
+        patientName: formData.fullName,
+        patientEmail: formData.email,
+        patientPhone: formData.phone,
+        doctorName: selectedDoctorObj ? selectedDoctorObj.name : formData.doctorId,
+        serviceName: selectedServiceObj ? selectedServiceObj.title : formData.serviceId,
+        date: formData.date,
+        time: formData.time,
+        notes: formData.notes
+      };
+
+      const response = await createAppointment(payload);
+      const createdApt = response.data || response;
+      setAppointmentId(createdApt.appointmentId || createdApt.id || createdApt._id || `DE-${Math.floor(10000 + Math.random() * 90000)}`);
       setStep(4);
       triggerConfetti();
-    }, 1500);
+    } catch (err) {
+      alert(err.message || "Failed to submit appointment. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Confetti burst for step 4
@@ -122,8 +157,8 @@ const AppointmentForm = () => {
   };
 
   // Helper values
-  const selectedService = services.find(s => s.id === formData.serviceId);
-  const selectedDoctor = doctors.find(d => d.id === formData.doctorId);
+  const selectedService = servicesList.find(s => s.id === formData.serviceId || s._id === formData.serviceId || s.slug === formData.serviceId);
+  const selectedDoctor = doctorsList.find(d => d.id === formData.doctorId || d._id === formData.doctorId || d.slug === formData.doctorId);
   const formattedDate = formData.date ? new Date(formData.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
 
   // Stepper helper
@@ -334,8 +369,8 @@ const AppointmentForm = () => {
                       onChange={handleSelectServiceChange}
                     >
                       <option value="">Choose a service...</option>
-                      {services.map(s => (
-                        <option key={s.id} value={s.id}>{s.title}</option>
+                      {servicesList.map(s => (
+                        <option key={s.id || s._id || s.slug} value={s.id || s._id || s.slug}>{s.title}</option>
                       ))}
                     </select>
                   </div>
@@ -349,8 +384,8 @@ const AppointmentForm = () => {
                       onChange={handleSelectDoctorChange}
                     >
                       <option value="">Choose a specialist...</option>
-                      {doctors.map(d => (
-                        <option key={d.id} value={d.id}>{d.name} ({d.specialization.split(' ').slice(-1)[0]})</option>
+                      {doctorsList.map(d => (
+                        <option key={d.id || d._id || d.slug} value={d.id || d._id || d.slug}>{d.name} ({d.specialization ? d.specialization.split(' ').slice(-1)[0] : 'Specialist'})</option>
                       ))}
                     </select>
                   </div>
@@ -364,7 +399,7 @@ const AppointmentForm = () => {
                     className="flex items-center gap-sm bg-surface-container-low p-3 rounded-lg border border-outline-variant/30"
                   >
                     <img 
-                      src={selectedDoctor.image} 
+                      src={getFullImageUrl(selectedDoctor.image)} 
                       alt={selectedDoctor.name} 
                       className="w-12 h-12 rounded-full object-cover border border-primary-fixed"
                     />

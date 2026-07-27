@@ -1,9 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { getFullImageUrl } from "../api/axios";
 
 const DoctorCardSimple = ({ doctor }) => {
-    const { id, name, specialization, image } = doctor;
+    const { id, _id, slug, name, specialization, image } = doctor;
+    const doctorIdentifier = slug || id || _id;
 
     return (
         <motion.div
@@ -14,7 +16,7 @@ const DoctorCardSimple = ({ doctor }) => {
             {/* Image */}
             <div className="relative overflow-hidden rounded-2xl mb-md">
                 <img
-                    src={image}
+                    src={getFullImageUrl(image)}
                     alt={name}
                     className="w-full aspect-[3/4] object-cover transition-transform duration-500 group-hover:scale-105"
                 />
@@ -32,7 +34,7 @@ const DoctorCardSimple = ({ doctor }) => {
           "
                 >
                     <Link
-                        to={`/doctors/${id}`}
+                        to={`/doctors/${doctorIdentifier}`}
                         className="
             bg-transparent 
             text-white 

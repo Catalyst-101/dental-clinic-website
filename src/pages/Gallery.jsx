@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { galleryItems } from '../data/clinicData';
+import { fetchGallery } from '../api/settingsApi';
+import { getFullImageUrl } from '../api/axios';
 import { GalleryCard } from '../components/GalleryCard';
 import { Button } from '../components/Button';
 
 const Gallery = () => {
   const navigate = useNavigate();
 
+  const [galleryList, setGalleryList] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
   const [selectedItem, setSelectedItem] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -22,12 +25,34 @@ const Gallery = () => {
     { label: "Before & After", value: "before-after" }
   ];
 
-  const filteredItems =
-    filter === "all"
-      ? galleryItems
-      : galleryItems.filter(item => item.category === filter);
+  useEffect(() => {
+    let isMounted = true;
+    const loadGallery = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchGallery();
+        if (isMounted) setGalleryList(data || []);
+      } catch (err) {
+        console.error("Failed to load gallery:", err);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    };
+    loadGallery();
+    return () => { isMounted = false; };
+  }, []);
 
-  const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+  const filteredItems = galleryList.filter(item => {
+    if (filter === "all") return true;
+    const tagStr = (item.tag || item.category || "").toLowerCase();
+    if (filter === "clinic") return tagStr.includes("clinic");
+    if (filter === "equipment") return tagStr.includes("equipment");
+    if (filter === "treatments") return tagStr.includes("treatment");
+    if (filter === "before-after") return tagStr.includes("before") || item.isBeforeAfter;
+    return true;
+  });
+
+  const totalPages = Math.ceil(filteredItems.length / itemsPerPage) || 1;
 
   const visibleItems = filteredItems.slice(
     (currentPage - 1) * itemsPerPage,
@@ -224,12 +249,12 @@ const Gallery = () => {
               onClick={(e) => e.stopPropagation()}
             >
               <img
-                src={selectedItem.image}
-                alt={selectedItem.title}
+                src={getFullImageUrl(selectedItem.url || selectedItem.image || selectedItem.afterImage)}
+                alt={selectedItem.title || selectedItem.caption || "Gallery item"}
                 className="max-h-[80vh] max-w-[90vw] rounded-2xl object-contain shadow-2xl"
               />
               <h3 className="text-white text-center mt-5 text-headline-md font-bold">
-                {selectedItem.title}
+                {selectedItem.title || selectedItem.caption || selectedItem.tag}
               </h3>
             </motion.div>
           </motion.div>

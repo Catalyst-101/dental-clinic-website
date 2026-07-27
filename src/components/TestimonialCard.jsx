@@ -1,8 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { getFullImageUrl } from '../api/axios';
 
 const TestimonialCard = ({ testimonial }) => {
-  const { name, role, quote, avatar, rating = 5 } = testimonial;
+  const { name, role, quote, avatar, rating = 5, image } = testimonial;
+  const avatarUrl = getFullImageUrl(avatar || image);
 
   return (
     <motion.div
@@ -45,7 +47,7 @@ const TestimonialCard = ({ testimonial }) => {
       <div className="flex items-center gap-4">
 
         <img
-          src={avatar}
+          src={avatarUrl}
           alt={name}
           className="w-12 h-12 rounded-full object-cover border-2 border-primary-fixed"
         />

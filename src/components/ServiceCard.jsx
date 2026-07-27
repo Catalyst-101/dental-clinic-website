@@ -1,9 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { getFullImageUrl } from '../api/axios';
 
 const ServiceCard = ({ service }) => {
-  const { id, title, summary, image } = service;
+  const { title, summary, image, slug, id, _id } = service;
+  const serviceIdentifier = slug || id || _id;
 
   return (
     <motion.div
@@ -13,7 +15,7 @@ const ServiceCard = ({ service }) => {
     >
       <div className="relative h-60 w-full overflow-hidden">
         <img
-          src={image}
+          src={getFullImageUrl(image)}
           alt={title}
           className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
         />
@@ -27,7 +29,7 @@ const ServiceCard = ({ service }) => {
           {summary}
         </p>
         <Link
-          to={`/services/${id}`}
+          to={`/services/${serviceIdentifier}`}
           className="inline-flex items-center text-primary font-bold hover:gap-2 transition-all group font-label-md text-label-md"
         >
           Learn More

@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '../components/Button';
+import { sendContactMessage } from '../api/contactApi';
+import { fetchSettings } from '../api/settingsApi';
 
 const Contact = () => {
   const navigate = useNavigate();
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [settings, setSettings] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -13,6 +16,20 @@ const Contact = () => {
     subject: 'General Inquiry',
     message: ''
   });
+
+  useEffect(() => {
+    let isMounted = true;
+    const loadSettings = async () => {
+      try {
+        const data = await fetchSettings();
+        if (isMounted) setSettings(data);
+      } catch (err) {
+        console.error("Failed to load settings in Contact page:", err);
+      }
+    };
+    loadSettings();
+    return () => { isMounted = false; };
+  }, []);
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -23,11 +40,21 @@ const Contact = () => {
     setFormData(prev => ({ ...prev, subject: e.target.value }));
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
-    setFormSubmitted(true);
-    setTimeout(() => {
-      setFormSubmitted(false);
+    if (!formData.name || !formData.email || !formData.message) {
+      alert("Please fill in all required fields.");
+      return;
+    }
+    try {
+      setFormSubmitted(true);
+      await sendContactMessage({
+        fullName: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        subject: formData.subject,
+        message: formData.message
+      });
       setFormData({
         name: '',
         email: '',
@@ -36,7 +63,11 @@ const Contact = () => {
         message: ''
       });
       alert('Message sent successfully! Our clinical staff will reach out to you shortly.');
-    }, 600);
+    } catch (err) {
+      alert(err.message || 'Failed to send message. Please try again.');
+    } finally {
+      setFormSubmitted(false);
+    }
   };
 
   const socialLinks = [

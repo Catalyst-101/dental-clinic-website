@@ -1,16 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { services } from '../data/clinicData';
+import { fetchServiceById } from '../api/servicesApi';
+import { getFullImageUrl } from '../api/axios';
 import { Button } from '../components/Button';
 
 const ServiceProfile = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [openFaq, setOpenFaq] = useState(null);
+  const [service, setService] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Find service
-  const service = services.find(s => s.id === id);
+  useEffect(() => {
+    let isMounted = true;
+    const loadService = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchServiceById(id);
+        if (isMounted) setService(data);
+      } catch (err) {
+        console.error("Failed to load service details:", err);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    };
+    loadService();
+    return () => { isMounted = false; };
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center p-md">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
+        <p className="text-on-surface-variant font-medium">Loading service details...</p>
+      </div>
+    );
+  }
 
   if (!service) {
     return (
@@ -33,7 +59,7 @@ const ServiceProfile = () => {
       {/* Hero Banner */}
       <header className="relative h-[600px] flex items-center overflow-hidden bg-background">
         <img 
-          src={service.image} 
+          src={getFullImageUrl(service.image)} 
           alt={service.title} 
           className="absolute inset-0 w-full h-full object-cover"
         />

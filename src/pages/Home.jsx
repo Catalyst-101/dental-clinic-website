@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '../components/Button';
@@ -6,12 +6,46 @@ import { SectionTitle } from '../components/SectionTitle';
 import { ServiceCard } from '../components/ServiceCard';
 import { DoctorCardSimple } from '../components/DoctorCardSimple';
 import { TestimonialCard } from '../components/TestimonialCard';
-import { services, doctors, testimonials } from '../data/clinicData';
+import { fetchServices } from '../api/servicesApi';
+import { fetchDoctors } from '../api/doctorsApi';
+import { fetchTestimonials, fetchSettings } from '../api/settingsApi';
 import Counter from '../components/Counter';
 import heroImage from "../assets/images/home_hero.jpg";
 
 const Home = () => {
   const navigate = useNavigate();
+  const [servicesList, setServicesList] = useState([]);
+  const [doctorsList, setDoctorsList] = useState([]);
+  const [testimonialsList, setTestimonialsList] = useState([]);
+  const [settingsData, setSettingsData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+    const loadHomeData = async () => {
+      try {
+        setLoading(true);
+        const [servicesData, doctorsData, testimonialsData, settingsRes] = await Promise.all([
+          fetchServices(),
+          fetchDoctors(),
+          fetchTestimonials(),
+          fetchSettings()
+        ]);
+        if (isMounted) {
+          setServicesList(servicesData || []);
+          setDoctorsList(doctorsData || []);
+          setTestimonialsList(testimonialsData || []);
+          setSettingsData(settingsRes || null);
+        }
+      } catch (err) {
+        console.error("Failed to load home data from backend:", err);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    };
+    loadHomeData();
+    return () => { isMounted = false; };
+  }, []);
 
   // Animations config
   const fadeInUp = {
@@ -163,8 +197,8 @@ const Home = () => {
           viewport={{ once: true, margin: "-100px" }}
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-md"
         >
-          {services.slice(0, 6).map((service) => (
-            <motion.div key={service.id} variants={fadeInUp}>
+          {servicesList.slice(0, 6).map((service) => (
+            <motion.div key={service.id || service._id} variants={fadeInUp}>
               <ServiceCard service={service} />
             </motion.div>
           ))}
@@ -283,9 +317,9 @@ const Home = () => {
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-md"
         >
 
-          {doctors.slice(0, 4).map((doctor) => (
+          {doctorsList.slice(0, 4).map((doctor) => (
             <motion.div
-              key={doctor.id}
+              key={doctor.id || doctor._id}
               variants={fadeInUp}
             >
               <DoctorCardSimple doctor={doctor} />
@@ -375,10 +409,10 @@ const Home = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-md">
 
-            {testimonials.map((t, idx) => (
+            {testimonialsList.map((t, idx) => (
 
               <motion.div
-                key={idx}
+                key={t._id || t.id || idx}
                 initial={{
                   opacity: 0,
                   y: 40

@@ -1,12 +1,31 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ServiceCard } from '../components/ServiceCard';
 import { Button } from '../components/Button';
-import { services } from '../data/clinicData';
+import { fetchServices } from '../api/servicesApi';
 
 const Services = () => {
   const navigate = useNavigate();
+  const [servicesList, setServicesList] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+    const loadServices = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchServices();
+        if (isMounted) setServicesList(data || []);
+      } catch (err) {
+        console.error("Failed to fetch services:", err);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    };
+    loadServices();
+    return () => { isMounted = false; };
+  }, []);
 
   const containerVariants = {
     hidden: {},
@@ -83,18 +102,24 @@ const Services = () => {
 
       {/* Services Grid Section */}
       <section className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-xl">
-        <motion.div 
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter"
-        >
-          {services.map((service) => (
-            <motion.div key={service.id} variants={itemVariants}>
-              <ServiceCard service={service} />
-            </motion.div>
-          ))}
-        </motion.div>
+        {loading ? (
+          <div className="flex justify-center py-16">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          </div>
+        ) : (
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter"
+          >
+            {servicesList.map((service) => (
+              <motion.div key={service.id || service._id} variants={itemVariants}>
+                <ServiceCard service={service} />
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
       </section>
 
       {/* CTA Section */}

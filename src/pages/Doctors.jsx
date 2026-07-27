@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { doctors } from '../data/clinicData';
+import { fetchDoctors } from '../api/doctorsApi';
 import { DoctorCard } from '../components/DoctorCard';
 import { Button } from '../components/Button';
 
@@ -9,8 +9,27 @@ import { Button } from '../components/Button';
 const Doctors = () => {
   const navigate = useNavigate();
 
+  const [doctorsList, setDoctorsList] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
+
+  useEffect(() => {
+    let isMounted = true;
+    const loadDoctors = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchDoctors({ all: "true" });
+        if (isMounted) setDoctorsList(data || []);
+      } catch (err) {
+        console.error("Failed to load doctors:", err);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    };
+    loadDoctors();
+    return () => { isMounted = false; };
+  }, []);
 
 
   const fadeUp = {
@@ -58,51 +77,35 @@ const Doctors = () => {
   };
 
 
-  const filteredDoctors = doctors.filter(doctor => {
+  const filteredDoctors = doctorsList.filter(doctor => {
+    const name = doctor.name || '';
+    const specialization = doctor.specialization || '';
+    const qualifications = doctor.qualifications || '';
+    const category = doctor.category || '';
 
     const matchesSearch =
-      doctor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      doctor.specialization.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      doctor.qualifications.toLowerCase().includes(searchQuery.toLowerCase());
+      name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      specialization.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      qualifications.toLowerCase().includes(searchQuery.toLowerCase());
 
 
-    if(activeCategory === "All") return matchesSearch;
-
+    if (activeCategory === "All") return matchesSearch;
 
     const categoryMapping = {
-
-      "General Dentistry": [
-        "General",
-        "Pediatric",
-        "Endodontic"
-      ],
-
-      "Orthodontics": [
-        "Orthodontics",
-        "Orthodontist"
-      ],
-
-      "Cosmetic Surgery": [
-        "Cosmetic",
-        "Implant"
-      ]
-
+      "General Dentistry": ["General", "Pediatric", "Endodontic", "Dentist", "Hygienist"],
+      "Orthodontics": ["Orthodontics", "Orthodontist"],
+      "Cosmetic Surgery": ["Cosmetic", "Implant", "Surgeon"]
     };
 
-
-    const keywords = categoryMapping[activeCategory] || [];
-
+    const keywords = categoryMapping[activeCategory] || [activeCategory];
 
     const matchesCategory =
+      category.toLowerCase().includes(activeCategory.toLowerCase()) ||
       keywords.some(keyword =>
-        doctor.specialization
-          .toLowerCase()
-          .includes(keyword.toLowerCase())
+        specialization.toLowerCase().includes(keyword.toLowerCase())
       );
 
-
     return matchesSearch && matchesCategory;
-
   });
 
 

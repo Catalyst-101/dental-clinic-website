@@ -1,15 +1,41 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { doctors } from '../data/clinicData';
+import { fetchDoctorById } from '../api/doctorsApi';
+import { getFullImageUrl } from '../api/axios';
 import { Button } from '../components/Button';
 
 const DoctorProfile = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [doctor, setDoctor] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Find doctor
-  const doctor = doctors.find(d => d.id === id);
+  useEffect(() => {
+    let isMounted = true;
+    const loadDoctor = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchDoctorById(id);
+        if (isMounted) setDoctor(data);
+      } catch (err) {
+        console.error("Failed to load doctor profile:", err);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    };
+    loadDoctor();
+    return () => { isMounted = false; };
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center p-md">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
+        <p className="text-on-surface-variant font-medium">Loading doctor profile...</p>
+      </div>
+    );
+  }
 
   if (!doctor) {
     return (
@@ -38,7 +64,7 @@ const DoctorProfile = () => {
           >
             <div className="aspect-[4/5] rounded-[32px] overflow-hidden shadow-xl border-4 border-white">
               <img 
-                src={doctor.image} 
+                src={getFullImageUrl(doctor.image)} 
                 alt={doctor.name} 
                 className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" 
               />

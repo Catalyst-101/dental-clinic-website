@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@material-symbols/react": "npm:@material-symbols-svg/react@^0.10.1",
+    "axios": "^1.18.1",
     "framer-motion": "^12.40.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",

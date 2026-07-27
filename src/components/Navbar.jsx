@@ -51,7 +51,7 @@ const Navbar = () => {
         </Link>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex gap-8 items-center">
+        <div className="hidden min-[1111px]:flex gap-8 items-center">
           {navLinks.map((link) => (
             <NavLink
               key={link.path}
@@ -69,7 +69,7 @@ const Navbar = () => {
         </div>
 
         {/* Desktop CTA Button */}
-        <div className="hidden md:block">
+        <div className="hidden min-[1111px]:block">
           <Link
             to="/book-appointment"
             className="bg-primary text-on-primary px-6 py-2.5 rounded-lg font-label-md text-label-md font-bold transition-all duration-150 hover:scale-105 active:scale-95 shadow-md flex items-center gap-2"
@@ -81,7 +81,7 @@ const Navbar = () => {
         {/* Mobile Toggle Button */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden flex items-center text-on-surface hover:text-primary focus:outline-none"
+          className="min-[1111px]:hidden flex items-center text-on-surface hover:text-primary focus:outline-none"
         >
           <span className="material-symbols-outlined text-[32px]">
             {isOpen ? 'close' : 'menu'}
@@ -97,7 +97,7 @@ const Navbar = () => {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="md:hidden bg-surface border-b border-outline-variant overflow-hidden"
+            className="min-[1111px]:hidden bg-surface border-b border-outline-variant overflow-hidden"
           >
             <div className="flex flex-col px-margin-mobile py-6 gap-4">
               {navLinks.map((link) => (

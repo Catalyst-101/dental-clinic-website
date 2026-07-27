@@ -5,6 +5,7 @@ import { fetchGallery } from '../api/settingsApi';
 import { getFullImageUrl } from '../api/axios';
 import { GalleryCard } from '../components/GalleryCard';
 import { SkeletonGallery } from '../components/Skeleton';
+import { Button } from '../components/Button';
 
 const Gallery = () => {
   const navigate = useNavigate();

@@ -7,18 +7,26 @@ const ServiceCard = ({ service }) => {
   const { title, summary, image, slug, id, _id } = service;
   const serviceIdentifier = slug || id || _id;
 
+  const imgUrl = getFullImageUrl(image);
+
   return (
     <motion.div
       whileHover={{ y: -8 }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
       className="glass-card rounded-xl overflow-hidden card-shadow flex flex-col h-full"
     >
-      <div className="relative h-60 w-full overflow-hidden">
-        <img
-          src={getFullImageUrl(image)}
-          alt={title}
-          className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-        />
+      <div className="relative h-60 w-full overflow-hidden bg-primary/10">
+        {imgUrl ? (
+          <img
+            src={imgUrl}
+            alt={title}
+            className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            <span className="material-symbols-outlined text-primary/50 text-5xl">medical_services</span>
+          </div>
+        )}
       </div>
 
       <div className="p-6 flex flex-col flex-grow">

@@ -1,13 +1,34 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '../components/Button';
 import { SectionTitle } from '../components/SectionTitle';
 import Counter from '../components/Counter';
 import TimelineCard from '../components/TimelineCard';
+import { fetchSettings } from '../api/settingsApi';
+import { SkeletonStat } from '../components/Skeleton';
 
 const About = () => {
   const navigate = useNavigate();
+  const [settingsData, setSettingsData] = useState(null);
+  const [loadingSettings, setLoadingSettings] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+    const loadSettings = async () => {
+      try {
+        setLoadingSettings(true);
+        const data = await fetchSettings();
+        if (isMounted) setSettingsData(data);
+      } catch (err) {
+        console.error("Failed to load settings on About page:", err);
+      } finally {
+        if (isMounted) setLoadingSettings(false);
+      }
+    };
+    loadSettings();
+    return () => { isMounted = false; };
+  }, []);
 
   // Scroll animations
   const revealAnim = {
@@ -111,22 +132,36 @@ const About = () => {
       {/* Stats Section */}
       <section className="py-lg bg-surface-container-lowest border-y border-outline-variant/10">
         <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-2 md:grid-cols-4 gap-md">
-          <div className="text-center p-md">
-            <div className="text-display-lg-mobile md:text-display-lg font-bold text-primary mb-xs"><Counter end={15} suffix="k+" /></div>
-            <div className="text-label-md font-medium text-on-surface-variant">Patients Treated</div>
-          </div>
-          <div className="text-center p-md">
-            <div className="text-display-lg-mobile md:text-display-lg font-bold text-primary mb-xs"><Counter end={28} suffix="+" /></div>
-            <div className="text-label-md font-medium text-on-surface-variant">Years Experience</div>
-          </div>
-          <div className="text-center p-md">
-            <div className="text-display-lg-mobile md:text-display-lg font-bold text-primary mb-xs"><Counter end={45} suffix="+" /></div>
-            <div className="text-label-md font-medium text-on-surface-variant">Expert Dentists</div>
-          </div>
-          <div className="text-center p-md">
-            <div className="text-display-lg-mobile md:text-display-lg font-bold text-primary mb-xs"><Counter end={98} suffix="%" /></div>
-            <div className="text-label-md font-medium text-on-surface-variant">Successful Procedures</div>
-          </div>
+          {loadingSettings ? (
+            [...Array(4)].map((_, i) => (
+              <SkeletonStat key={i} />
+            ))
+          ) : (
+            (settingsData?.stats || []).map((stat, idx) => {
+              const valStr = String(stat.value || '').trim();
+              const numMatch = valStr.match(/\d+[\d,]*/);
+              let endVal = 0;
+              let prefixStr = '';
+              let suffixStr = valStr;
+
+              if (numMatch) {
+                const numStr = numMatch[0];
+                const numIndex = valStr.indexOf(numStr);
+                prefixStr = valStr.substring(0, numIndex);
+                suffixStr = valStr.substring(numIndex + numStr.length);
+                endVal = parseInt(numStr.replace(/,/g, ''), 10);
+              }
+
+              return (
+                <div key={idx} className="text-center p-md">
+                  <div className="text-display-lg-mobile md:text-display-lg font-bold text-primary mb-xs">
+                    {prefixStr}<Counter end={endVal} suffix={suffixStr} />
+                  </div>
+                  <div className="text-label-md font-medium text-on-surface-variant">{stat.label}</div>
+                </div>
+              );
+            })
+          )}
         </div>
       </section>
 

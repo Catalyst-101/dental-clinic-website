@@ -7,6 +7,8 @@ const DoctorCard = ({ doctor }) => {
   const { id, _id, slug, name, qualifications, specialization, experience, availability, image } = doctor;
   const doctorIdentifier = slug || id || _id;
 
+  const imgUrl = getFullImageUrl(image);
+
   return (
     <motion.div
       whileHover={{ y: -8 }}
@@ -14,11 +16,17 @@ const DoctorCard = ({ doctor }) => {
       className="bg-surface-container-lowest rounded-xl overflow-hidden border border-[#DCFCE7] card-shadow flex flex-col h-full group"
     >
       <div className="h-72 overflow-hidden relative">
-        <img 
-          src={getFullImageUrl(image)} 
-          alt={name} 
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
-        />
+        {imgUrl ? (
+          <img 
+            src={imgUrl} 
+            alt={name} 
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+          />
+        ) : (
+          <div className="w-full h-full bg-primary/10 flex items-center justify-center">
+            <span className="material-symbols-outlined text-primary/50 text-5xl">person</span>
+          </div>
+        )}
         <div className="absolute top-4 right-4 bg-primary text-white px-3 py-1 rounded-full text-label-sm font-label-sm">
           Top Rated
         </div>

@@ -7,6 +7,8 @@ const DoctorCardSimple = ({ doctor }) => {
     const { id, _id, slug, name, specialization, image } = doctor;
     const doctorIdentifier = slug || id || _id;
 
+    const imgUrl = getFullImageUrl(image);
+
     return (
         <motion.div
             whileHover={{ y: -8 }}
@@ -14,12 +16,18 @@ const DoctorCardSimple = ({ doctor }) => {
             className="group"
         >
             {/* Image */}
-            <div className="relative overflow-hidden rounded-2xl mb-md">
-                <img
-                    src={getFullImageUrl(image)}
-                    alt={name}
-                    className="w-full aspect-[3/4] object-cover transition-transform duration-500 group-hover:scale-105"
-                />
+            <div className="relative overflow-hidden rounded-2xl mb-md bg-primary/10">
+                {imgUrl ? (
+                    <img
+                        src={imgUrl}
+                        alt={name}
+                        className="w-full aspect-[3/4] object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                ) : (
+                    <div className="w-full aspect-[3/4] flex items-center justify-center">
+                        <span className="material-symbols-outlined text-primary/50 text-6xl">person</span>
+                    </div>
+                )}
 
                 {/* Hover Overlay */}
                 <div

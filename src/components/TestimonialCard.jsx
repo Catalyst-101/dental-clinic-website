@@ -36,11 +36,17 @@ const TestimonialCard = ({ testimonial }) => {
       </div>
 
       <div className="flex items-center gap-4 pt-4 border-t border-outline-variant/10">
-        <img
-          src={avatarUrl || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"}
-          alt={name || "Patient"}
-          className="w-12 h-12 rounded-full object-cover border-2 border-primary-fixed"
-        />
+        {avatarUrl ? (
+          <img
+            src={avatarUrl}
+            alt={name || "Patient"}
+            className="w-12 h-12 rounded-full object-cover border-2 border-primary-fixed"
+          />
+        ) : (
+          <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold border-2 border-primary-fixed shrink-0">
+            {name ? name.charAt(0).toUpperCase() : "P"}
+          </div>
+        )}
 
         <div>
           <h5 className="font-bold text-on-surface text-body-md">

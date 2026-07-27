@@ -25,7 +25,7 @@ export const parseErrorMessage = (error, defaultMsg = "An unexpected error occur
 };
 
 export const getFullImageUrl = (imagePath) => {
-  if (!imagePath) return "";
+  if (!imagePath || typeof imagePath !== "string" || !imagePath.trim()) return null;
   if (imagePath.startsWith("http://") || imagePath.startsWith("https://") || imagePath.startsWith("data:")) {
     return imagePath;
   }

@@ -7,6 +7,8 @@ const GalleryCard = ({ item, onClick }) => {
   const displayTitle = title || caption || "Gallery Item";
   const displayTag = tag || category || "Clinic";
   const mainImage = getFullImageUrl(url || image);
+  const beforeImgUrl = getFullImageUrl(beforeImage);
+  const afterImgUrl = getFullImageUrl(afterImage);
 
   return (
     <motion.div
@@ -21,23 +23,29 @@ const GalleryCard = ({ item, onClick }) => {
       <div className="gallery-image-container relative overflow-hidden rounded-xl bg-surface-container-low group shadow-sm">
         {isBeforeAfter ? (
           <div className="grid grid-cols-2 gap-[2px]">
-            <img 
-              src={getFullImageUrl(beforeImage)} 
-              alt={`${displayTitle} Before`} 
-              className="w-full h-full object-cover aspect-[4/5] transition-transform duration-500 group-hover:scale-[1.03]" 
-            />
-            <img 
-              src={getFullImageUrl(afterImage)} 
-              alt={`${displayTitle} After`} 
-              className="w-full h-full object-cover aspect-[4/5] transition-transform duration-500 group-hover:scale-[1.03]" 
-            />
+            {beforeImgUrl ? (
+              <img 
+                src={beforeImgUrl} 
+                alt={`${displayTitle} Before`} 
+                className="w-full h-full object-cover aspect-[4/5] transition-transform duration-500 group-hover:scale-[1.03]" 
+              />
+            ) : <div className="w-full aspect-[4/5] bg-surface-container-high" />}
+            {afterImgUrl ? (
+              <img 
+                src={afterImgUrl} 
+                alt={`${displayTitle} After`} 
+                className="w-full h-full object-cover aspect-[4/5] transition-transform duration-500 group-hover:scale-[1.03]" 
+              />
+            ) : <div className="w-full aspect-[4/5] bg-surface-container-high" />}
           </div>
         ) : (
-          <img 
-            src={mainImage} 
-            alt={displayTitle} 
-            className="w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" 
-          />
+          mainImage ? (
+            <img 
+              src={mainImage} 
+              alt={displayTitle} 
+              className="w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" 
+            />
+          ) : <div className="w-full h-64 bg-surface-container-high" />
         )}
         
         {/* Hover overlay with glassmorphism blur */}

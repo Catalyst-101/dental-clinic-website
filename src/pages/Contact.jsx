@@ -6,11 +6,14 @@ import { sendContactMessage } from '../api/contactApi';
 import { fetchSettings } from '../api/settingsApi';
 import { useToast } from '../context/ToastContext';
 
+import { SkeletonContactInfo, Skeleton } from '../components/Skeleton';
+
 const Contact = () => {
   const navigate = useNavigate();
   const { showToast } = useToast();
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [settings, setSettings] = useState(null);
+  const [loadingSettings, setLoadingSettings] = useState(true);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -23,10 +26,13 @@ const Contact = () => {
     let isMounted = true;
     const loadSettings = async () => {
       try {
+        setLoadingSettings(true);
         const data = await fetchSettings();
         if (isMounted) setSettings(data);
       } catch (err) {
         console.error("Failed to load settings in Contact page:", err);
+      } finally {
+        if (isMounted) setLoadingSettings(false);
       }
     };
     loadSettings();
@@ -278,93 +284,97 @@ const Contact = () => {
                 Contact Information
               </h2>
 
-              <div className="space-y-6">
-                {/* Address Row */}
-                <motion.div
-                  variants={{
-                    hidden: { opacity: 0, x: -20 },
-                    visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: "easeOut" } }
-                  }}
-                  className="flex items-start gap-md"
-                >
-                  <div className="bg-primary-container text-on-primary-container p-3 rounded-lg flex items-center justify-center shrink-0">
-                    <span className="material-symbols-outlined text-[28px]">location_on</span>
-                  </div>
-                  <div>
-                    <h3 className="text-label-lg font-bold text-primary">Clinic Address</h3>
-                    <p className="text-on-surface-variant mt-1 leading-relaxed text-body-md">
-                      {settings?.contact?.address || "New Diljanplaza Section D 2nd Floor Office D7 Ring Road Achini, chowk, Achini Payan, Peshawar, 25000, Pakistan"}
-                    </p>
-                  </div>
-                </motion.div>
+              {loadingSettings ? (
+                <SkeletonContactInfo />
+              ) : (
+                <div className="space-y-6">
+                  {/* Address Row */}
+                  <motion.div
+                    variants={{
+                      hidden: { opacity: 0, x: -20 },
+                      visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: "easeOut" } }
+                    }}
+                    className="flex items-start gap-md"
+                  >
+                    <div className="bg-primary-container text-on-primary-container p-3 rounded-lg flex items-center justify-center shrink-0">
+                      <span className="material-symbols-outlined text-[28px]">location_on</span>
+                    </div>
+                    <div>
+                      <h3 className="text-label-lg font-bold text-primary">Clinic Address</h3>
+                      <p className="text-on-surface-variant mt-1 leading-relaxed text-body-md">
+                        {settings?.contact?.address || ""}
+                      </p>
+                    </div>
+                  </motion.div>
 
-                {/* Phone Row */}
-                <motion.div
-                  variants={{
-                    hidden: { opacity: 0, x: -20 },
-                    visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: "easeOut" } }
-                  }}
-                  className="flex items-start gap-md"
-                >
-                  <div className="bg-primary-container text-on-primary-container p-3 rounded-lg flex items-center justify-center shrink-0">
-                    <span className="material-symbols-outlined text-[28px]">phone_in_talk</span>
-                  </div>
-                  <div>
-                    <h3 className="text-label-lg font-bold text-primary">Phone</h3>
-                    <p className="text-on-surface-variant font-bold text-body-lg mt-1">
-                      {settings?.contact?.phone || "+92 337 5675083"}
-                    </p>
-                  </div>
-                </motion.div>
+                  {/* Phone Row */}
+                  <motion.div
+                    variants={{
+                      hidden: { opacity: 0, x: -20 },
+                      visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: "easeOut" } }
+                    }}
+                    className="flex items-start gap-md"
+                  >
+                    <div className="bg-primary-container text-on-primary-container p-3 rounded-lg flex items-center justify-center shrink-0">
+                      <span className="material-symbols-outlined text-[28px]">phone_in_talk</span>
+                    </div>
+                    <div>
+                      <h3 className="text-label-lg font-bold text-primary">Phone</h3>
+                      <p className="text-on-surface-variant font-bold text-body-lg mt-1">
+                        {settings?.contact?.phone || ""}
+                      </p>
+                    </div>
+                  </motion.div>
 
-                {/* WhatsApp Row */}
-                <motion.div
-                  variants={{
-                    hidden: { opacity: 0, x: -20 },
-                    visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: "easeOut" } }
-                  }}
-                  className="flex items-start gap-md"
-                >
-                  <div className="bg-primary-container text-on-primary-container p-3 rounded-lg flex items-center justify-center shrink-0">
-                    <svg className="w-[28px] h-[28px]" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984a9.96 9.96 0 001.37 5.054L2 22l5.077-1.331a9.923 9.923 0 004.934 1.317c5.506 0 9.99-4.478 9.99-9.986 0-2.67-1.037-5.18-2.92-7.065A9.925 9.925 0 0012.012 2zm5.727 14.154c-.237.669-1.392 1.282-1.92 1.32-.475.034-.943.167-3.036-.656-2.522-.992-4.14-3.554-4.266-3.722-.127-.168-.925-1.229-.925-2.343 0-1.114.58-1.66.786-1.884.207-.224.453-.28.604-.28.152 0 .304.002.437.008.138.006.322-.053.504.385.188.452.64 1.557.696 1.669.056.112.094.243.019.393-.075.15-.113.243-.226.373-.113.13-.238.29-.339.39-.113.11-.233.23-.1.458.133.227.59 2.06 1.277 2.68.884.795 1.63 1.04 1.86 1.152.228.112.362.093.497-.06.136-.155.586-.684.743-.916.157-.23.314-.193.53-.112.217.081 1.378.65 1.616.769.239.118.398.177.456.277.06.1.06.579-.177 1.248z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="text-label-lg font-bold text-primary">WhatsApp</h3>
-                    <p className="text-on-surface-variant font-bold text-body-lg mt-1 hover:text-primary transition-colors">
-                      <a 
-                        href={`https://wa.me/${(settings?.contact?.whatsApp || settings?.social?.whatsApp || "+92 337 5675083").replace(/[^0-9]/g, "")}`}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        {settings?.contact?.whatsApp || settings?.social?.whatsApp || "+92 337 5675083"}
-                      </a>
-                    </p>
-                  </div>
-                </motion.div>
+                  {/* WhatsApp Row */}
+                  <motion.div
+                    variants={{
+                      hidden: { opacity: 0, x: -20 },
+                      visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: "easeOut" } }
+                    }}
+                    className="flex items-start gap-md"
+                  >
+                    <div className="bg-primary-container text-on-primary-container p-3 rounded-lg flex items-center justify-center shrink-0">
+                      <svg className="w-[28px] h-[28px]" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984a9.96 9.96 0 001.37 5.054L2 22l5.077-1.331a9.923 9.923 0 004.934 1.317c5.506 0 9.99-4.478 9.99-9.986 0-2.67-1.037-5.18-2.92-7.065A9.925 9.925 0 0012.012 2zm5.727 14.154c-.237.669-1.392 1.282-1.92 1.32-.475.034-.943.167-3.036-.656-2.522-.992-4.14-3.554-4.266-3.722-.127-.168-.925-1.229-.925-2.343 0-1.114.58-1.66.786-1.884.207-.224.453-.28.604-.28.152 0 .304.002.437.008.138.006.322-.053.504.385.188.452.64 1.557.696 1.669.056.112.094.243.019.393-.075.15-.113.243-.226.373-.113.13-.238.29-.339.39-.113.11-.233.23-.1.458.133.227.59 2.06 1.277 2.68.884.795 1.63 1.04 1.86 1.152.228.112.362.093.497-.06.136-.155.586-.684.743-.916.157-.23.314-.193.53-.112.217.081 1.378.65 1.616.769.239.118.398.177.456.277.06.1.06.579-.177 1.248z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 className="text-label-lg font-bold text-primary">WhatsApp</h3>
+                      <p className="text-on-surface-variant font-bold text-body-lg mt-1 hover:text-primary transition-colors">
+                        <a 
+                          href={`https://wa.me/${((settings?.contact?.whatsApp || settings?.social?.whatsApp) || "").replace(/[^0-9]/g, "")}`}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          {settings?.contact?.whatsApp || settings?.social?.whatsApp || ""}
+                        </a>
+                      </p>
+                    </div>
+                  </motion.div>
 
-                {/* Email Row */}
-                <motion.div
-                  variants={{
-                    hidden: { opacity: 0, x: -20 },
-                    visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: "easeOut" } }
-                  }}
-                  className="flex items-start gap-md"
-                >
-                  <div className="bg-primary-container text-on-primary-container p-3 rounded-lg flex items-center justify-center shrink-0">
-                    <span className="material-symbols-outlined text-[28px]">mail</span>
-                  </div>
-                  <div>
-                    <h3 className="text-label-lg font-bold text-primary">Email</h3>
-                    <p className="text-on-surface-variant mt-1 font-semibold text-body-md hover:text-primary transition-colors">
-                      <a href={`mailto:${settings?.contact?.email || 'hello@dentaelite.care'}`}>
-                        {settings?.contact?.email || "hello@dentaelite.care"}
-                      </a>
-                    </p>
-                  </div>
-                </motion.div>
-              </div>
+                  {/* Email Row */}
+                  <motion.div
+                    variants={{
+                      hidden: { opacity: 0, x: -20 },
+                      visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: "easeOut" } }
+                    }}
+                    className="flex items-start gap-md"
+                  >
+                    <div className="bg-primary-container text-on-primary-container p-3 rounded-lg flex items-center justify-center shrink-0">
+                      <span className="material-symbols-outlined text-[28px]">mail</span>
+                    </div>
+                    <div>
+                      <h3 className="text-label-lg font-bold text-primary">Email</h3>
+                      <p className="text-on-surface-variant mt-1 font-semibold text-body-md hover:text-primary transition-colors">
+                        <a href={`mailto:${settings?.contact?.email || ''}`}>
+                          {settings?.contact?.email || ""}
+                        </a>
+                      </p>
+                    </div>
+                  </motion.div>
+                </div>
+              )}
             </motion.div>
 
             {/* Business Hours Section */}
@@ -380,8 +390,15 @@ const Contact = () => {
                 <h3 className="font-bold text-label-md tracking-wider">BUSINESS HOURS</h3>
               </div>
               <div className="space-y-3">
-                {settings?.businessHours && settings.businessHours.length > 0 ? (
-                  settings.businessHours.map((bh, idx) => (
+                {loadingSettings ? (
+                  [...Array(5)].map((_, i) => (
+                    <div key={i} className="flex justify-between border-b border-outline-variant/20 pb-2">
+                      <Skeleton className="h-4 w-20" />
+                      <Skeleton className="h-4 w-28" />
+                    </div>
+                  ))
+                ) : (
+                  (settings?.businessHours || []).map((bh, idx) => (
                     <div key={idx} className="flex justify-between border-b border-outline-variant/20 pb-2 text-body-md">
                       <span className="text-on-surface-variant">{bh.day}</span>
                       <span className="font-bold text-on-surface">
@@ -389,17 +406,6 @@ const Contact = () => {
                       </span>
                     </div>
                   ))
-                ) : (
-                  <>
-                    <div className="flex justify-between border-b border-outline-variant/20 pb-2 text-body-md">
-                      <span className="text-on-surface-variant">Mon - Sat</span>
-                      <span className="font-bold text-on-surface">9:00 AM - 10:00 PM</span>
-                    </div>
-                    <div className="flex justify-between border-b border-outline-variant/20 pb-2 text-body-md">
-                      <span className="text-on-surface-variant">Sunday</span>
-                      <span className="text-on-surface font-bold">11:00 AM - 6:00 PM</span>
-                    </div>
-                  </>
                 )}
               </div>
             </motion.div>

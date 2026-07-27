@@ -10,7 +10,7 @@ import { fetchServices } from '../api/servicesApi';
 import { fetchDoctors } from '../api/doctorsApi';
 import { fetchTestimonials, fetchSettings, fetchGallery } from '../api/settingsApi';
 import { getFullImageUrl } from '../api/axios';
-import { SkeletonCard, Skeleton } from '../components/Skeleton';
+import { Skeleton, SkeletonCard, SkeletonProfile, SkeletonStat, SkeletonTestimonial, SkeletonGallery } from '../components/Skeleton';
 import Counter from '../components/Counter';
 import heroImage from "../assets/images/home_hero.jpg";
 
@@ -170,35 +170,36 @@ const Home = () => {
       {/* Stats Section */}
       <section className="py-lg bg-surface-container-lowest border-y border-outline-variant/10">
         <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-2 md:grid-cols-4 gap-md">
-          {(settingsData?.stats && settingsData.stats.length > 0 ? settingsData.stats : [
-            { label: 'Patients Treated', value: '15,000+' },
-            { label: 'Years Experience', value: '28+' },
-            { label: 'Expert Dentists', value: '45+' },
-            { label: 'Successful Procedures', value: '98%' }
-          ]).map((stat, idx) => {
-            const valStr = String(stat.value || '').trim();
-            const numMatch = valStr.match(/\d+[\d,]*/);
-            let endVal = 0;
-            let prefixStr = '';
-            let suffixStr = valStr;
+          {loading ? (
+            [...Array(4)].map((_, i) => (
+              <SkeletonStat key={i} />
+            ))
+          ) : (
+            (settingsData?.stats || []).map((stat, idx) => {
+              const valStr = String(stat.value || '').trim();
+              const numMatch = valStr.match(/\d+[\d,]*/);
+              let endVal = 0;
+              let prefixStr = '';
+              let suffixStr = valStr;
 
-            if (numMatch) {
-              const numStr = numMatch[0];
-              const numIndex = valStr.indexOf(numStr);
-              prefixStr = valStr.substring(0, numIndex);
-              suffixStr = valStr.substring(numIndex + numStr.length);
-              endVal = parseInt(numStr.replace(/,/g, ''), 10);
-            }
+              if (numMatch) {
+                const numStr = numMatch[0];
+                const numIndex = valStr.indexOf(numStr);
+                prefixStr = valStr.substring(0, numIndex);
+                suffixStr = valStr.substring(numIndex + numStr.length);
+                endVal = parseInt(numStr.replace(/,/g, ''), 10);
+              }
 
-            return (
-              <div key={idx} className="text-center p-md">
-                <div className="text-display-lg-mobile md:text-display-lg font-bold text-primary mb-xs">
-                  {prefixStr}<Counter end={endVal} suffix={suffixStr} />
+              return (
+                <div key={idx} className="text-center p-md">
+                  <div className="text-display-lg-mobile md:text-display-lg font-bold text-primary mb-xs">
+                    {prefixStr}<Counter end={endVal} suffix={suffixStr} />
+                  </div>
+                  <div className="text-label-md font-medium text-on-surface-variant">{stat.label}</div>
                 </div>
-                <div className="text-label-md font-medium text-on-surface-variant">{stat.label}</div>
-              </div>
-            );
-          })}
+              );
+            })
+          )}
         </div>
       </section>
 
@@ -208,19 +209,27 @@ const Home = () => {
           title="Specialized Dental Services"
           description="Combining clinical excellence with high-end hospitality to provide a unique, comfortable, and effective dental experience."
         />
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-md"
-        >
-          {servicesList.slice(0, 6).map((service) => (
-            <motion.div key={service.id || service._id} variants={fadeInUp}>
-              <ServiceCard service={service} />
-            </motion.div>
-          ))}
-        </motion.div>
+        {loading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-md">
+            {[...Array(6)].map((_, i) => (
+              <SkeletonCard key={i} />
+            ))}
+          </div>
+        ) : (
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-md"
+          >
+            {servicesList.slice(0, 6).map((service) => (
+              <motion.div key={service.id || service._id} variants={fadeInUp}>
+                <ServiceCard service={service} />
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
         <div className="flex justify-center mt-xl">
           <Button
             onClick={() => navigate('/services')}
@@ -327,24 +336,30 @@ const Home = () => {
         />
 
 
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-md"
-        >
-
-          {doctorsList.slice(0, 4).map((doctor) => (
-            <motion.div
-              key={doctor.id || doctor._id}
-              variants={fadeInUp}
-            >
-              <DoctorCardSimple doctor={doctor} />
-            </motion.div>
-          ))}
-
-        </motion.div>
+        {loading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-md">
+            {[...Array(4)].map((_, i) => (
+              <SkeletonProfile key={i} />
+            ))}
+          </div>
+        ) : (
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-md"
+          >
+            {doctorsList.slice(0, 4).map((doctor) => (
+              <motion.div
+                key={doctor.id || doctor._id}
+                variants={fadeInUp}
+              >
+                <DoctorCardSimple doctor={doctor} />
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
 
 
         <div className="flex justify-center mt-xl">
@@ -425,38 +440,27 @@ const Home = () => {
 
 
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-md">
-
-            {testimonialsList.map((t, idx) => (
-
-              <motion.div
-                key={t._id || t.id || idx}
-                initial={{
-                  opacity: 0,
-                  y: 40
-                }}
-                whileInView={{
-                  opacity: 1,
-                  y: 0
-                }}
-                viewport={{
-                  once: true
-                }}
-                transition={{
-                  duration: 0.7,
-                  delay: idx * 0.15,
-                  ease: "easeOut"
-                }}
-              >
-
-                <TestimonialCard testimonial={t} />
-
-              </motion.div>
-
-            ))}
-
-          </div>
-
+          {loading ? (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-md">
+              {[...Array(3)].map((_, i) => (
+                <SkeletonTestimonial key={i} />
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-md">
+              {testimonialsList.map((t, idx) => (
+                <motion.div
+                  key={t._id || t.id || idx}
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.7, delay: idx * 0.15, ease: "easeOut" }}
+                >
+                  <TestimonialCard testimonial={t} />
+                </motion.div>
+              ))}
+            </div>
+          )}
 
         </div>
 
@@ -470,90 +474,70 @@ const Home = () => {
           description="A clinical environment designed entirely for your comfort, sterility, and serenity."
         />
 
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-5 mt-10">
+            <div className="md:col-span-7 h-[420px] rounded-3xl overflow-hidden">
+              <Skeleton className="w-full h-full rounded-3xl" />
+            </div>
+            <div className="md:col-span-5 grid gap-5">
+              <Skeleton className="w-full h-[200px] rounded-3xl" />
+              <Skeleton className="w-full h-[200px] rounded-3xl" />
+            </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-5 mt-10">
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-5 mt-10">
-
-
-          {/* Large Featured Image */}
-          <motion.div
-            initial={{ opacity: 0, x: -60 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{
-              duration: 0.8,
-              ease: "easeOut"
-            }}
-            className="md:col-span-7 relative group overflow-hidden rounded-3xl"
-          >
-
-            <img
-              src={galleryList[0] ? getFullImageUrl(galleryList[0].image || galleryList[0].url) : "https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=800&q=80"}
-              alt={galleryList[0]?.title || "Clinical Facility"}
-              className="w-full h-[420px] object-cover transition duration-700 group-hover:scale-110"
-            />
-
-            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition duration-500" />
-
-          </motion.div>
-
-
-
-
-          {/* Right Side Images */}
-          <div className="md:col-span-5 grid gap-5">
-
-
+            {/* Large Featured Image */}
             <motion.div
-              initial={{ opacity: 0, x: 60 }}
+              initial={{ opacity: 0, x: -60 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{
-                duration: 0.8,
-                ease: "easeOut"
-              }}
-              className="relative group overflow-hidden rounded-3xl"
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="md:col-span-7 relative group overflow-hidden rounded-3xl"
             >
-
               <img
-                src={galleryList[1] ? getFullImageUrl(galleryList[1].image || galleryList[1].url) : "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&w=800&q=80"}
-                alt={galleryList[1]?.title || "Operating Facility"}
-                className="w-full h-[200px] object-cover rounded-3xl transition duration-700 group-hover:scale-110"
+                src={galleryList[0] ? getFullImageUrl(galleryList[0].image || galleryList[0].url) : ""}
+                alt={galleryList[0]?.title || "Clinical Facility"}
+                className="w-full h-[420px] object-cover transition duration-700 group-hover:scale-110"
               />
-
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition" />
-
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition duration-500" />
             </motion.div>
 
+            {/* Right Side Images */}
+            <div className="md:col-span-5 grid gap-5">
+              <motion.div
+                initial={{ opacity: 0, x: 60 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="relative group overflow-hidden rounded-3xl"
+              >
+                <img
+                  src={galleryList[1] ? getFullImageUrl(galleryList[1].image || galleryList[1].url) : ""}
+                  alt={galleryList[1]?.title || "Operating Facility"}
+                  className="w-full h-[200px] object-cover rounded-3xl transition duration-700 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition" />
+              </motion.div>
 
-
-            <motion.div
-              initial={{ opacity: 0, x: 60 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{
-                duration: 0.8,
-                delay: 0.15,
-                ease: "easeOut"
-              }}
-              className="relative group overflow-hidden rounded-3xl"
-            >
-
-              <img
-                src={galleryList[2] ? getFullImageUrl(galleryList[2].image || galleryList[2].url) : "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&q=80"}
-                alt={galleryList[2]?.title || "Patient Lounge"}
-                className="w-full h-[200px] object-cover rounded-3xl transition duration-700 group-hover:scale-110"
-              />
-
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition" />
-
-            </motion.div>
-
+              <motion.div
+                initial={{ opacity: 0, x: 60 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.15, ease: "easeOut" }}
+                className="relative group overflow-hidden rounded-3xl"
+              >
+                <img
+                  src={galleryList[2] ? getFullImageUrl(galleryList[2].image || galleryList[2].url) : ""}
+                  alt={galleryList[2]?.title || "Patient Lounge"}
+                  className="w-full h-[200px] object-cover rounded-3xl transition duration-700 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition" />
+              </motion.div>
+            </div>
 
           </div>
-
-        </div>
-
-
+        )}
 
         <motion.div
           initial={{ opacity: 0 }}

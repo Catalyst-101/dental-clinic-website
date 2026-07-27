@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { fetchGallery } from '../api/settingsApi';
 import { getFullImageUrl } from '../api/axios';
 import { GalleryCard } from '../components/GalleryCard';
-import { Button } from '../components/Button';
+import { SkeletonGallery } from '../components/Skeleton';
 
 const Gallery = () => {
   const navigate = useNavigate();
@@ -152,29 +152,37 @@ const Gallery = () => {
 
       {/* GALLERY */}
       <main className="px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto mb-xl">
-        <motion.div
-          variants={containerAnimation}
-          initial="hidden"
-          animate="visible"
-          className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6"
-        >
-          <AnimatePresence mode="popLayout">
-            {visibleItems.map(item => (
-              <motion.div
-                layout
-                variants={itemAnimation}
-                key={item.id}
-                className="break-inside-avoid"
-                whileHover={{ scale: 1.02 }}
-              >
-                <GalleryCard
-                  item={item}
-                  onClick={() => setSelectedItem(item)}
-                />
-              </motion.div>
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[...Array(6)].map((_, i) => (
+              <SkeletonGallery key={i} />
             ))}
-          </AnimatePresence>
-        </motion.div>
+          </div>
+        ) : (
+          <motion.div
+            variants={containerAnimation}
+            initial="hidden"
+            animate="visible"
+            className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6"
+          >
+            <AnimatePresence mode="popLayout">
+              {visibleItems.map(item => (
+                <motion.div
+                  layout
+                  variants={itemAnimation}
+                  key={item.id}
+                  className="break-inside-avoid"
+                  whileHover={{ scale: 1.02 }}
+                >
+                  <GalleryCard
+                    item={item}
+                    onClick={() => setSelectedItem(item)}
+                  />
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </motion.div>
+        )}
       </main>
 
       {/* PAGINATION */}

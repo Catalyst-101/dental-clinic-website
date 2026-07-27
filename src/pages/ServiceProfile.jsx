@@ -5,6 +5,8 @@ import { fetchServiceById } from '../api/servicesApi';
 import { getFullImageUrl } from '../api/axios';
 import { Button } from '../components/Button';
 
+import { SkeletonDetail } from '../components/Skeleton';
+
 const ServiceProfile = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -30,12 +32,7 @@ const ServiceProfile = () => {
   }, [id]);
 
   if (loading) {
-    return (
-      <div className="min-h-[60vh] flex flex-col items-center justify-center p-md">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
-        <p className="text-on-surface-variant font-medium">Loading service details...</p>
-      </div>
-    );
+    return <SkeletonDetail />;
   }
 
   if (!service) {

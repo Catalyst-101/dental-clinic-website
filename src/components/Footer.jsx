@@ -4,14 +4,18 @@ import { FaWhatsapp, FaInstagram, FaFacebook } from 'react-icons/fa';
 import { fetchSettings } from '../api/settingsApi';
 import { fetchServices } from '../api/servicesApi';
 
+import { Skeleton } from './Skeleton';
+
 const Footer = () => {
   const [settings, setSettings] = useState(null);
   const [servicesList, setServicesList] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
     const loadFooterData = async () => {
       try {
+        setLoading(true);
         const [settingsRes, servicesRes] = await Promise.all([
           fetchSettings(),
           fetchServices()
@@ -22,6 +26,8 @@ const Footer = () => {
         }
       } catch (err) {
         console.error("Failed to load footer data:", err);
+      } finally {
+        if (isMounted) setLoading(false);
       }
     };
     loadFooterData();
@@ -31,7 +37,7 @@ const Footer = () => {
   const contact = settings?.contact || {};
   const social = settings?.social || {};
   const businessHours = settings?.businessHours || [];
-  const whatsAppVal = contact.whatsApp || social.whatsApp || "+92 337 5675083";
+  const whatsAppVal = contact.whatsApp || social.whatsApp || "";
 
   return (
     <footer className="bg-surface-container-lowest border-t border-outline-variant">
@@ -49,14 +55,16 @@ const Footer = () => {
             Providing premium dental care with a focus on hospitality and clinical excellence.
           </p>
           <div className="flex gap-sm justify-start">
-            <a
-              href={whatsAppVal.startsWith('http') ? whatsAppVal : `https://wa.me/${whatsAppVal.replace(/[^0-9]/g, '')}`}
-              target="_blank"
-              rel="noreferrer"
-              className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary cursor-pointer hover:bg-primary hover:text-white transition-all"
-            >
-              <FaWhatsapp className="text-[20px]" />
-            </a>
+            {whatsAppVal && (
+              <a
+                href={whatsAppVal.startsWith('http') ? whatsAppVal : `https://wa.me/${whatsAppVal.replace(/[^0-9]/g, '')}`}
+                target="_blank"
+                rel="noreferrer"
+                className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary cursor-pointer hover:bg-primary hover:text-white transition-all"
+              >
+                <FaWhatsapp className="text-[20px]" />
+              </a>
+            )}
 
             {social.instagram && (
               <a
@@ -98,7 +106,11 @@ const Footer = () => {
         <div className="space-y-md">
           <h6 className="text-label-md font-bold text-on-surface uppercase tracking-widest">Services</h6>
           <ul className="space-y-sm">
-            {servicesList.length > 0 ? (
+            {loading ? (
+              [...Array(4)].map((_, i) => (
+                <li key={i}><Skeleton className="h-4 w-28" /></li>
+              ))
+            ) : (
               servicesList.map((srv) => (
                 <li key={srv.id || srv._id}>
                   <Link
@@ -109,12 +121,6 @@ const Footer = () => {
                   </Link>
                 </li>
               ))
-            ) : (
-              <>
-                <li><Link className="text-on-surface-variant hover:text-primary transition-all text-body-md" to="/services">Dental Cleaning</Link></li>
-                <li><Link className="text-on-surface-variant hover:text-primary transition-all text-body-md" to="/services">Root Canal Treatment</Link></li>
-                <li><Link className="text-on-surface-variant hover:text-primary transition-all text-body-md" to="/services">Orthodontics</Link></li>
-              </>
             )}
           </ul>
         </div>
@@ -122,51 +128,65 @@ const Footer = () => {
         {/* Contact Info */}
         <div className="space-y-md">
           <h6 className="text-label-md font-bold text-on-surface uppercase tracking-widest">Contact Info</h6>
-          <ul className="space-y-sm">
-            <li className="flex items-start gap-sm">
-              <span className="material-symbols-outlined text-primary mt-1">location_on</span>
-              <span className="text-on-surface-variant text-body-md">
-                {contact.address || "New Diljanplaza Section D 2nd Floor Office D7 Ring Road Achini Chowk, Achini Payan, Peshawar"}
-              </span>
-            </li>
-            <li className="flex items-center gap-sm">
-              <span className="material-symbols-outlined text-primary">call</span>
-              <span className="text-on-surface-variant text-body-md font-bold">
-                {contact.phone || "+92 337 5675083"}
-              </span>
-            </li>
-            <li className="flex items-center gap-sm">
-              <FaWhatsapp className="text-primary text-xl" />
-              <a
-                href={whatsAppVal.startsWith('http') ? whatsAppVal : `https://wa.me/${whatsAppVal.replace(/[^0-9]/g, '')}`}
-                target="_blank"
-                rel="noreferrer"
-                className="text-on-surface-variant hover:text-primary transition-colors text-body-md font-bold"
-              >
-                {whatsAppVal}
-              </a>
-            </li>
-            <li className="flex items-center gap-sm">
-              <span className="material-symbols-outlined text-primary">mail</span>
-              <span className="text-on-surface-variant text-body-md">
-                {contact.email || "hello@dentaelite.care"}
-              </span>
-            </li>
-            <li className="flex gap-sm">
-              <span className="material-symbols-outlined text-primary mt-1">schedule</span>
-              <div className="flex flex-col justify-center gap-1 text-on-surface-variant text-body-sm">
-                {businessHours.length > 0 ? (
-                  businessHours.map((bh, idx) => (
-                    <span key={idx}>
-                      {bh.day}: {bh.isClosed ? "Closed" : `${bh.open} - ${bh.close}`}
-                    </span>
-                  ))
-                ) : (
-                  <span>Mon - Sat: 9:00 AM - 10:00 PM</span>
-                )}
-              </div>
-            </li>
-          </ul>
+          {loading ? (
+            <div className="space-y-3">
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-4 w-1/2" />
+            </div>
+          ) : (
+            <ul className="space-y-sm">
+              {contact.address && (
+                <li className="flex items-start gap-sm">
+                  <span className="material-symbols-outlined text-primary mt-1">location_on</span>
+                  <span className="text-on-surface-variant text-body-md">
+                    {contact.address}
+                  </span>
+                </li>
+              )}
+              {contact.phone && (
+                <li className="flex items-center gap-sm">
+                  <span className="material-symbols-outlined text-primary">call</span>
+                  <span className="text-on-surface-variant text-body-md font-bold">
+                    {contact.phone}
+                  </span>
+                </li>
+              )}
+              {whatsAppVal && (
+                <li className="flex items-center gap-sm">
+                  <FaWhatsapp className="text-primary text-xl" />
+                  <a
+                    href={whatsAppVal.startsWith('http') ? whatsAppVal : `https://wa.me/${whatsAppVal.replace(/[^0-9]/g, '')}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-on-surface-variant hover:text-primary transition-colors text-body-md font-bold"
+                  >
+                    {whatsAppVal}
+                  </a>
+                </li>
+              )}
+              {contact.email && (
+                <li className="flex items-center gap-sm">
+                  <span className="material-symbols-outlined text-primary">mail</span>
+                  <span className="text-on-surface-variant text-body-md">
+                    {contact.email}
+                  </span>
+                </li>
+              )}
+              {businessHours.length > 0 && (
+                <li className="flex gap-sm">
+                  <span className="material-symbols-outlined text-primary mt-1">schedule</span>
+                  <div className="flex flex-col justify-center gap-1 text-on-surface-variant text-body-sm">
+                    {businessHours.map((bh, idx) => (
+                      <span key={idx}>
+                        {bh.day}: {bh.isClosed ? "Closed" : `${bh.open} - ${bh.close}`}
+                      </span>
+                    ))}
+                  </div>
+                </li>
+              )}
+            </ul>
+          )}
         </div>
 
       </div>

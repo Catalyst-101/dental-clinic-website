@@ -18,18 +18,17 @@ const AppointmentForm = () => {
   const [documentUrl, setDocumentUrl] = useState('');
   const [uploadingPdf, setUploadingPdf] = useState(false);
   const [pdfFileName, setPdfFileName] = useState('');
+  const [filteredDoctors, setFilteredDoctors] = useState([]);
+  const [availableSlots, setAvailableSlots] = useState([]);
+  const [fetchingSlots, setFetchingSlots] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
     const loadFormData = async () => {
       try {
-        const [servRes, docRes] = await Promise.all([
-          fetchServices(),
-          fetchDoctors({ all: "true" })
-        ]);
+        const servRes = await fetchServices();
         if (isMounted) {
           setServicesList(servRes || []);
-          setDoctorsList(docRes || []);
         }
       } catch (err) {
         console.error("Failed to load options for appointment form:", err);
@@ -38,6 +37,64 @@ const AppointmentForm = () => {
     loadFormData();
     return () => { isMounted = false; };
   }, []);
+
+  // Filter assigned doctors when serviceId changes
+  useEffect(() => {
+    if (!formData.serviceId) {
+      setFilteredDoctors([]);
+      setFormData(prev => ({ ...prev, doctorId: '', time: '' }));
+      setAvailableSlots([]);
+      return;
+    }
+
+    const loadAssignedDoctors = async () => {
+      try {
+        const docs = await fetchDoctors({ serviceId: formData.serviceId });
+        setFilteredDoctors(docs || []);
+      } catch (err) {
+        console.error("Failed to load assigned doctors:", err);
+        setFilteredDoctors([]);
+      }
+    };
+
+    loadAssignedDoctors();
+    setFormData(prev => ({ ...prev, doctorId: '', time: '' }));
+    setAvailableSlots([]);
+  }, [formData.serviceId]);
+
+  // Fetch dynamic available slots when serviceId, doctorId, and date are selected
+  useEffect(() => {
+    if (!formData.serviceId || !formData.doctorId || !formData.date) {
+      setAvailableSlots([]);
+      return;
+    }
+
+    const fetchDynamicSlots = async () => {
+      setFetchingSlots(true);
+      try {
+        const res = await api.get('/appointments/available-slots', {
+          params: {
+            serviceId: formData.serviceId,
+            doctorId: formData.doctorId,
+            date: formData.date
+          }
+        });
+
+        if (res.data && res.data.success) {
+          setAvailableSlots(res.data.data || []);
+        } else {
+          setAvailableSlots([]);
+        }
+      } catch (err) {
+        console.error("Failed to fetch dynamic slots:", err);
+        setAvailableSlots([]);
+      } finally {
+        setFetchingSlots(false);
+      }
+    };
+
+    fetchDynamicSlots();
+  }, [formData.serviceId, formData.doctorId, formData.date]);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -503,14 +560,21 @@ const AppointmentForm = () => {
                   <div className="space-y-xs">
                     <label className="text-label-md font-label-md text-on-surface-variant px-1" htmlFor="doctorId">Select Doctor</label>
                     <select
-                      className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-body-md"
+                      className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-body-md disabled:opacity-50"
                       id="doctorId"
                       required
+                      disabled={!formData.serviceId}
                       value={formData.doctorId}
                       onChange={handleSelectDoctorChange}
                     >
-                      <option value="">Choose a specialist...</option>
-                      {doctorsList.map(d => (
+                      <option value="">
+                        {!formData.serviceId
+                          ? "Select a service first..."
+                          : filteredDoctors.length === 0
+                          ? "No doctors assigned to this service"
+                          : "Choose a specialist..."}
+                      </option>
+                      {filteredDoctors.map(d => (
                         <option key={d.id || d._id || d.slug} value={d.id || d._id || d.slug}>{d.name} ({d.specialization ? d.specialization.split(' ').slice(-1)[0] : 'Specialist'})</option>
                       ))}
                     </select>
@@ -550,23 +614,38 @@ const AppointmentForm = () => {
                     />
                   </div>
                   <div className="space-y-xs">
-                    <label className="text-label-md font-label-md text-on-surface-variant px-1">Preferred Time</label>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                      {['09:00 AM', '10:30 AM', '11:30 AM', '01:00 PM', '02:30 PM', '04:00 PM'].map((slot) => (
-                        <button
-                          key={slot}
-                          type="button"
-                          onClick={() => handleTimeSelect(slot)}
-                          className={`py-2 px-1 rounded-lg border text-label-sm font-label-sm transition-all text-center ${
-                            formData.time === slot
-                              ? 'border-primary bg-primary-fixed text-on-primary-fixed font-semibold ring-1 ring-primary'
-                              : 'border-outline-variant bg-surface-container-lowest hover:border-primary text-on-surface'
-                          }`}
-                        >
-                          {slot}
-                        </button>
-                      ))}
-                    </div>
+                    <label className="text-label-md font-label-md text-on-surface-variant px-1">Available Start Times (Dynamic)</label>
+                    {fetchingSlots ? (
+                      <div className="p-3 text-xs text-primary font-bold flex items-center gap-2">
+                        <span className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></span>
+                        <span>Calculating doctor availability...</span>
+                      </div>
+                    ) : !formData.serviceId || !formData.doctorId || !formData.date ? (
+                      <p className="text-xs text-on-surface-variant opacity-70 p-2 italic">
+                        Select service, doctor, and date to view calculated times.
+                      </p>
+                    ) : availableSlots.length === 0 ? (
+                      <p className="text-xs text-error font-bold p-2">
+                        No available time slots fit this service duration on the selected date.
+                      </p>
+                    ) : (
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-36 overflow-y-auto p-1">
+                        {availableSlots.map((slot) => (
+                          <button
+                            key={slot}
+                            type="button"
+                            onClick={() => handleTimeSelect(slot)}
+                            className={`py-2 px-1 rounded-lg border text-label-sm font-label-sm transition-all text-center cursor-pointer ${
+                              formData.time === slot
+                                ? 'border-primary bg-primary-fixed text-on-primary-fixed font-semibold ring-1 ring-primary'
+                                : 'border-outline-variant bg-surface-container-lowest hover:border-primary text-on-surface'
+                            }`}
+                          >
+                            {slot}
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
 

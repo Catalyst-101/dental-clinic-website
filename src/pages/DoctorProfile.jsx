@@ -283,8 +283,12 @@ const DoctorProfile = () => {
                   className="flex justify-between items-center py-2 border-b border-outline-variant/20 last:border-b-0 hover:bg-primary-container/5 px-2 rounded-lg transition-colors"
                 >
                   <span className="text-label-md font-label-md font-bold text-on-surface">{sched.day}</span>
-                  <span className={`text-label-md font-label-md ${sched.time === 'Closed' ? 'text-error' : 'text-primary'}`}>
-                    {sched.time}
+                  <span className={`text-label-md font-label-md ${sched.isWorking === false || sched.time === 'Closed' ? 'text-error font-semibold' : 'text-primary font-bold'}`}>
+                    {sched.isWorking === false
+                      ? "Off / Closed"
+                      : (sched.startTime && sched.endTime)
+                      ? `${sched.startTime} - ${sched.endTime}`
+                      : sched.time || "Closed"}
                   </span>
                 </motion.div>
               ))}

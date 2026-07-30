@@ -2,33 +2,38 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { fetchDoctors } from '../api/doctorsApi';
+import { fetchCategories } from '../api/categoriesApi';
 import { DoctorCard } from '../components/DoctorCard';
-import { Button } from '../components/Button';
-import { SkeletonProfile } from '../components/Skeleton';
-
 
 const Doctors = () => {
   const navigate = useNavigate();
 
   const [doctorsList, setDoctorsList] = useState([]);
+  const [categoriesList, setCategoriesList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
 
   useEffect(() => {
     let isMounted = true;
-    const loadDoctors = async () => {
+    const loadData = async () => {
       try {
         setLoading(true);
-        const data = await fetchDoctors({ all: "true" });
-        if (isMounted) setDoctorsList(data || []);
+        const [docs, cats] = await Promise.all([
+          fetchDoctors({ all: "true" }),
+          fetchCategories()
+        ]);
+        if (isMounted) {
+          setDoctorsList(docs || []);
+          setCategoriesList(cats || []);
+        }
       } catch (err) {
-        console.error("Failed to load doctors:", err);
+        console.error("Failed to load doctors or categories:", err);
       } finally {
         if (isMounted) setLoading(false);
       }
     };
-    loadDoctors();
+    loadData();
     return () => { isMounted = false; };
   }, []);
 
@@ -92,19 +97,9 @@ const Doctors = () => {
 
     if (activeCategory === "All") return matchesSearch;
 
-    const categoryMapping = {
-      "General Dentistry": ["General", "Pediatric", "Endodontic", "Dentist", "Hygienist"],
-      "Orthodontics": ["Orthodontics", "Orthodontist"],
-      "Cosmetic Surgery": ["Cosmetic", "Implant", "Surgeon"]
-    };
-
-    const keywords = categoryMapping[activeCategory] || [activeCategory];
-
     const matchesCategory =
-      category.toLowerCase().includes(activeCategory.toLowerCase()) ||
-      keywords.some(keyword =>
-        specialization.toLowerCase().includes(keyword.toLowerCase())
-      );
+      category.toLowerCase() === activeCategory.toLowerCase() ||
+      specialization.toLowerCase().includes(activeCategory.toLowerCase());
 
     return matchesSearch && matchesCategory;
   });
@@ -335,12 +330,7 @@ const Doctors = () => {
 
 
           {
-            [
-              'All',
-              'General Dentistry',
-              'Orthodontics',
-              'Cosmetic Surgery'
-            ]
+            ['All', ...categoriesList.map(c => c.name)]
             .map(cat=>(
 
 

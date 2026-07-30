@@ -79,16 +79,28 @@ const ServiceProfile = () => {
             }}
             className="max-w-2xl"
           >
-            {/* Badge slides down and fades in */}
-            <motion.span 
-              variants={{
-                hidden: { opacity: 0, y: -20 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
-              }}
-              className="inline-block px-4 py-1.5 bg-[#DCFCE7] text-primary rounded-full text-label-sm font-label-sm mb-6 uppercase tracking-wider"
-            >
-              {service.tagline}
-            </motion.span>
+            <div className="flex flex-wrap items-center gap-3 mb-6">
+              <motion.span 
+                variants={{
+                  hidden: { opacity: 0, y: -20 },
+                  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
+                }}
+                className="inline-block px-4 py-1.5 bg-[#DCFCE7] text-primary rounded-full text-label-sm font-label-sm uppercase tracking-wider font-bold"
+              >
+                {service.tagline || "CLINICAL SERVICE"}
+              </motion.span>
+
+              <motion.span 
+                variants={{
+                  hidden: { opacity: 0, y: -20 },
+                  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
+                }}
+                className="inline-flex items-center gap-1 px-4 py-1.5 bg-primary text-on-primary rounded-full text-label-sm font-label-sm uppercase tracking-wider font-bold"
+              >
+                <span className="material-symbols-outlined text-[16px]">schedule</span>
+                <span>{service.duration || 30} Minutes</span>
+              </motion.span>
+            </div>
 
             {/* Heading reveals smoothly */}
             <motion.h1 
@@ -245,6 +257,43 @@ const ServiceProfile = () => {
           </motion.div>
         </div>
       </section>
+
+      {/* Assigned Doctors Section */}
+      {Array.isArray(service.doctors) && service.doctors.length > 0 && (
+        <section className="py-lg bg-surface-container/30 border-b border-outline-variant/10">
+          <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop text-left">
+            <h3 className="font-headline-sm text-headline-sm font-bold mb-6 text-primary flex items-center gap-2">
+              <span className="material-symbols-outlined text-[24px]">groups</span>
+              Specialists Assigned to {service.title}
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-md">
+              {service.doctors.map((doc) => {
+                const doctorObj = typeof doc === "object" ? doc : null;
+                if (!doctorObj) return null;
+
+                return (
+                  <div
+                    key={doctorObj._id || doctorObj.slug}
+                    onClick={() => navigate(`/doctors/${doctorObj.slug || doctorObj._id}`)}
+                    className="glass-card rounded-2xl p-4 border border-outline-variant/30 flex items-center gap-4 cursor-pointer hover:shadow-md transition-all"
+                  >
+                    <img
+                      src={getFullImageUrl(doctorObj.image)}
+                      alt={doctorObj.name}
+                      className="w-14 h-14 rounded-full object-cover border border-primary-fixed shrink-0"
+                    />
+                    <div>
+                      <h4 className="font-bold text-on-surface text-sm">{doctorObj.name}</h4>
+                      <p className="text-xs text-primary font-semibold">{doctorObj.specialization}</p>
+                      <p className="text-[11px] text-on-surface-variant opacity-75">{doctorObj.experience}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* 3-Step Procedure */}
       <section className="py-xl" id="procedure">

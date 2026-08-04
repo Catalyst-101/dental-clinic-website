@@ -41,9 +41,14 @@ const AppointmentForm = () => {
     let isMounted = true;
     const loadFormData = async () => {
       try {
-        const servRes = await fetchServices();
+        const [servRes, docRes] = await Promise.allSettled([
+          fetchServices(),
+          fetchDoctors({ all: "true" })
+        ]);
+
         if (isMounted) {
-          setServicesList(servRes || []);
+          if (servRes.status === "fulfilled") setServicesList(servRes.value || []);
+          if (docRes.status === "fulfilled") setDoctorsList(docRes.value || []);
         }
       } catch (err) {
         console.error("Failed to load options for appointment form:", err);
@@ -52,6 +57,8 @@ const AppointmentForm = () => {
     loadFormData();
     return () => { isMounted = false; };
   }, []);
+
+  const displayDoctors = filteredDoctors.length > 0 ? filteredDoctors : doctorsList;
 
   // Filter assigned doctors when serviceId changes
   useEffect(() => {
@@ -218,12 +225,12 @@ const AppointmentForm = () => {
               <div class="info-val">${serviceName}</div>
             </div>
             <div class="info-item">
-              <div class="info-label">Date</div>
+              <div class="info-label">Scheduled Date</div>
               <div class="info-val">${formData.date}</div>
             </div>
-            <div class="info-item">
-              <div class="info-label">Time Slot</div>
-              <div class="info-val">${formData.time}</div>
+            <div class="info-item" style="border: 2px solid #059669; background: #ecfdf5;">
+              <div class="info-label" style="color: #047857;">Ticket Number</div>
+              <div class="info-val" style="color: #047857; font-size: 16px; font-weight: 900;">${formData.time && formData.time.includes('Ticket') ? formData.time : ('Ticket #' + (formData.time || '1'))}</div>
             </div>
           </div>
 
@@ -303,6 +310,9 @@ const AppointmentForm = () => {
       const response = await createAppointment(payload);
       const createdApt = response.data || response;
       setAppointmentId(createdApt.appointmentId || createdApt.id || createdApt._id || `DE-${Math.floor(10000 + Math.random() * 90000)}`);
+      if (createdApt && createdApt.time) {
+        setFormData(prev => ({ ...prev, time: createdApt.time }));
+      }
       setStep(4);
       triggerConfetti();
     } catch (err) {
@@ -345,7 +355,7 @@ const AppointmentForm = () => {
 
   // Helper values
   const selectedService = servicesList.find(s => s.id === formData.serviceId || s._id === formData.serviceId || s.slug === formData.serviceId);
-  const selectedDoctor = doctorsList.find(d => d.id === formData.doctorId || d._id === formData.doctorId || d.slug === formData.doctorId);
+  const selectedDoctor = displayDoctors.find(d => d.id === formData.doctorId || d._id === formData.doctorId || d.slug === formData.doctorId) || doctorsList.find(d => d.id === formData.doctorId || d._id === formData.doctorId || d.slug === formData.doctorId);
   const formattedDate = formData.date ? new Date(formData.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
 
   // Stepper helper
@@ -571,15 +581,17 @@ const AppointmentForm = () => {
                       value={formData.doctorId}
                       onChange={handleSelectDoctorChange}
                     >
-                      <option value="">
+                      <option value="" disabled>
                         {!formData.serviceId
                           ? "Select a service first..."
-                          : filteredDoctors.length === 0
-                          ? "No doctors assigned to this service"
+                          : displayDoctors.length === 0
+                          ? "Loading specialists..."
                           : "Choose a specialist..."}
                       </option>
-                      {filteredDoctors.map(d => (
-                        <option key={d.id || d._id || d.slug} value={d.id || d._id || d.slug}>{d.name} ({d.specialization ? d.specialization.split(' ').slice(-1)[0] : 'Specialist'})</option>
+                      {displayDoctors.map(d => (
+                        <option key={d.id || d._id || d.slug} value={d.id || d._id || d.slug}>
+                          {d.name} ({d.specialization ? d.specialization : 'Specialist'})
+                        </option>
                       ))}
                     </select>
                   </div>

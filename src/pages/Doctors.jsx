@@ -21,18 +21,28 @@ const Doctors = () => {
     const loadData = async () => {
       try {
         setLoading(true);
-        const [docs, cats] = await Promise.all([
-          fetchDoctors({ all: "true" }),
-          fetchCategories()
-        ]);
-        console.log("Doctors:", docs);
-        console.log("Categories:", cats);
+
+        let docs = [];
+        let cats = [];
+
+        try {
+          docs = await fetchDoctors({ all: "true" });
+        } catch (doctorErr) {
+          console.error("Failed to load doctors:", doctorErr);
+        }
+
+        try {
+          cats = await fetchCategories();
+        } catch (catErr) {
+          console.warn("Failed to load categories, using fallback:", catErr);
+        }
+
         if (isMounted) {
           setDoctorsList(docs || []);
           setCategoriesList(cats || []);
         }
       } catch (err) {
-        console.error("Failed to load doctors or categories:", err);
+        console.error("Unexpected error in Doctors page:", err);
       } finally {
         if (isMounted) setLoading(false);
       }
@@ -89,7 +99,11 @@ const Doctors = () => {
     return matchesSearch && matchesCategory;
   });
 
-  const categories = ['All', ...Array.from(new Set(categoriesList.map(c => typeof c === 'string' ? c : c?.name).filter(Boolean)))];
+  // Extract category names from API list or infer directly from doctorsList if API returned empty/404
+  const apiCategoryNames = categoriesList.map(c => typeof c === 'string' ? c : c?.name).filter(Boolean);
+  const inferredCategoryNames = doctorsList.map(d => typeof d.category === 'object' ? d.category?.name : d.category).filter(Boolean);
+  const combinedCategoryNames = Array.from(new Set([...apiCategoryNames, ...inferredCategoryNames]));
+  const categories = ['All', ...combinedCategoryNames];
 
   return (
     <div className="overflow-hidden bg-background">

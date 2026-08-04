@@ -100,6 +100,19 @@ const ServiceProfile = () => {
                 <span className="material-symbols-outlined text-[16px]">schedule</span>
                 <span>{service.duration || 30} Minutes</span>
               </motion.span>
+
+              {service.price !== undefined && (
+                <motion.span 
+                  variants={{
+                    hidden: { opacity: 0, y: -20 },
+                    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
+                  }}
+                  className="inline-flex items-center gap-1 px-4 py-1.5 bg-emerald-700 text-white rounded-full text-label-sm font-label-sm uppercase tracking-wider font-bold"
+                >
+                  <span className="material-symbols-outlined text-[16px]">payments</span>
+                  <span>{service.price > 0 ? `$${service.price}` : "Free Consultation"}</span>
+                </motion.span>
+              )}
             </div>
 
             {/* Heading reveals smoothly */}
@@ -193,7 +206,7 @@ const ServiceProfile = () => {
                 viewport={{ once: true }}
                 className="space-y-4"
               >
-                {service.bulletPoints.map((pt, idx) => (
+                {(service.bulletPoints || []).map((pt, idx) => (
                   <motion.div 
                     key={idx} 
                     variants={{
@@ -227,7 +240,7 @@ const ServiceProfile = () => {
               viewport={{ once: true }}
               className="grid grid-cols-1 gap-md"
             >
-              {service.benefits.map((benefit, idx) => (
+              {(service.benefits || []).map((benefit, idx) => (
                 <motion.div 
                   key={idx} 
                   variants={{
@@ -333,7 +346,7 @@ const ServiceProfile = () => {
           viewport={{ once: true }}
           className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-1 md:grid-cols-3 gap-gutter"
         >
-          {service.steps.map((step, idx) => (
+          {(service.steps || []).map((step, idx) => (
             <motion.div 
               key={idx} 
               variants={{
@@ -396,7 +409,7 @@ const ServiceProfile = () => {
                 transition={{ duration: 0.5, delay: 0.1 }}
                 className="text-body-lg mb-8 opacity-95 leading-relaxed"
               >
-                {service.recovery.intro}
+                {service.recovery?.intro}
               </motion.p>
               
               <motion.div 
@@ -415,7 +428,7 @@ const ServiceProfile = () => {
                 viewport={{ once: true }}
                 className="space-y-6"
               >
-                {service.recovery.tips.map((tip, idx) => (
+                {(service.recovery?.tips || []).map((tip, idx) => (
                   <motion.div 
                     key={idx} 
                     variants={{
@@ -468,7 +481,7 @@ const ServiceProfile = () => {
             viewport={{ once: true }}
             className="space-y-4"
           >
-            {service.faqs.map((faq, idx) => {
+            {(service.faqs || []).map((faq, idx) => {
               const isOpen = openFaq === idx;
               return (
                 <motion.div 

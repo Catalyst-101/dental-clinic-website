@@ -19,8 +19,8 @@ const AppointmentForm = () => {
   const [uploadingPdf, setUploadingPdf] = useState(false);
   const [pdfFileName, setPdfFileName] = useState('');
   const [filteredDoctors, setFilteredDoctors] = useState([]);
-  const [availableSlots, setAvailableSlots] = useState([]);
-  const [fetchingSlots, setFetchingSlots] = useState(false);
+  const [ticketInfo, setTicketInfo] = useState(null);
+  const [fetchingTickets, setFetchingTickets] = useState(false);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -34,7 +34,7 @@ const AppointmentForm = () => {
     serviceId: '',
     doctorId: '',
     date: '',
-    time: ''
+    time: 'Ticket Reservation'
   });
 
   useEffect(() => {
@@ -57,8 +57,8 @@ const AppointmentForm = () => {
   useEffect(() => {
     if (!formData.serviceId) {
       setFilteredDoctors([]);
-      setFormData(prev => ({ ...prev, doctorId: '', time: '' }));
-      setAvailableSlots([]);
+      setFormData(prev => ({ ...prev, doctorId: '', time: 'Ticket Reservation' }));
+      setTicketInfo(null);
       return;
     }
 
@@ -73,43 +73,42 @@ const AppointmentForm = () => {
     };
 
     loadAssignedDoctors();
-    setFormData(prev => ({ ...prev, doctorId: '', time: '' }));
-    setAvailableSlots([]);
+    setFormData(prev => ({ ...prev, doctorId: '', time: 'Ticket Reservation' }));
+    setTicketInfo(null);
   }, [formData.serviceId]);
 
-  // Fetch dynamic available slots when serviceId, doctorId, and date are selected
+  // Fetch ticket availability when serviceId and date are selected
   useEffect(() => {
-    if (!formData.serviceId || !formData.doctorId || !formData.date) {
-      setAvailableSlots([]);
+    if (!formData.serviceId || !formData.date) {
+      setTicketInfo(null);
       return;
     }
 
-    const fetchDynamicSlots = async () => {
-      setFetchingSlots(true);
+    const fetchTicketAvailability = async () => {
+      setFetchingTickets(true);
       try {
-        const res = await api.get('/appointments/available-slots', {
+        const res = await api.get('/appointments/ticket-availability', {
           params: {
             serviceId: formData.serviceId,
-            doctorId: formData.doctorId,
             date: formData.date
           }
         });
 
         if (res.data && res.data.success) {
-          setAvailableSlots(res.data.data || []);
+          setTicketInfo(res.data.data);
         } else {
-          setAvailableSlots([]);
+          setTicketInfo(null);
         }
       } catch (err) {
-        console.error("Failed to fetch dynamic slots:", err);
-        setAvailableSlots([]);
+        console.error("Failed to fetch ticket availability:", err);
+        setTicketInfo(null);
       } finally {
-        setFetchingSlots(false);
+        setFetchingTickets(false);
       }
     };
 
-    fetchDynamicSlots();
-  }, [formData.serviceId, formData.doctorId, formData.date]);
+    fetchTicketAvailability();
+  }, [formData.serviceId, formData.date]);
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -271,10 +270,15 @@ const AppointmentForm = () => {
 
   const handleStep2Submit = (e) => {
     e.preventDefault();
-    if (!formData.serviceId || !formData.doctorId || !formData.date || !formData.time) {
+    if (!formData.serviceId || !formData.doctorId || !formData.date) {
       showToast('Please complete all appointment details.', 'warning');
       return;
     }
+    if (ticketInfo && ticketInfo.ticketsLeft <= 0) {
+      showToast('All daily tickets for this service are booked on the selected date. Please pick another date.', 'error');
+      return;
+    }
+    setFormData(prev => ({ ...prev, time: 'Ticket Reservation' }));
     setStep(3);
   };
 
@@ -614,38 +618,39 @@ const AppointmentForm = () => {
                     />
                   </div>
                   <div className="space-y-xs">
-                    <label className="text-label-md font-label-md text-on-surface-variant px-1">Available Start Times (Dynamic)</label>
-                    {fetchingSlots ? (
-                      <div className="p-3 text-xs text-primary font-bold flex items-center gap-2">
+                    <label className="text-label-md font-label-md text-on-surface-variant px-1">Daily Ticket Capacity</label>
+                    {fetchingTickets ? (
+                      <div className="p-3 text-xs text-primary font-bold flex items-center gap-2 bg-surface-container-lowest rounded-lg border border-outline-variant">
                         <span className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></span>
-                        <span>Calculating doctor availability...</span>
+                        <span>Checking available tickets...</span>
                       </div>
-                    ) : !formData.serviceId || !formData.doctorId || !formData.date ? (
-                      <p className="text-xs text-on-surface-variant opacity-70 p-2 italic">
-                        Select service, doctor, and date to view calculated times.
-                      </p>
-                    ) : availableSlots.length === 0 ? (
-                      <p className="text-xs text-error font-bold p-2">
-                        No available time slots fit this service duration on the selected date.
-                      </p>
-                    ) : (
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-36 overflow-y-auto p-1">
-                        {availableSlots.map((slot) => (
-                          <button
-                            key={slot}
-                            type="button"
-                            onClick={() => handleTimeSelect(slot)}
-                            className={`py-2 px-1 rounded-lg border text-label-sm font-label-sm transition-all text-center cursor-pointer ${
-                              formData.time === slot
-                                ? 'border-primary bg-primary-fixed text-on-primary-fixed font-semibold ring-1 ring-primary'
-                                : 'border-outline-variant bg-surface-container-lowest hover:border-primary text-on-surface'
-                            }`}
-                          >
-                            {slot}
-                          </button>
-                        ))}
+                    ) : !formData.serviceId || !formData.date ? (
+                      <div className="p-3 text-xs text-on-surface-variant italic bg-surface-container-lowest rounded-lg border border-outline-variant">
+                        Select a service and date to view ticket availability today.
                       </div>
-                    )}
+                    ) : ticketInfo ? (
+                      <div className={`p-3.5 rounded-lg border flex items-center gap-3 ${
+                        ticketInfo.ticketsLeft > 0 
+                          ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-700' 
+                          : 'bg-red-500/10 border-red-500/30 text-red-600'
+                      }`}>
+                        <span className="material-symbols-outlined text-[24px] shrink-0">
+                          {ticketInfo.ticketsLeft > 0 ? 'confirmation_number' : 'cancel'}
+                        </span>
+                        <div>
+                          <p className="text-sm font-extrabold leading-tight">
+                            {ticketInfo.ticketsLeft > 0 
+                              ? `${ticketInfo.ticketsLeft} Tickets Available Today` 
+                              : 'Sold Out for this Date'}
+                          </p>
+                          <p className="text-[11px] opacity-80 mt-0.5">
+                            {ticketInfo.ticketsLeft > 0 
+                              ? `${ticketInfo.bookedCount} booked out of ${ticketInfo.totalTickets} total daily tickets.` 
+                              : `All ${ticketInfo.totalTickets} daily tickets have been reserved for ${formattedDate}.`}
+                          </p>
+                        </div>
+                      </div>
+                    ) : null}
                   </div>
                 </div>
 
@@ -773,12 +778,12 @@ const AppointmentForm = () => {
 
                     <div className="flex items-start gap-4">
                       <div className="w-12 h-12 rounded-lg bg-surface-container-high flex items-center justify-center shrink-0">
-                        <span className="material-symbols-outlined text-on-surface-variant">schedule</span>
+                        <span className="material-symbols-outlined text-primary">confirmation_number</span>
                       </div>
                       <div>
-                        <p className="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider mb-0.5">Time Slot</p>
-                        <p className="text-body-md font-semibold text-on-surface">{formData.time}</p>
-                        <p className="text-label-sm text-on-surface-variant font-medium">Estimated: 45-60 mins</p>
+                        <p className="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider mb-0.5">Ticket Status</p>
+                        <p className="text-body-md font-semibold text-on-surface">Daily Ticket Reserved</p>
+                        <p className="text-label-sm text-primary font-medium">Valid for All-Day Access</p>
                       </div>
                     </div>
                   </div>

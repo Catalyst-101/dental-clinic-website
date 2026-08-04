@@ -22,6 +22,21 @@ const AppointmentForm = () => {
   const [availableSlots, setAvailableSlots] = useState([]);
   const [fetchingSlots, setFetchingSlots] = useState(false);
 
+  // Form state
+  const [formData, setFormData] = useState({
+    fullName: '',
+    phone: '',
+    email: '',
+    gender: '',
+    dob: '',
+    address: '',
+    notes: '',
+    serviceId: '',
+    doctorId: '',
+    date: '',
+    time: ''
+  });
+
   useEffect(() => {
     let isMounted = true;
     const loadFormData = async () => {
@@ -95,21 +110,6 @@ const AppointmentForm = () => {
 
     fetchDynamicSlots();
   }, [formData.serviceId, formData.doctorId, formData.date]);
-
-  // Form state
-  const [formData, setFormData] = useState({
-    fullName: '',
-    phone: '',
-    email: '',
-    gender: '',
-    dob: '',
-    address: '',
-    notes: '',
-    serviceId: '',
-    doctorId: '',
-    date: '',
-    time: ''
-  });
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;

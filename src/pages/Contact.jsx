@@ -18,7 +18,7 @@ const Contact = () => {
     name: '',
     email: '',
     phone: '',
-    subject: 'General Inquiry',
+    subject: '',
     message: ''
   });
 
@@ -50,7 +50,7 @@ const Contact = () => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.email || !formData.message) {
+    if (!formData.name || !formData.email || !formData.message || !formData.subject) {
       showToast("Please fill in all required fields.", "warning");
       return;
     }
@@ -67,7 +67,7 @@ const Contact = () => {
         name: '',
         email: '',
         phone: '',
-        subject: 'General Inquiry',
+        subject: '',
         message: ''
       });
       showToast('Message sent successfully! Our clinical staff will reach out to you shortly.', 'success');
@@ -77,36 +77,6 @@ const Contact = () => {
       setFormSubmitted(false);
     }
   };
-
-  const socialLinks = [
-    {
-      name: 'WhatsApp',
-      url: 'https://wa.me/923375675083',
-      icon: (
-        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984a9.96 9.96 0 001.37 5.054L2 22l5.077-1.331a9.923 9.923 0 004.934 1.317c5.506 0 9.99-4.478 9.99-9.986 0-2.67-1.037-5.18-2.92-7.065A9.925 9.925 0 0012.012 2zm5.727 14.154c-.237.669-1.392 1.282-1.92 1.32-.475.034-.943.167-3.036-.656-2.522-.992-4.14-3.554-4.266-3.722-.127-.168-.925-1.229-.925-2.343 0-1.114.58-1.66.786-1.884.207-.224.453-.28.604-.28.152 0 .304.002.437.008.138.006.322-.053.504.385.188.452.64 1.557.696 1.669.056.112.094.243.019.393-.075.15-.113.243-.226.373-.113.13-.238.29-.339.39-.113.11-.233.23-.1.458.133.227.59 2.06 1.277 2.68.884.795 1.63 1.04 1.86 1.152.228.112.362.093.497-.06.136-.155.586-.684.743-.916.157-.23.314-.193.53-.112.217.081 1.378.65 1.616.769.239.118.398.177.456.277.06.1.06.579-.177 1.248z" />
-        </svg>
-      )
-    },
-    {
-      name: 'Instagram',
-      url: '',
-      icon: (
-        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
-        </svg>
-      )
-    },
-    {
-      name: 'Facebook',
-      url: '',
-      icon: (
-        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c4.56-.93 8-4.96 8-9.75z" />
-        </svg>
-      )
-    }
-  ];
 
   return (
     <div className="overflow-hidden bg-background text-on-surface">
@@ -120,23 +90,11 @@ const Contact = () => {
             hidden: { opacity: 0 },
             visible: {
               opacity: 1,
-              transition: {
-                staggerChildren: 0.15,
-                delayChildren: 0.1
-              }
+              transition: { staggerChildren: 0.15, delayChildren: 0.1 }
             }
           }}
           className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop text-center relative z-10"
         >
-          {/* <motion.span 
-            variants={{
-              hidden: { opacity: 0, y: -20 },
-              visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
-            }}
-            className="inline-block px-4 py-1.5 rounded-full bg-[#DCFCE7] text-primary text-label-sm font-label-sm mb-md uppercase tracking-wider"
-          >
-            GET IN TOUCH
-          </motion.span> */}
           <motion.h1
             variants={{
               hidden: { opacity: 0, y: 30 },
@@ -174,7 +132,6 @@ const Contact = () => {
               <h2 className="text-headline-md font-headline-md text-primary mb-lg font-bold">Send us a Message</h2>
 
               <form onSubmit={handleFormSubmit} className="space-y-md">
-
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
                   <div className="space-y-xs">
                     <label className="text-label-md font-label-md text-on-surface-variant ml-1">Full Name</label>
@@ -219,9 +176,11 @@ const Contact = () => {
                     <label className="text-label-md font-label-md text-on-surface-variant ml-1">Subject</label>
                     <select
                       value={formData.subject}
+                      required
                       onChange={handleSubjectChange}
                       className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg p-3 focus:ring-2 focus:ring-primary focus:outline-none transition-all text-body-md appearance-none"
                     >
+                      <option value="" disabled>Select a subject</option>
                       <option value="General Inquiry">General Inquiry</option>
                       <option value="Booking Request">Booking Request</option>
                       <option value="Feedback">Feedback</option>
@@ -252,7 +211,6 @@ const Contact = () => {
                   {formSubmitted ? 'Sending...' : 'Send Message'}
                   <span className="material-symbols-outlined">send</span>
                 </Button>
-
               </form>
             </div>
           </motion.div>
@@ -270,12 +228,7 @@ const Contact = () => {
                 visible: {
                   opacity: 1,
                   y: 0,
-                  transition: {
-                    duration: 0.6,
-                    ease: "easeOut",
-                    staggerChildren: 0.12,
-                    delayChildren: 0.1
-                  }
+                  transition: { duration: 0.6, ease: "easeOut" }
                 }
               }}
               className="glass-card rounded-xl p-6 md:p-8 border border-[#DCFCE7] shadow-sm space-y-lg"
@@ -290,10 +243,9 @@ const Contact = () => {
                 <div className="space-y-6">
                   {/* Address Row */}
                   <motion.div
-                    variants={{
-                      hidden: { opacity: 0, x: -20 },
-                      visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: "easeOut" } }
-                    }}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.4, ease: "easeOut" }}
                     className="flex items-start gap-md"
                   >
                     <div className="bg-primary-container text-on-primary-container p-3 rounded-lg flex items-center justify-center shrink-0">
@@ -302,17 +254,16 @@ const Contact = () => {
                     <div>
                       <h3 className="text-label-lg font-bold text-primary">Clinic Address</h3>
                       <p className="text-on-surface-variant mt-1 leading-relaxed text-body-md">
-                        {settings?.contact?.address || ""}
+                        {settings?.contact?.address || settings?.address || "123 Dental St, Suite 100, New York, NY"}
                       </p>
                     </div>
                   </motion.div>
 
                   {/* Phone Row */}
                   <motion.div
-                    variants={{
-                      hidden: { opacity: 0, x: -20 },
-                      visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: "easeOut" } }
-                    }}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.4, delay: 0.08, ease: "easeOut" }}
                     className="flex items-start gap-md"
                   >
                     <div className="bg-primary-container text-on-primary-container p-3 rounded-lg flex items-center justify-center shrink-0">
@@ -321,17 +272,16 @@ const Contact = () => {
                     <div>
                       <h3 className="text-label-lg font-bold text-primary">Phone</h3>
                       <p className="text-on-surface-variant font-bold text-body-lg mt-1">
-                        {settings?.contact?.phone || ""}
+                        {settings?.contact?.phone || settings?.phone || "+1 (555) 123-4567"}
                       </p>
                     </div>
                   </motion.div>
 
                   {/* WhatsApp Row */}
                   <motion.div
-                    variants={{
-                      hidden: { opacity: 0, x: -20 },
-                      visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: "easeOut" } }
-                    }}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.4, delay: 0.16, ease: "easeOut" }}
                     className="flex items-start gap-md"
                   >
                     <div className="bg-primary-container text-on-primary-container p-3 rounded-lg flex items-center justify-center shrink-0">
@@ -343,11 +293,11 @@ const Contact = () => {
                       <h3 className="text-label-lg font-bold text-primary">WhatsApp</h3>
                       <p className="text-on-surface-variant font-bold text-body-lg mt-1 hover:text-primary transition-colors">
                         <a 
-                          href={`https://wa.me/${((settings?.contact?.whatsApp || settings?.social?.whatsApp) || "").replace(/[^0-9]/g, "")}`}
+                          href={`https://wa.me/${((settings?.contact?.whatsApp || settings?.contact?.whatsapp || settings?.social?.whatsApp || settings?.social?.whatsapp) || "15551234567").replace(/[^0-9]/g, "")}`}
                           target="_blank"
                           rel="noreferrer"
                         >
-                          {settings?.contact?.whatsApp || settings?.social?.whatsApp || ""}
+                          {settings?.contact?.whatsApp || settings?.contact?.whatsapp || settings?.social?.whatsApp || settings?.social?.whatsapp || "+1 (555) 123-4567"}
                         </a>
                       </p>
                     </div>
@@ -355,10 +305,9 @@ const Contact = () => {
 
                   {/* Email Row */}
                   <motion.div
-                    variants={{
-                      hidden: { opacity: 0, x: -20 },
-                      visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: "easeOut" } }
-                    }}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.4, delay: 0.24, ease: "easeOut" }}
                     className="flex items-start gap-md"
                   >
                     <div className="bg-primary-container text-on-primary-container p-3 rounded-lg flex items-center justify-center shrink-0">
@@ -367,8 +316,8 @@ const Contact = () => {
                     <div>
                       <h3 className="text-label-lg font-bold text-primary">Email</h3>
                       <p className="text-on-surface-variant mt-1 font-semibold text-body-md hover:text-primary transition-colors">
-                        <a href={`mailto:${settings?.contact?.email || ''}`}>
-                          {settings?.contact?.email || ""}
+                        <a href={`mailto:${settings?.contact?.email || settings?.email || 'contact@dentaelite.com'}`}>
+                          {settings?.contact?.email || settings?.email || "contact@dentaelite.com"}
                         </a>
                       </p>
                     </div>
@@ -398,7 +347,11 @@ const Contact = () => {
                     </div>
                   ))
                 ) : (
-                  (settings?.businessHours || []).map((bh, idx) => (
+                  ((settings?.businessHours && settings.businessHours.length > 0) ? settings.businessHours : [
+                    { day: "Monday - Friday", open: "08:00 AM", close: "05:00 PM", isClosed: false },
+                    { day: "Saturday", open: "09:00 AM", close: "02:00 PM", isClosed: false },
+                    { day: "Sunday", open: "", close: "", isClosed: true }
+                  ]).map((bh, idx) => (
                     <div key={idx} className="flex justify-between border-b border-outline-variant/20 pb-2 text-body-md">
                       <span className="text-on-surface-variant">{bh.day}</span>
                       <span className="font-bold text-on-surface">
@@ -412,58 +365,45 @@ const Contact = () => {
 
             {/* Social Links below Business Hours */}
             <motion.div
-              variants={{
-                hidden: { opacity: 0, y: 15 },
-                visible: {
-                  opacity: 1,
-                  y: 0,
-                  transition: {
-                    staggerChildren: 0.1,
-                    delayChildren: 0.2
-                  }
-                }
-              }}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
               className="flex justify-center gap-md pt-4"
             >
-              {settings?.social?.whatsApp && (
-                <motion.a
-                  href={settings.social.whatsApp.startsWith('http') ? settings.social.whatsApp : `https://wa.me/${settings.social.whatsApp.replace(/[^0-9]/g, '')}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="w-12 h-12 rounded-full border border-primary flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors duration-300 shadow-sm bg-transparent cursor-pointer"
-                >
-                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984a9.96 9.96 0 001.37 5.054L2 22l5.077-1.331a9.923 9.923 0 004.934 1.317c5.506 0 9.99-4.478 9.99-9.986 0-2.67-1.037-5.18-2.92-7.065A9.925 9.925 0 0012.012 2zm5.727 14.154c-.237.669-1.392 1.282-1.92 1.32-.475.034-.943.167-3.036-.656-2.522-.992-4.14-3.554-4.266-3.722-.127-.168-.925-1.229-.925-2.343 0-1.114.58-1.66.786-1.884.207-.224.453-.28.604-.28.152 0 .304.002.437.008.138.006.322-.053.504.385.188.452.64 1.557.696 1.669.056.112.094.243.019.393-.075.15-.113.243-.226.373-.113.13-.238.29-.339.39-.113.11-.233.23-.1.458.133.227.59 2.06 1.277 2.68.884.795 1.63 1.04 1.86 1.152.228.112.362.093.497-.06.136-.155.586-.684.743-.916.157-.23.314-.193.53-.112.217.081 1.378.65 1.616.769.239.118.398.177.456.277.06.1.06.579-.177 1.248z" />
-                  </svg>
-                </motion.a>
-              )}
-              {settings?.social?.instagram && (
-                <motion.a
-                  href={settings.social.instagram}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="w-12 h-12 rounded-full border border-primary flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors duration-300 shadow-sm bg-transparent cursor-pointer"
-                >
-                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
-                  </svg>
-                </motion.a>
-              )}
-              {settings?.social?.facebook && (
-                <motion.a
-                  href={settings.social.facebook}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="w-12 h-12 rounded-full border border-primary flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors duration-300 shadow-sm bg-transparent cursor-pointer"
-                >
-                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c4.56-.93 8-4.96 8-9.75z" />
-                  </svg>
-                </motion.a>
-              )}
+              <motion.a
+                href={
+                  settings?.social?.whatsApp
+                    ? (settings.social.whatsApp.startsWith('http') ? settings.social.whatsApp : `https://wa.me/${settings.social.whatsApp.replace(/[^0-9]/g, '')}`)
+                    : 'https://wa.me/15551234567'
+                }
+                target="_blank"
+                rel="noreferrer"
+                className="w-12 h-12 rounded-full border border-primary flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors duration-300 shadow-sm bg-transparent cursor-pointer"
+              >
+                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984a9.96 9.96 0 001.37 5.054L2 22l5.077-1.331a9.923 9.923 0 004.934 1.317c5.506 0 9.99-4.478 9.99-9.986 0-2.67-1.037-5.18-2.92-7.065A9.925 9.925 0 0012.012 2zm5.727 14.154c-.237.669-1.392 1.282-1.92 1.32-.475.034-.943.167-3.036-.656-2.522-.992-4.14-3.554-4.266-3.722-.127-.168-.925-1.229-.925-2.343 0-1.114.58-1.66.786-1.884.207-.224.453-.28.604-.28.152 0 .304.002.437.008.138.006.322-.053.504.385.188.452.64 1.557.696 1.669.056.112.094.243.019.393-.075.15-.113.243-.226.373-.113.13-.238.29-.339.39-.113.11-.233.23-.1.458.133.227.59 2.06 1.277 2.68.884.795 1.63 1.04 1.86 1.152.228.112.362.093.497-.06.136-.155.586-.684.743-.916.157-.23.314-.193.53-.112.217.081 1.378.65 1.616.769.239.118.398.177.456.277.06.1.06.579-.177 1.248z" />
+                </svg>
+              </motion.a>
+              <motion.a
+                href={settings?.social?.instagram || 'https://instagram.com'}
+                target="_blank"
+                rel="noreferrer"
+                className="w-12 h-12 rounded-full border border-primary flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors duration-300 shadow-sm bg-transparent cursor-pointer"
+              >
+                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+                </svg>
+              </motion.a>
+              <motion.a
+                href={settings?.social?.facebook || 'https://facebook.com'}
+                target="_blank"
+                rel="noreferrer"
+                className="w-12 h-12 rounded-full border border-primary flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors duration-300 shadow-sm bg-transparent cursor-pointer"
+              >
+                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c4.56-.93 8-4.96 8-9.75z" />
+                </svg>
+              </motion.a>
             </motion.div>
 
           </div>
@@ -481,10 +421,10 @@ const Contact = () => {
         <iframe
           title="SAMI Dental Clinic Location"
           src={
-            settings?.contact?.googleMapUrl
-              ? (settings.contact.googleMapUrl.includes("src=")
-                  ? settings.contact.googleMapUrl.match(/src=["']([^"']+)["']/)?.[1] || settings.contact.googleMapUrl
-                  : settings.contact.googleMapUrl)
+            settings?.contact?.googleMapUrl || settings?.googleMapUrl
+              ? ((settings?.contact?.googleMapUrl || settings?.googleMapUrl).includes("src=")
+                  ? (settings?.contact?.googleMapUrl || settings?.googleMapUrl).match(/src=["']([^"']+)["']/)?.[1] || (settings?.contact?.googleMapUrl || settings?.googleMapUrl)
+                  : (settings?.contact?.googleMapUrl || settings?.googleMapUrl))
               : "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3308.7645207047726!2d71.4772578!3d33.97289149999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38d93d0461436cab%3A0x5d6aaa0fc8be6434!2sDr%20Sami%20dental%20Clinic!5e0!3m2!1sen!2s!4v1782729928415!5m2!1sen!2s"
           }
           className="w-full h-full border-0 grayscale opacity-90 contrast-100 hover:grayscale-0 transition-all duration-500"

@@ -493,13 +493,15 @@ const Home = () => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, ease: "easeOut" }}
-              className="md:col-span-7 relative group overflow-hidden rounded-3xl"
+              className="md:col-span-7 relative group overflow-hidden rounded-3xl bg-surface-container-high"
             >
-              <img
-                src={galleryList[0] ? getFullImageUrl(galleryList[0].image || galleryList[0].url) : ""}
-                alt={galleryList[0]?.title || "Clinical Facility"}
-                className="w-full h-[420px] object-cover transition duration-700 group-hover:scale-110"
-              />
+              {galleryList[0] && (
+                <img
+                  src={getFullImageUrl(galleryList[0].image || galleryList[0].url)}
+                  alt={galleryList[0]?.title || "Clinical Facility"}
+                  className="w-full h-[420px] object-cover transition duration-700 group-hover:scale-110"
+                />
+              )}
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition duration-500" />
             </motion.div>
 
@@ -510,13 +512,15 @@ const Home = () => {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
-                className="relative group overflow-hidden rounded-3xl"
+                className="relative group overflow-hidden rounded-3xl bg-surface-container-high"
               >
-                <img
-                  src={galleryList[1] ? getFullImageUrl(galleryList[1].image || galleryList[1].url) : ""}
-                  alt={galleryList[1]?.title || "Operating Facility"}
-                  className="w-full h-[200px] object-cover rounded-3xl transition duration-700 group-hover:scale-110"
-                />
+                {galleryList[1] && (
+                  <img
+                    src={getFullImageUrl(galleryList[1].image || galleryList[1].url)}
+                    alt={galleryList[1]?.title || "Operating Facility"}
+                    className="w-full h-[200px] object-cover rounded-3xl transition duration-700 group-hover:scale-110"
+                  />
+                )}
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition" />
               </motion.div>
 
@@ -525,13 +529,15 @@ const Home = () => {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: 0.15, ease: "easeOut" }}
-                className="relative group overflow-hidden rounded-3xl"
+                className="relative group overflow-hidden rounded-3xl bg-surface-container-high"
               >
-                <img
-                  src={galleryList[2] ? getFullImageUrl(galleryList[2].image || galleryList[2].url) : ""}
-                  alt={galleryList[2]?.title || "Patient Lounge"}
-                  className="w-full h-[200px] object-cover rounded-3xl transition duration-700 group-hover:scale-110"
-                />
+                {galleryList[2] && (
+                  <img
+                    src={getFullImageUrl(galleryList[2].image || galleryList[2].url)}
+                    alt={galleryList[2]?.title || "Patient Lounge"}
+                    className="w-full h-[200px] object-cover rounded-3xl transition duration-700 group-hover:scale-110"
+                  />
+                )}
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition" />
               </motion.div>
             </div>

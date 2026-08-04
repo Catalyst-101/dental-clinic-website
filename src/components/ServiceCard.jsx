@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { getFullImageUrl } from '../api/axios';
 
 const ServiceCard = ({ service }) => {
-  const { title, summary, image, slug, id, _id, duration, doctors } = service;
+  const { title, summary, image, slug, id, _id, duration, doctors, price } = service;
   const serviceIdentifier = slug || id || _id;
 
   const imgUrl = getFullImageUrl(image);
@@ -29,10 +29,18 @@ const ServiceCard = ({ service }) => {
           </div>
         )}
 
-        {/* Duration badge */}
-        <div className="absolute top-3 right-3 bg-black/70 backdrop-blur-xs text-white text-[11px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1">
-          <span className="material-symbols-outlined text-[14px]">schedule</span>
-          <span>{duration || 30} mins</span>
+        {/* Badges container */}
+        <div className="absolute top-3 right-3 flex flex-col gap-2 items-end">
+          {price !== undefined && price !== null && (
+            <div className="bg-primary/90 backdrop-blur-xs text-white text-[12px] font-bold px-3 py-1 rounded-full flex items-center gap-1 shadow-sm">
+              <span>${price}</span>
+            </div>
+          )}
+          {/* Duration badge */}
+          <div className="bg-black/70 backdrop-blur-xs text-white text-[11px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1 shadow-sm">
+            <span className="material-symbols-outlined text-[14px]">schedule</span>
+            <span>{duration || 30} mins</span>
+          </div>
         </div>
       </div>
 

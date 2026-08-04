@@ -19,8 +19,6 @@ const AppointmentForm = () => {
   const [uploadingPdf, setUploadingPdf] = useState(false);
   const [pdfFileName, setPdfFileName] = useState('');
   const [filteredDoctors, setFilteredDoctors] = useState([]);
-  const [ticketInfo, setTicketInfo] = useState(null);
-  const [fetchingTickets, setFetchingTickets] = useState(false);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -33,8 +31,7 @@ const AppointmentForm = () => {
     notes: '',
     serviceId: '',
     doctorId: '',
-    date: '',
-    time: 'Ticket Reservation'
+    date: ''
   });
 
   useEffect(() => {
@@ -64,8 +61,7 @@ const AppointmentForm = () => {
   useEffect(() => {
     if (!formData.serviceId) {
       setFilteredDoctors([]);
-      setFormData(prev => ({ ...prev, doctorId: '', time: 'Ticket Reservation' }));
-      setTicketInfo(null);
+      setFormData(prev => ({ ...prev, doctorId: '' }));
       return;
     }
 
@@ -80,42 +76,8 @@ const AppointmentForm = () => {
     };
 
     loadAssignedDoctors();
-    setFormData(prev => ({ ...prev, doctorId: '', time: 'Ticket Reservation' }));
-    setTicketInfo(null);
+    setFormData(prev => ({ ...prev, doctorId: '' }));
   }, [formData.serviceId]);
-
-  // Fetch ticket availability when serviceId and date are selected
-  useEffect(() => {
-    if (!formData.serviceId || !formData.date) {
-      setTicketInfo(null);
-      return;
-    }
-
-    const fetchTicketAvailability = async () => {
-      setFetchingTickets(true);
-      try {
-        const res = await api.get('/appointments/ticket-availability', {
-          params: {
-            serviceId: formData.serviceId,
-            date: formData.date
-          }
-        });
-
-        if (res.data && res.data.success) {
-          setTicketInfo(res.data.data);
-        } else {
-          setTicketInfo(null);
-        }
-      } catch (err) {
-        console.error("Failed to fetch ticket availability:", err);
-        setTicketInfo(null);
-      } finally {
-        setFetchingTickets(false);
-      }
-    };
-
-    fetchTicketAvailability();
-  }, [formData.serviceId, formData.date]);
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -128,7 +90,8 @@ const AppointmentForm = () => {
   const handleSelectServiceChange = (e) => {
     setFormData(prev => ({
       ...prev,
-      serviceId: e.target.value
+      serviceId: e.target.value,
+      doctorId: ''
     }));
   };
 
@@ -139,59 +102,176 @@ const AppointmentForm = () => {
     }));
   };
 
-  const handleTimeSelect = (timeSlot) => {
-    setFormData(prev => ({
-      ...prev,
-      time: timeSlot
-    }));
+  const selectedDoctor = displayDoctors.find(d => (d.id === formData.doctorId || d._id === formData.doctorId || d.slug === formData.doctorId));
+  const selectedService = servicesList.find(s => (s.id === formData.serviceId || s._id === formData.serviceId || s.slug === formData.serviceId));
+
+  const formattedDate = formData.date ? new Date(formData.date).toLocaleDateString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  }) : '';
+
+  const handleStep1Submit = (e) => {
+    e.preventDefault();
+    if (!formData.fullName || !formData.phone || !formData.email || !formData.gender || !formData.dob || !formData.address) {
+      showToast('Please fill in all required patient details.', 'warning');
+      return;
+    }
+    setStep(2);
+  };
+
+  const handleStep2Submit = (e) => {
+    e.preventDefault();
+    if (!formData.serviceId || !formData.doctorId || !formData.date) {
+      showToast('Please complete all appointment details.', 'warning');
+      return;
+    }
+    setStep(3);
+  };
+
+  const handleConfirm = async () => {
+    try {
+      setLoading(true);
+      const selectedServiceObj = servicesList.find(s => (s.id === formData.serviceId || s._id === formData.serviceId || s.slug === formData.serviceId));
+      const selectedDoctorObj = doctorsList.find(d => (d.id === formData.doctorId || d._id === formData.doctorId || d.slug === formData.doctorId));
+
+      const payload = {
+        patientName: formData.fullName,
+        patientEmail: formData.email,
+        patientPhone: formData.phone,
+        doctorName: selectedDoctorObj ? selectedDoctorObj.name : formData.doctorId,
+        serviceName: selectedServiceObj ? selectedServiceObj.title : formData.serviceId,
+        date: formData.date,
+        time: "Date-Only Booking",
+        notes: formData.notes,
+        documentUrl: documentUrl
+      };
+
+      const response = await createAppointment(payload);
+      const createdApt = response.data || response;
+      setAppointmentId(createdApt.appointmentId || createdApt.id || createdApt._id || `DE-${Math.floor(10000 + Math.random() * 90000)}`);
+      setStep(4);
+      triggerConfetti();
+    } catch (err) {
+      showToast(err.message || "Failed to submit appointment. Please try again.", "error");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDownloadConfirmation = () => {
-    const selectedServiceObj = servicesList.find(s => (s.id === formData.serviceId || s._id === formData.serviceId || s.slug === formData.serviceId));
-    const selectedDoctorObj = doctorsList.find(d => (d.id === formData.doctorId || d._id === formData.doctorId || d.slug === formData.doctorId));
-    
     const printWindow = window.open('', '_blank');
     if (!printWindow) {
-      showToast('Pop-up window was blocked by your browser. Please allow pop-ups to view/print PDF confirmation.', 'warning');
+      showToast('Please allow popups to download your confirmation receipt.', 'warning');
       return;
     }
 
-    const refNo = appointmentId || ('DE-' + Math.floor(100000 + Math.random() * 900000));
+    const doctorName = selectedDoctor ? selectedDoctor.name : 'Assigned Practitioner';
+    const serviceName = selectedService ? selectedService.title : 'Dental Service';
     const patientName = formData.fullName || 'Valued Patient';
-    const doctorName = selectedDoctorObj ? selectedDoctorObj.name : (formData.doctorId || 'Assigned Specialist');
-    const serviceName = selectedServiceObj ? selectedServiceObj.title : (formData.serviceId || 'Dental Consultation');
+    const refNo = appointmentId || 'APT-RESERVATION';
 
     const htmlContent = `
       <!DOCTYPE html>
       <html>
       <head>
-        <title>Appointment Confirmation PDF - ${refNo}</title>
+        <title>Appointment Confirmation Receipt - SAMI Dental Clinic</title>
         <style>
-          @page { size: A4; margin: 20mm; }
-          body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #0f172a; margin: 0; padding: 24px; background: #fff; }
-          .receipt-box { border: 2px solid #059669; border-radius: 16px; padding: 32px; max-w: 700px; margin: 0 auto; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-          .header { text-align: center; border-bottom: 2px dashed #cbd5e1; padding-bottom: 20px; margin-bottom: 24px; }
-          .clinic-title { font-size: 26px; font-weight: 800; color: #047857; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
-          .subtitle { font-size: 13px; color: #64748b; margin-top: 4px; font-weight: 500; }
-          .status-badge { display: inline-block; margin-top: 12px; background: #d1fae5; color: #047857; font-size: 11px; font-weight: 800; padding: 6px 16px; rounded: 9999px; border-radius: 20px; letter-spacing: 0.5px; }
-          .section-heading { font-size: 12px; font-weight: 800; color: #059669; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; border-bottom: 1px solid #f1f5f9; padding-bottom: 4px; }
-          .info-grid { display: grid; grid-template-cols: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
-          .info-item { background: #f8fafc; padding: 12px 16px; border-radius: 8px; border: 1px solid #e2e8f0; }
-          .info-label { font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; }
-          .info-val { font-size: 14px; font-weight: 700; color: #0f172a; margin-top: 2px; }
-          .footer-note { text-align: center; margin-top: 32px; border-top: 1px solid #e2e8f0; padding-top: 16px; font-size: 11px; color: #64748b; }
-          @media print {
-            body { padding: 0; }
-            .receipt-box { border: none; padding: 0; box-shadow: none; }
+          body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: #1f2937;
+            padding: 30px;
+            background: #f9fafb;
+          }
+          .receipt-card {
+            max-width: 650px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 36px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            border: 1px solid #e5e7eb;
+          }
+          .clinic-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid #006b2c;
+            padding-bottom: 20px;
+            margin-bottom: 24px;
+          }
+          .clinic-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: #006b2c;
+            letter-spacing: -0.5px;
+          }
+          .clinic-subtitle {
+            font-size: 13px;
+            color: #6b7280;
+            margin-top: 4px;
+          }
+          .badge {
+            background: #ecfdf5;
+            color: #047857;
+            border: 1px solid #a7f3d0;
+            padding: 6px 14px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+          }
+          .section-heading {
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #6b7280;
+            margin-top: 20px;
+            margin-bottom: 10px;
+          }
+          .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+          }
+          .info-item {
+            background: #f3f4f6;
+            padding: 12px 16px;
+            border-radius: 10px;
+          }
+          .info-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #4b5563;
+            margin-bottom: 3px;
+          }
+          .info-val {
+            font-size: 14px;
+            font-weight: 700;
+            color: #111827;
+          }
+          .footer-note {
+            margin-top: 28px;
+            padding-top: 16px;
+            border-top: 1px solid #e5e7eb;
+            font-size: 11px;
+            color: #6b7280;
+            text-align: center;
           }
         </style>
       </head>
       <body>
-        <div class="receipt-box">
-          <div class="header">
-            <h1 class="clinic-title">SAMI DENTAL CLINIC</h1>
-            <div class="subtitle">Official Appointment Confirmation Receipt</div>
-            <div class="status-badge">APPOINTMENT CONFIRMED</div>
+        <div class="receipt-card">
+          <div class="clinic-header">
+            <div>
+              <div class="clinic-title">SAMI DENTAL CLINIC</div>
+              <div class="clinic-subtitle">Specialized Dental Care & Oral Surgery</div>
+            </div>
+            <div class="badge">Confirmed Booking</div>
           </div>
 
           <div class="section-heading">Patient Details</div>
@@ -224,13 +304,9 @@ const AppointmentForm = () => {
               <div class="info-label">Service</div>
               <div class="info-val">${serviceName}</div>
             </div>
-            <div class="info-item">
+            <div class="info-item" style="grid-column: span 2;">
               <div class="info-label">Scheduled Date</div>
               <div class="info-val">${formData.date}</div>
-            </div>
-            <div class="info-item" style="border: 2px solid #059669; background: #ecfdf5;">
-              <div class="info-label" style="color: #047857;">Ticket Number</div>
-              <div class="info-val" style="color: #047857; font-size: 16px; font-weight: 900;">${formData.time && formData.time.includes('Ticket') ? formData.time : ('Ticket #' + (formData.time || '1'))}</div>
             </div>
           </div>
 
@@ -266,62 +342,6 @@ const AppointmentForm = () => {
     showToast('PDF confirmation receipt generated! Save or print as PDF.', 'success');
   };
 
-  const handleStep1Submit = (e) => {
-    e.preventDefault();
-    if (!formData.fullName || !formData.phone || !formData.email || !formData.gender || !formData.dob || !formData.address) {
-      showToast('Please fill in all required patient details.', 'warning');
-      return;
-    }
-    setStep(2);
-  };
-
-  const handleStep2Submit = (e) => {
-    e.preventDefault();
-    if (!formData.serviceId || !formData.doctorId || !formData.date) {
-      showToast('Please complete all appointment details.', 'warning');
-      return;
-    }
-    if (ticketInfo && ticketInfo.ticketsLeft <= 0) {
-      showToast('All daily tickets for this service are booked on the selected date. Please pick another date.', 'error');
-      return;
-    }
-    setFormData(prev => ({ ...prev, time: 'Ticket Reservation' }));
-    setStep(3);
-  };
-
-  const handleConfirm = async () => {
-    try {
-      setLoading(true);
-      const selectedServiceObj = servicesList.find(s => (s.id === formData.serviceId || s._id === formData.serviceId || s.slug === formData.serviceId));
-      const selectedDoctorObj = doctorsList.find(d => (d.id === formData.doctorId || d._id === formData.doctorId || d.slug === formData.doctorId));
-
-      const payload = {
-        patientName: formData.fullName,
-        patientEmail: formData.email,
-        patientPhone: formData.phone,
-        doctorName: selectedDoctorObj ? selectedDoctorObj.name : formData.doctorId,
-        serviceName: selectedServiceObj ? selectedServiceObj.title : formData.serviceId,
-        date: formData.date,
-        time: formData.time,
-        notes: formData.notes,
-        documentUrl: documentUrl
-      };
-
-      const response = await createAppointment(payload);
-      const createdApt = response.data || response;
-      setAppointmentId(createdApt.appointmentId || createdApt.id || createdApt._id || `DE-${Math.floor(10000 + Math.random() * 90000)}`);
-      if (createdApt && createdApt.time) {
-        setFormData(prev => ({ ...prev, time: createdApt.time }));
-      }
-      setStep(4);
-      triggerConfetti();
-    } catch (err) {
-      showToast(err.message || "Failed to submit appointment. Please try again.", "error");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   // Confetti burst for step 4
   const triggerConfetti = () => {
     const container = document.body;
@@ -352,11 +372,6 @@ const AppointmentForm = () => {
       setTimeout(() => confetti.remove(), 4000);
     }
   };
-
-  // Helper values
-  const selectedService = servicesList.find(s => s.id === formData.serviceId || s._id === formData.serviceId || s.slug === formData.serviceId);
-  const selectedDoctor = displayDoctors.find(d => d.id === formData.doctorId || d._id === formData.doctorId || d.slug === formData.doctorId) || doctorsList.find(d => d.id === formData.doctorId || d._id === formData.doctorId || d.slug === formData.doctorId);
-  const formattedDate = formData.date ? new Date(formData.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
 
   // Stepper helper
   const getStepperClasses = (nodeNum) => {
@@ -616,54 +631,17 @@ const AppointmentForm = () => {
                   </motion.div>
                 )}
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-gutter">
-                  <div className="space-y-xs">
-                    <label className="text-label-md font-label-md text-on-surface-variant px-1" htmlFor="date">Preferred Date</label>
-                    <input
-                      className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-body-md"
-                      id="date"
-                      required
-                      type="date"
-                      min={new Date().toISOString().split('T')[0]}
-                      value={formData.date}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                  <div className="space-y-xs">
-                    <label className="text-label-md font-label-md text-on-surface-variant px-1">Daily Ticket Capacity</label>
-                    {fetchingTickets ? (
-                      <div className="p-3 text-xs text-primary font-bold flex items-center gap-2 bg-surface-container-lowest rounded-lg border border-outline-variant">
-                        <span className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></span>
-                        <span>Checking available tickets...</span>
-                      </div>
-                    ) : !formData.serviceId || !formData.date ? (
-                      <div className="p-3 text-xs text-on-surface-variant italic bg-surface-container-lowest rounded-lg border border-outline-variant">
-                        Select a service and date to view ticket availability today.
-                      </div>
-                    ) : ticketInfo ? (
-                      <div className={`p-3.5 rounded-lg border flex items-center gap-3 ${
-                        ticketInfo.ticketsLeft > 0 
-                          ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-700' 
-                          : 'bg-red-500/10 border-red-500/30 text-red-600'
-                      }`}>
-                        <span className="material-symbols-outlined text-[24px] shrink-0">
-                          {ticketInfo.ticketsLeft > 0 ? 'confirmation_number' : 'cancel'}
-                        </span>
-                        <div>
-                          <p className="text-sm font-extrabold leading-tight">
-                            {ticketInfo.ticketsLeft > 0 
-                              ? `${ticketInfo.ticketsLeft} Tickets Available Today` 
-                              : 'Sold Out for this Date'}
-                          </p>
-                          <p className="text-[11px] opacity-80 mt-0.5">
-                            {ticketInfo.ticketsLeft > 0 
-                              ? `${ticketInfo.bookedCount} booked out of ${ticketInfo.totalTickets} total daily tickets.` 
-                              : `All ${ticketInfo.totalTickets} daily tickets have been reserved for ${formattedDate}.`}
-                          </p>
-                        </div>
-                      </div>
-                    ) : null}
-                  </div>
+                <div className="space-y-xs">
+                  <label className="text-label-md font-label-md text-on-surface-variant px-1" htmlFor="date">Preferred Date</label>
+                  <input
+                    className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-body-md"
+                    id="date"
+                    required
+                    type="date"
+                    min={new Date().toISOString().split('T')[0]}
+                    value={formData.date}
+                    onChange={handleInputChange}
+                  />
                 </div>
 
                 <div className="flex gap-4 pt-4">
@@ -749,7 +727,7 @@ const AppointmentForm = () => {
                     </button>
                   </div>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-6 text-left">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-y-4 gap-x-6 text-left">
                     <div className="flex items-start gap-4">
                       {selectedDoctor && (
                         <>
@@ -785,17 +763,6 @@ const AppointmentForm = () => {
                       <div>
                         <p className="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider mb-0.5">Scheduled Date</p>
                         <p className="text-body-md font-semibold text-on-surface">{formattedDate}</p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 rounded-lg bg-surface-container-high flex items-center justify-center shrink-0">
-                        <span className="material-symbols-outlined text-primary">confirmation_number</span>
-                      </div>
-                      <div>
-                        <p className="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider mb-0.5">Ticket Status</p>
-                        <p className="text-body-md font-semibold text-on-surface">Daily Ticket Reserved</p>
-                        <p className="text-label-sm text-primary font-medium">Valid for All-Day Access</p>
                       </div>
                     </div>
                   </div>
@@ -868,7 +835,7 @@ const AppointmentForm = () => {
                 </p>
 
                 {/* Appointment Details Bento Grid */}
-                <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-md mb-lg text-left">
+                <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-md mb-lg text-left">
                   <div className="bg-surface-container-low p-md rounded-lg border border-outline-variant/30 hover:scale-[1.02] transition-transform duration-300">
                     <span className="text-label-sm font-label-sm text-primary uppercase tracking-wider mb-xs block">Appointment ID</span>
                     <span className="text-headline-sm font-headline-sm text-on-surface font-mono">{appointmentId}</span>
@@ -882,13 +849,6 @@ const AppointmentForm = () => {
                     <div className="flex items-center gap-2">
                       <span className="material-symbols-outlined text-primary text-[20px]">calendar_today</span>
                       <span className="text-body-lg font-bold text-on-surface">{formattedDate}</span>
-                    </div>
-                  </div>
-                  <div className="bg-surface-container-low p-md rounded-lg border border-outline-variant/30 hover:scale-[1.02] transition-transform duration-300">
-                    <span className="text-label-sm font-label-sm text-primary uppercase tracking-wider mb-xs block">Time Slot</span>
-                    <div className="flex items-center gap-2">
-                      <span className="material-symbols-outlined text-primary text-[20px]">schedule</span>
-                      <span className="text-body-lg font-bold text-on-surface">{formData.time}</span>
                     </div>
                   </div>
                 </div>

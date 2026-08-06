@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const defaultBackendUrl = "https://dental-clinic-backend-production-ba90.up.railway.app";
+const defaultBackendUrl = "https://localhost:5000";
 export const API_BASE_URL = (import.meta.env.VITE_API_URL && String(import.meta.env.VITE_API_URL).trim() !== "")
   ? import.meta.env.VITE_API_URL
   : defaultBackendUrl;

@@ -80,7 +80,13 @@ const AppointmentForm = () => {
   }, [formData.serviceId]);
 
   const handleInputChange = (e) => {
-    const { id, value } = e.target;
+    let { id, value } = e.target;
+    
+    // Restrict phone field to numbers and standard phone characters
+    if (id === 'phone') {
+      value = value.replace(/[^0-9+\-\s()]/g, '');
+    }
+
     setFormData(prev => ({
       ...prev,
       [id]: value
@@ -732,7 +738,7 @@ const AppointmentForm = () => {
                       {selectedDoctor && (
                         <>
                           <img 
-                            src={selectedDoctor.image} 
+                            src={getFullImageUrl(selectedDoctor.image)} 
                             alt={selectedDoctor.name} 
                             className="w-12 h-12 rounded-full object-cover border border-primary-fixed"
                           />

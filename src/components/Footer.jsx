@@ -39,14 +39,42 @@ const Footer = () => {
   const businessHours = settings?.businessHours || [];
   const whatsAppVal = contact.whatsApp || social.whatsApp || "";
 
+  // Helper to group consecutive days with identical timings
+  const groupedHours = React.useMemo(() => {
+    if (!businessHours || businessHours.length === 0) return [];
+    
+    const groups = [];
+    let current = { start: businessHours[0].day, end: businessHours[0].day, ...businessHours[0] };
+
+    for (let i = 1; i < businessHours.length; i++) {
+      const bh = businessHours[i];
+      if (bh.isClosed === current.isClosed && bh.open === current.open && bh.close === current.close) {
+        current.end = bh.day;
+      } else {
+        groups.push(current);
+        current = { start: bh.day, end: bh.day, ...bh };
+      }
+    }
+    groups.push(current);
+    
+    return groups.map(g => {
+      const dayLabel = g.start === g.end ? g.start.substring(0, 3) : `${g.start.substring(0, 3)} - ${g.end.substring(0, 3)}`;
+      const timeLabel = g.isClosed ? "Closed" : `${g.open} - ${g.close}`;
+      return { label: dayLabel, time: timeLabel };
+    });
+  }, [businessHours]);
+
   return (
-    <footer className="bg-surface-container-lowest border-t border-outline-variant">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-xl px-margin-mobile md:px-margin-desktop py-xl max-w-7xl mx-auto">
+    <footer className="bg-surface-container-lowest border-t border-outline-variant w-full">
+      <div className="flex flex-col md:flex-row md:flex-wrap lg:flex-nowrap justify-between gap-xl px-margin-mobile md:px-margin-desktop py-xl max-w-7xl mx-auto w-full">
 
         {/* Brand Block */}
-        <div className="space-y-md">
-          <div className="text-headline-sm font-bold text-primary flex items-center gap-2">
-            <span className="material-symbols-outlined text-[28px]" style={{ fontVariationSettings: "'FILL' 1" }}>
+        <div className="space-y-md flex-1 min-w-[250px]">
+          <div className="text-xs sm:text-sm lg:text-headline-sm font-bold text-primary flex items-center gap-2 whitespace-nowrap">
+            <span
+              className="material-symbols-outlined text-[24px] shrink-0"
+              style={{ fontVariationSettings: "'FILL' 1" }}
+            >
               dentistry
             </span>
             SAMI DENTAL CLINIC
@@ -91,7 +119,7 @@ const Footer = () => {
         </div>
 
         {/* Quick Links */}
-        <div className="space-y-md">
+        <div className="space-y-md flex-1 min-w-[150px] md:text-center lg:text-left">
           <h6 className="text-label-md font-bold text-on-surface uppercase tracking-widest">Quick Links</h6>
           <ul className="space-y-sm">
             <li><Link className="text-on-surface-variant hover:text-primary transition-all text-body-md" to="/">Home</Link></li>
@@ -103,7 +131,7 @@ const Footer = () => {
         </div>
 
         {/* Services */}
-        <div className="space-y-md">
+        <div className="space-y-md flex-1 min-w-[150px] md:text-center lg:text-left">
           <h6 className="text-label-md font-bold text-on-surface uppercase tracking-widest">Services</h6>
           <ul className="space-y-sm">
             {loading ? (
@@ -126,7 +154,7 @@ const Footer = () => {
         </div>
 
         {/* Contact Info */}
-        <div className="space-y-md">
+        <div className="space-y-md flex-1 min-w-[200px]">
           <h6 className="text-label-md font-bold text-on-surface uppercase tracking-widest">Contact Info</h6>
           {loading ? (
             <div className="space-y-3">
@@ -176,11 +204,12 @@ const Footer = () => {
               {businessHours.length > 0 && (
                 <li className="flex gap-sm">
                   <span className="material-symbols-outlined text-primary mt-1">schedule</span>
-                  <div className="flex flex-col justify-center gap-1 text-on-surface-variant text-body-sm">
-                    {businessHours.map((bh, idx) => (
-                      <span key={idx}>
-                        {bh.day}: {bh.isClosed ? "Closed" : `${bh.open} - ${bh.close}`}
-                      </span>
+                  <div className="flex flex-col justify-center gap-1 text-on-surface-variant text-label-sm">
+                    {groupedHours.map((g, idx) => (
+                      <div key={idx} className="flex justify-between gap-4">
+                        <span className="font-bold">{g.label}</span>
+                        <span>{g.time}</span>
+                      </div>
                     ))}
                   </div>
                 </li>
@@ -195,8 +224,8 @@ const Footer = () => {
       <div className="border-t border-outline-variant py-md px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-md">
         <p className="text-label-sm text-on-surface-variant">© 2026 SAMI DENTAL CLINIC. All rights reserved.</p>
         <div className="flex gap-md">
-          <a className="text-label-sm text-on-surface-variant hover:text-primary underline" href="#">Privacy Policy</a>
-          <a className="text-label-sm text-on-surface-variant hover:text-primary underline" href="#">Terms of Service</a>
+          <Link className="text-label-sm text-on-surface-variant hover:text-primary underline" to="/privacy-policy">Privacy Policy</Link>
+          <Link className="text-label-sm text-on-surface-variant hover:text-primary underline" to="/terms-of-service">Terms of Service</Link>
         </div>
       </div>
     </footer>

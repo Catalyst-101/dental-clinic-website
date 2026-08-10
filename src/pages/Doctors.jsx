@@ -252,7 +252,7 @@ const Doctors = () => {
               Book a general consultation and our head doctor will recommend the best specialist for your unique dental needs.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col gap-4 items-center">
               <motion.div whileHover={{ scale: 1.05 }}>
                 <Button
                   onClick={() => navigate('/book-appointment')}

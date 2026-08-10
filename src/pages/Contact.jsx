@@ -40,7 +40,13 @@ const Contact = () => {
   }, []);
 
   const handleInputChange = (e) => {
-    const { id, value } = e.target;
+    let { id, value } = e.target;
+    
+    // Restrict phone field to numbers and standard phone characters
+    if (id === 'phone') {
+      value = value.replace(/[^0-9+\-\s()]/g, '');
+    }
+
     setFormData(prev => ({ ...prev, [id]: value }));
   };
 
@@ -416,7 +422,7 @@ const Contact = () => {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="w-full h-[450px] bg-surface-container relative overflow-hidden"
+        className="w-full h-[450px] bg-surface-container relative overflow-hidden mb-xl"
       >
         <iframe
           title="SAMI Dental Clinic Location"

@@ -16,7 +16,7 @@ const Gallery = () => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const itemsPerPage = 9;
+  const itemsPerPage = 6;
 
   const filterCategories = [
     { label: "All Collections", value: "all" },
@@ -132,7 +132,7 @@ const Gallery = () => {
         transition={{ duration: 0.6 }}
         className="sticky top-[64px] z-40 bg-background/90 backdrop-blur-md py-md border-y border-outline-variant/30 mb-xl"
       >
-        <div className="px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto flex justify-center gap-sm">
+        <div className="px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto flex flex-wrap justify-center gap-sm">
           {filterCategories.map(cat => (
             <motion.button
               key={cat.value}
@@ -159,31 +159,53 @@ const Gallery = () => {
               <SkeletonGallery key={i} />
             ))}
           </div>
-        ) : (
-          <motion.div
-            variants={containerAnimation}
-            initial="hidden"
-            animate="visible"
-            className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6"
-          >
-            <AnimatePresence mode="popLayout">
-              {visibleItems.map(item => (
-                <motion.div
-                  layout
-                  variants={itemAnimation}
-                  key={item.id}
-                  className="break-inside-avoid"
-                  whileHover={{ scale: 1.02 }}
-                >
-                  <GalleryCard
-                    item={item}
-                    onClick={() => setSelectedItem(item)}
-                  />
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </motion.div>
-        )}
+        ) : (() => {
+          const count = visibleItems.length;
+
+          if (count === 5) {
+            return (
+              <motion.div variants={containerAnimation} initial="hidden" animate="visible" className="grid grid-cols-1 md:grid-cols-6 gap-6">
+                <AnimatePresence mode="popLayout">
+                  {visibleItems.map((item, index) => (
+                    <motion.div
+                      layout
+                      variants={itemAnimation}
+                      key={item.id}
+                      className={`${index < 3 ? 'md:col-span-2' : 'md:col-span-3'}`}
+                      whileHover={{ scale: 1.02 }}
+                    >
+                      <GalleryCard item={item} onClick={() => setSelectedItem(item)} />
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+              </motion.div>
+            );
+          }
+
+          let gridClass = "grid-cols-1";
+          if (count === 1) gridClass = "grid-cols-1 max-w-md mx-auto";
+          else if (count === 2) gridClass = "grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto";
+          else if (count === 3) gridClass = "grid-cols-1 md:grid-cols-3";
+          else if (count === 4) gridClass = "grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto";
+          else if (count === 6) gridClass = "grid-cols-1 md:grid-cols-3";
+
+          return (
+            <motion.div variants={containerAnimation} initial="hidden" animate="visible" className={`grid gap-6 ${gridClass}`}>
+              <AnimatePresence mode="popLayout">
+                {visibleItems.map(item => (
+                  <motion.div
+                    layout
+                    variants={itemAnimation}
+                    key={item.id}
+                    whileHover={{ scale: 1.02 }}
+                  >
+                    <GalleryCard item={item} onClick={() => setSelectedItem(item)} />
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </motion.div>
+          );
+        })()}
       </main>
 
       {/* PAGINATION */}
@@ -257,13 +279,38 @@ const Gallery = () => {
               exit={{ scale: 0.8 }}
               onClick={(e) => e.stopPropagation()}
             >
-              <img
-                src={getFullImageUrl(selectedItem.url || selectedItem.image || selectedItem.afterImage)}
-                alt={selectedItem.title || selectedItem.caption || "Gallery item"}
-                className="max-h-[80vh] max-w-[90vw] rounded-2xl object-contain shadow-2xl"
-              />
+              {selectedItem.isBeforeAfter ? (
+                <div className="flex flex-col md:flex-row gap-4 items-center justify-center max-h-[80vh] max-w-[90vw]">
+                  {selectedItem.beforeImage && (
+                    <div className="flex flex-col items-center">
+                      <span className="text-white text-sm font-bold uppercase tracking-wider mb-2">Before</span>
+                      <img
+                        src={getFullImageUrl(selectedItem.beforeImage)}
+                        alt={`${selectedItem.title || selectedItem.caption || "Gallery item"} Before`}
+                        className="max-h-[35vh] md:max-h-[70vh] max-w-[90vw] md:max-w-[42vw] rounded-2xl object-contain shadow-2xl"
+                      />
+                    </div>
+                  )}
+                  {selectedItem.afterImage && (
+                    <div className="flex flex-col items-center">
+                      <span className="text-white text-sm font-bold uppercase tracking-wider mb-2">After</span>
+                      <img
+                        src={getFullImageUrl(selectedItem.afterImage)}
+                        alt={`${selectedItem.title || selectedItem.caption || "Gallery item"} After`}
+                        className="max-h-[35vh] md:max-h-[70vh] max-w-[90vw] md:max-w-[42vw] rounded-2xl object-contain shadow-2xl"
+                      />
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <img
+                  src={getFullImageUrl(selectedItem.url || selectedItem.image)}
+                  alt={selectedItem.title || selectedItem.caption || "Gallery item"}
+                  className="max-h-[80vh] max-w-[90vw] rounded-2xl object-contain shadow-2xl"
+                />
+              )}
               <h3 className="text-white text-center mt-5 text-headline-md font-bold">
-                {selectedItem.title || selectedItem.caption || selectedItem.tag}
+                {selectedItem.title || selectedItem.caption || selectedItem.tag || selectedItem.category}
               </h3>
             </motion.div>
           </motion.div>
@@ -290,7 +337,7 @@ const Gallery = () => {
               Our team of specialists is ready to provide you with the same high-quality care you see in our gallery. Book your consultation today.
             </p>
 
-            <div className="flex gap-sm flex-wrap">
+            <div className="flex gap-sm flex-wrap justify-center md:justify-start">
               <motion.div whileHover={{ scale: 1.05 }}>
                 <Button
                   onClick={() => navigate('/book-appointment')}
@@ -300,14 +347,8 @@ const Gallery = () => {
                   Book Appointment
                 </Button>
               </motion.div>
-
-              <Button
-                variant="secondary"
-                onClick={() => alert('Opening clinic price list brochure...')}
-              >
-                View Price List
-              </Button>
             </div>
+
           </div>
 
           <motion.div 

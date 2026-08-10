@@ -8,6 +8,9 @@ import DoctorProfile from "../pages/DoctorProfile";
 import Gallery from "../pages/Gallery";
 import Contact from "../pages/Contact";
 import BookAppointment from "../pages/BookAppointment";
+import NotFound from "../pages/NotFound";
+import PrivacyPolicy from "../pages/PrivacyPolicy";
+import TermsOfService from "../pages/TermsOfService";
 
 const AppRoutes = () => {
   return (
@@ -21,8 +24,11 @@ const AppRoutes = () => {
       <Route path="/gallery" element={<Gallery />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/book-appointment" element={<BookAppointment />} />
+      <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+      <Route path="/terms-of-service" element={<TermsOfService />} />
+      <Route path="/404" element={<NotFound />} />
       {/* Fallback route */}
-      <Route path="*" element={<Home />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };

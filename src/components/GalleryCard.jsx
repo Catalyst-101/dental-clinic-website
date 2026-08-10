@@ -17,35 +17,35 @@ const GalleryCard = ({ item, onClick }) => {
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9 }}
       transition={{ duration: 0.3 }}
-      className="masonry-item break-inside-avoid mb-6 cursor-pointer"
+      className="cursor-pointer"
       onClick={() => onClick(item)}
     >
-      <div className="gallery-image-container relative overflow-hidden rounded-xl bg-surface-container-low group shadow-sm">
+      <div className="gallery-image-container relative overflow-hidden rounded-xl bg-surface-container-low group shadow-sm aspect-square">
         {isBeforeAfter ? (
-          <div className="grid grid-cols-2 gap-[2px]">
+          <div className="grid grid-cols-2 gap-[2px] w-full h-full">
             {beforeImgUrl ? (
               <img 
                 src={beforeImgUrl} 
                 alt={`${displayTitle} Before`} 
-                className="w-full h-full object-cover aspect-[4/5] transition-transform duration-500 group-hover:scale-[1.03]" 
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" 
               />
-            ) : <div className="w-full aspect-[4/5] bg-surface-container-high" />}
+            ) : <div className="w-full h-full bg-surface-container-high" />}
             {afterImgUrl ? (
               <img 
                 src={afterImgUrl} 
                 alt={`${displayTitle} After`} 
-                className="w-full h-full object-cover aspect-[4/5] transition-transform duration-500 group-hover:scale-[1.03]" 
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" 
               />
-            ) : <div className="w-full aspect-[4/5] bg-surface-container-high" />}
+            ) : <div className="w-full h-full bg-surface-container-high" />}
           </div>
         ) : (
           mainImage ? (
             <img 
               src={mainImage} 
               alt={displayTitle} 
-              className="w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" 
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" 
             />
-          ) : <div className="w-full h-64 bg-surface-container-high" />
+          ) : <div className="w-full h-full bg-surface-container-high" />
         )}
         
         {/* Hover overlay with glassmorphism blur */}

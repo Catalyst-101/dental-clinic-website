@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import AppointmentForm from '../components/AppointmentForm';
 
 const BookAppointment = () => {
@@ -41,8 +41,8 @@ const BookAppointment = () => {
         <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-label-sm text-on-surface-variant">© 2026 DentaElite Premium Care. All rights reserved.</p>
           <div className="flex gap-gutter">
-            <a className="text-label-sm text-on-surface-variant hover:text-primary underline transition-all" href="#">Privacy Policy</a>
-            <a className="text-label-sm text-on-surface-variant hover:text-primary underline transition-all" href="#">Terms of Service</a>
+            <Link className="text-label-sm text-on-surface-variant hover:text-primary underline transition-all" to="/privacy-policy">Privacy Policy</Link>
+            <Link className="text-label-sm text-on-surface-variant hover:text-primary underline transition-all" to="/terms-of-service">Terms of Service</Link>
           </div>
         </div>
       </footer>

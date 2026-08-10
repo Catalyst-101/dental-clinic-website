@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, matchPath } from "react-router-dom";
 import { FaWhatsapp } from "react-icons/fa";
 import AppRoutes from "./routes/AppRoutes";
 import Navbar from "./components/Navbar";
@@ -20,6 +20,22 @@ function ScrollToTop() {
 function App() {
   const location = useLocation();
   const isBookingPage = location.pathname === "/book-appointment";
+
+  const validRoutes = [
+    "/",
+    "/about",
+    "/services",
+    "/services/:id",
+    "/doctors",
+    "/doctors/:id",
+    "/gallery",
+    "/contact",
+    "/book-appointment",
+    "/privacy-policy",
+    "/terms-of-service"
+  ];
+  const isNotFoundPage = location.pathname === "/404" || !validRoutes.some(route => matchPath({ path: route, end: true }, location.pathname));
+  const hideLayout = isBookingPage || isNotFoundPage;
   const [whatsAppNum, setWhatsAppNum] = useState("+92 337 5675083");
 
   useEffect(() => {
@@ -48,16 +64,16 @@ function App() {
 
       <ScrollToTop />
 
-      {!isBookingPage && <Navbar />}
+      {!hideLayout && <Navbar />}
 
       <main className="flex-grow">
         <AppRoutes />
       </main>
 
-      {!isBookingPage && <Footer />}
+      {!hideLayout && <Footer />}
 
       {/* Floating WhatsApp Button */}
-      {!isBookingPage && (
+      {!hideLayout && (
         <a
           href={whatsAppUrl}
           target="_blank"

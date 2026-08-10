@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { fetchDoctorById } from '../api/doctorsApi';
 import { getFullImageUrl } from '../api/axios';
 import { Button } from '../components/Button';
+import NotFound from './NotFound';
 
 import { SkeletonDetail } from '../components/Skeleton';
 
@@ -35,14 +36,7 @@ const DoctorProfile = () => {
   }
 
   if (!doctor) {
-    return (
-      <div className="min-h-[60vh] flex flex-col items-center justify-center p-md">
-        <h2 className="text-headline-md font-bold mb-4">Doctor Not Found</h2>
-        <Button onClick={() => navigate('/doctors')} variant="primary">
-          Back to Doctors List
-        </Button>
-      </div>
-    );
+    return <NotFound />;
   }
 
   return (

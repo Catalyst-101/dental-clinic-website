@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { fetchServiceById } from '../api/servicesApi';
 import { getFullImageUrl } from '../api/axios';
 import { Button } from '../components/Button';
+import NotFound from './NotFound';
 
 import { SkeletonDetail } from '../components/Skeleton';
 
@@ -36,14 +37,7 @@ const ServiceProfile = () => {
   }
 
   if (!service) {
-    return (
-      <div className="min-h-[60vh] flex flex-col items-center justify-center p-md">
-        <h2 className="text-headline-md font-bold mb-4">Service Not Found</h2>
-        <Button onClick={() => navigate('/services')} variant="primary">
-          Back to Services
-        </Button>
-      </div>
-    );
+    return <NotFound />;
   }
 
   const toggleFaq = (idx) => {

@@ -35,7 +35,7 @@ function App() {
     "/terms-of-service"
   ];
   const isNotFoundPage = location.pathname === "/404" || !validRoutes.some(route => matchPath({ path: route, end: true }, location.pathname));
-  const hideLayout = isBookingPage || isNotFoundPage;
+  const hideLayout = isBookingPage;
   const [whatsAppNum, setWhatsAppNum] = useState("+92 337 5675083");
 
   useEffect(() => {

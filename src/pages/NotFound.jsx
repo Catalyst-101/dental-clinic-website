@@ -7,7 +7,7 @@ const NotFound = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-margin-mobile md:px-margin-desktop bg-background text-on-surface overflow-hidden relative">
+    <div className="py-32 min-h-[70vh] flex flex-col items-center justify-center px-margin-mobile md:px-margin-desktop bg-background text-on-surface overflow-hidden relative">
       
       {/* Decorative Background Elements */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] max-w-[800px] max-h-[800px] bg-primary/5 rounded-full blur-3xl pointer-events-none -z-10"></div>

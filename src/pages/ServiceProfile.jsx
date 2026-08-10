@@ -386,7 +386,7 @@ const ServiceProfile = () => {
             >
               <img 
                 className="w-full h-96 object-cover" 
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXzqphuSJpBHH0E3yFoG8foJ_zw5NaZzGdtkrWjyEiL6EgwZ3Is6BL8EOz1cbF6aU7hbEZbrsnfaATWbMv0jH6T0GZrOoYC0zGRLM05aXrVgc7Z0LFMMglO3kNl2CnsAlaIxYL5JBx_Zp9whHS5LWI85_ZLs8P0NZskT8iCO_cA61oRp4cVqKlvX-AFEhlPNbtfXLzOyHhcGQuUoBIOCinczi14w1x83S3-jbzKikVOJwJKgBhbG8fmsh1zquVWo5vcy0832dkLvKc"
+                src={service.recovery?.image ? getFullImageUrl(service.recovery.image) : "https://lh3.googleusercontent.com/aida-public/AB6AXuBXzqphuSJpBHH0E3yFoG8foJ_zw5NaZzGdtkrWjyEiL6EgwZ3Is6BL8EOz1cbF6aU7hbEZbrsnfaATWbMv0jH6T0GZrOoYC0zGRLM05aXrVgc7Z0LFMMglO3kNl2CnsAlaIxYL5JBx_Zp9whHS5LWI85_ZLs8P0NZskT8iCO_cA61oRp4cVqKlvX-AFEhlPNbtfXLzOyHhcGQuUoBIOCinczi14w1x83S3-jbzKikVOJwJKgBhbG8fmsh1zquVWo5vcy0832dkLvKc"}
                 alt="Patient Recovery" 
               />
             </motion.div>

@@ -2,9 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { getFullImageUrl } from '../api/axios';
+import FocalImage from './FocalImage';
 
 const DoctorCard = ({ doctor }) => {
-  const { id, _id, slug, name, qualifications, specialization, experience, availability, image } = doctor;
+  const { id, _id, slug, name, qualifications, specialization, experience, availability, image, imageFocalPoint } = doctor;
   const doctorIdentifier = slug || id || _id;
 
   const imgUrl = getFullImageUrl(image);
@@ -17,9 +18,10 @@ const DoctorCard = ({ doctor }) => {
     >
       <div className="h-72 overflow-hidden relative">
         {imgUrl ? (
-          <img 
+          <FocalImage 
             src={imgUrl} 
             alt={name} 
+            focalPoint={imageFocalPoint}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
           />
         ) : (

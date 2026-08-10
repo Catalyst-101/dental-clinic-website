@@ -59,9 +59,10 @@ const ServiceProfile = () => {
           src={getFullImageUrl(service.image)} 
           alt={service.title} 
           className="absolute inset-0 w-full h-full object-cover"
+          style={{ objectPosition: `${service.imageFocalPoint?.x ?? 50}% ${service.imageFocalPoint?.y ?? 50}%` }}
         />
         {/* Responsive Gradient Overlay for High Readability & Image Visibility */}
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/85 to-transparent md:bg-gradient-to-r md:from-background md:via-background/85 md:to-transparent z-0"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/85 to-transparent z-0"></div>
         
         <div className="relative w-full max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop z-10 text-left">
           <motion.div 

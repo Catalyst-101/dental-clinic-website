@@ -63,7 +63,8 @@ const DoctorProfile = () => {
               <img 
                 src={getFullImageUrl(doctor.image)} 
                 alt={doctor.name} 
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" 
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                style={{ objectPosition: `${doctor.imageFocalPoint?.x ?? 50}% ${doctor.imageFocalPoint?.y ?? 50}%` }}
               />
             </div>
             {/* Experience Badge */}

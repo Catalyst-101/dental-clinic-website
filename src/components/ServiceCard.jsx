@@ -2,9 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { getFullImageUrl } from '../api/axios';
+import FocalImage from './FocalImage';
 
 const ServiceCard = ({ service }) => {
-  const { title, summary, image, slug, id, _id, duration, doctors, price } = service;
+  const { title, summary, image, imageFocalPoint, slug, id, _id, duration, doctors, price } = service;
   const serviceIdentifier = slug || id || _id;
 
   const imgUrl = getFullImageUrl(image);
@@ -18,9 +19,10 @@ const ServiceCard = ({ service }) => {
     >
       <div className="relative h-60 w-full overflow-hidden bg-primary/10">
         {imgUrl ? (
-          <img
+          <FocalImage
             src={imgUrl}
             alt={title}
+            focalPoint={imageFocalPoint}
             className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
           />
         ) : (
